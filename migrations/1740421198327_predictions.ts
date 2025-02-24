@@ -1,0 +1,61 @@
+import { sql, type Kysely } from 'kysely'
+
+export async function up(db: Kysely<any>): Promise<void> {
+  await sql`create extension if not exists pg_trgm;`.execute(db)
+  await db.schema.withSchema('app')
+    .createTable('prediction')
+    .addColumn('source', 'varchar', c => c.notNull())
+    .addColumn('gene', 'varchar', c => c.notNull())
+    .addColumn('term', 'varchar', c => c.notNull())
+    .addColumn('proba', 'float4', c => c.notNull())
+    .addColumn('known', 'boolean', c => c.notNull())
+    .execute()
+  await db.schema.withSchema('app')
+    .createIndex('prediction_gene')
+    .on('prediction')
+    .column('gene')
+    .execute()
+  await db.schema.withSchema('app')
+    .createIndex('prediction_source')
+    .on('prediction')
+    .column('source')
+    .execute()
+  await db.schema.withSchema('app')
+    .createIndex('prediction_gene_source_proba')
+    .on('prediction')
+    .column('gene')
+    .column('source')
+    .column('proba desc')
+    .execute()
+  await db.schema.withSchema('app')
+    .createView('gene_materialized')
+    .materialized()
+    .as(
+      db
+      .selectFrom('prediction')
+      .select('gene')
+      .distinct()
+    )
+    .execute()
+  await db.schema.withSchema('app')
+    .createIndex('gene_trgm')
+    .on('gene_materialized')
+    .using('gin')
+    .expression(sql`gene gin_trgm_ops`)
+    .execute()
+  await db.schema.withSchema('app')
+    .createView('gene')
+    .as(
+      db
+      .selectFrom('gene_materialized')
+      .selectAll()
+    )
+    .execute()
+  }
+
+export async function down(db: Kysely<any>): Promise<void> {
+  db.schema.withSchema('app')
+    .dropTable('prediction')
+    .cascade()
+    .execute()
+}

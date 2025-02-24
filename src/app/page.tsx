@@ -1,40 +1,52 @@
 'use client'
 import trpc from '@/lib/trpc/client'
+import React from 'react';
+
+function Predictions(props: { source: string, gene: string, count: number }) {
+  const pageSize = 10
+  const [page, setPage] = React.useState(1)
+  const predictions = trpc.predictions.useQuery({
+    source: props.source,
+    gene: props.gene,
+    offset: (page-1)*pageSize,
+    limit: pageSize,
+  })
+  return (
+    <table>
+      <thead>
+        <tr>
+          <th>Term</th>
+          <th>Proba</th>
+        </tr>
+      </thead>
+      <tbody>
+        {predictions.isLoading && <tr><td colSpan={2}>Loading...</td></tr>}
+        {predictions.data?.map(prediction => <tr key={prediction.term}><td>{prediction.term}</td><td>{prediction.proba}</td></tr>)}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th><button disabled={page <= 1} onClick={evt => {setPage(page => page - 1)}}>&lt;</button></th>
+          <th>{page}</th>
+          <th><button disabled={page*pageSize > props.count} onClick={evt => {setPage(page => page + 1)}}>&gt;</button></th>
+        </tr>
+      </tfoot>
+    </table>
+  )
+}
 
 export default function Home() {
-  const testQuery = trpc.testQuery.useQuery()
-  const testMutation = trpc.testMutation.useMutation()
+  const sources = trpc.sources.useQuery()
+  const [gene,setGene] = React.useState('')
+  const geneAutocomplete = trpc.gene_autocomplete.useQuery(gene, { enabled: gene.length > 0 })
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+    <>
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-          <li>
-            Update your API in real time:
-            <br />
-            {testQuery.isLoading && <>Loading...</>}
-            {testQuery.isError && <>Error!</>}
-            {testQuery.data}
-            <br />
-            <button onClick={evt => {testQuery.refetch()}}>Click me</button>
-          </li>
-          <li>
-            <button onClick={evt => {testMutation.mutate({ value: testQuery.data || 0 })}}>Click Me</button>
-            <br />
-            {testMutation.isPending && <>Loading...</>}
-            {testMutation.data}
-          </li>
-        </ol>
+        <datalist id="geneAutocomplete">{geneAutocomplete.data?.map(suggestion => <option key={suggestion.gene}>{suggestion.gene}</option>)}</datalist>
+        <input type="text" value={gene} onChange={evt => {setGene(evt.currentTarget.value)}} list={geneAutocomplete.data ? "geneAutocomplete" : undefined} />
+        {sources.data?.map(({ source, count }) => <Predictions source={source} gene={gene} count={Number(count)} />)}
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
       </footer>
-    </div>
-  );
+    </>
+  )
 }
