@@ -23,7 +23,7 @@ export default router({
   predictions: procedure.input(z.object({
     source: z.string(),
     gene: z.string(),
-    offset: z.number(),
+    offset: z.number().transform(offset => Math.max(0, offset)),
     limit: z.number().transform(limit => Math.min(100, limit)),
   })).query(async (props) => {
     return await db
@@ -34,6 +34,8 @@ export default router({
       .orderBy('proba desc')
       .where('source', '=', props.input.source)
       .where('gene', '=', props.input.gene)
+      .offset(props.input.offset)
+      .limit(props.input.limit)
       .execute()
   }),
 })
