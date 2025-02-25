@@ -13,11 +13,12 @@ export default router({
       .limit(10)
       .execute()
   }),
-  sources: procedure.query(async (props) => {
+  sources: procedure.input(z.string()).query(async (props) => {
     return await db
       .selectFrom('app.prediction')
       .select(eb => ['source', eb.fn.countAll().as('count')])
       .groupBy('source')
+      .where('gene', '=', props.input)
       .execute()
   }),
   predictions: procedure.input(z.object({
