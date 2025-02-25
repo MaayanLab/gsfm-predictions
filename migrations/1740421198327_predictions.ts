@@ -9,6 +9,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('term', 'varchar', c => c.notNull())
     .addColumn('proba', 'float4', c => c.notNull())
     .addColumn('known', 'boolean', c => c.notNull())
+    .addPrimaryKeyConstraint('prediction_pk', ['source', 'term', 'gene'])
     .execute()
   await db.schema.withSchema('app')
     .createIndex('prediction_gene')
