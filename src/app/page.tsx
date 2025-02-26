@@ -20,8 +20,8 @@ function Predictions(props: { source: string, gene: string, count: number }) {
     limit: pageSize,
   })
   return (
-    <div className="shadow-lg p-4 w-96 flex flex-col overflow-hidden">
-      <h3 className="text-xl text-wrap break-all">{props.source} ({props.count})</h3>
+    <div className="border rounded-xl p-4 w-96 flex flex-col overflow-hidden">
+      <h3 className="text-wrap">{props.source.replaceAll('_', ' ')}</h3>
       <div className="overflow-auto flex-grow">
         <table className="table w-full">
           <thead>
@@ -31,12 +31,12 @@ function Predictions(props: { source: string, gene: string, count: number }) {
             </tr>
           </thead>
           <tbody>
-            {predictions.isLoading && range(pageSize).map(p => <tr key={p} className="border border-gray-400 hover:bg-gray-400">
+            {predictions.isLoading && range(pageSize).map(p => <tr key={p} className="hover:bg-base-200">
               <td className="w-full">Loading...</td>
               <td>&nbsp;</td>
             </tr>)}
             {predictions.data?.map(prediction =>
-              <tr key={prediction.term} className={classNames("border border-gray-400 hover:bg-gray-400", { 'font-bold': prediction.known })}>
+              <tr key={prediction.term} className={classNames("hover:bg-base-200", { 'font-bold': prediction.known })}>
                 <td className="w-full">{prediction.term}</td>
                 <td>{prediction.proba.toFixed(2)}</td>
               </tr>
@@ -44,10 +44,14 @@ function Predictions(props: { source: string, gene: string, count: number }) {
           </tbody>
         </table>
       </div>
-      <div className="flex flex-row justify-around">
-        <button disabled={page <= 1} onClick={evt => {setPage(page => page - 1)}}>&lt;</button>
-        {page}
-        <button disabled={page*pageSize >= props.count} onClick={evt => {setPage(page => page + 1)}}>&gt;</button>
+      <div className="join items-center justify-center">
+        {page > 2 && <button className="join-item btn" onClick={evt => {setPage(page => 1)}}>1</button>}
+        {page > 3 && <button className="join-item btn btn-disabled">...</button>}
+        {page > 1 && <button className="join-item btn" onClick={evt => {setPage(page => page - 1)}}>{page - 1}</button>}
+        <button className="join-item btn btn-active">{page}</button>
+        {page*pageSize < props.count && <button className="join-item btn" onClick={evt => {setPage(page => page + 1)}}>{page + 1}</button>}
+        {(page+2)*pageSize < props.count && <button className="join-item btn btn-disabled">...</button>}
+        {(page+1)*pageSize < props.count && <button className="join-item btn" onClick={evt => {setPage(page => Math.ceil(props.count/pageSize))}}>{Math.ceil(props.count/pageSize)}</button>}
       </div>
     </div>
   )
@@ -65,17 +69,19 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen w-screen">
       <header className="m-2">
-        <a href="/"><h1 className="text-4xl">Gene Set Foundation Model</h1></a>
+        <div className="navbar bg-base-100">
+          <a className="btn btn-ghost text-xl" href="/">Gene Set Foundation Model</a>
+        </div>
       </header>
       <main className="mx-auto flex flex-col gap-4 items-center flex-grow">
         <div className="flex flex-col gap-1">
-          <div className="flex flex-row text-xl">
-            <div className={classNames('border border-r-0', { 'border-red-400': !validGene })}>
-              <input className="form-select p-2" type="text" value={gene} onChange={evt => {setGene(evt.currentTarget.value)}} list={geneAutocomplete.data ? "geneAutocomplete" : undefined} />
+          <div className={classNames('border join', { 'border-red-400': !validGene })}>
+            <div className="join-item">
+              <input className="input" type="text" value={gene} onChange={evt => {setGene(evt.currentTarget.value)}} list={geneAutocomplete.data ? "geneAutocomplete" : undefined} />
               <datalist id="geneAutocomplete">{geneAutocomplete.data?.map(suggestion => <option key={suggestion.gene}>{suggestion.gene}</option>)}</datalist>
             </div>
             <input
-              className={classNames("border border-l-0 rounded-r-lg p-2 text-white bg-blue-900", { 'border-red-400': !validGene })}
+              className="btn join-item"
               type="submit"
               disabled={!validGene}
               onClick={evt => {
@@ -83,26 +89,30 @@ export default function Home() {
                 router.push(`?q=${gene}`)
               }}
             ></input>
+            <button className="btn join-item" onClick={evt => {
+              setGene('ACE2')
+              router.push(`?q=ACE2`)
+            }}>Example</button>
           </div>
-          <button className="border rounded-lg self-start p-1" onClick={evt => {
-            setGene('ACE2')
-            router.push(`?q=ACE2`)
-          }}>Example</button>
         </div>
         <div className="flex flex-row flex-wrap gap-2 justify-center">
           {sources.data?.map(({ source, count }) => <Predictions key={`${source}-${geneSearchParam}`} source={source} gene={geneSearchParam} count={Number(count)} />)}
         </div>
       </main>
-      <footer className="bg-blue-900">
-        <div className="h-32 container mx-auto flex flex-row flex-wrap justify-around items-center">
-          <div className="flex flex-col">
-            <a className="text-white" href="mailto:avi.maayan@mssm.edu">Contact Us</a>
-            <a className="text-white" href="https://github.com/maayanlab/gsfm">Source Code</a>
-          </div>
-          <img className="w-48" src="https://rummagene.com/images/ismms_white.png" alt="icahn school of medicine at mount sinai center for bioinformatics" />
-          <img className="w-48" src="https://rummagene.com/images/maayanlab_white.png" alt="ma'ayan lab" />
-          <img className="w-48" src="https://rummagene.com/images/cc-by-nc-sa.png" alt="cc-by-4.0" />
-        </div>
+      <footer className="footer bg-neutral text-neutral-content p-10">
+        <nav className="place-self-center">
+          <a className="link link-hover" href="mailto:avi.maayan@mssm.edu">Contact Us</a>
+          <a className="link link-hover" href="https://github.com/maayanlab/gsfm" target='_blank'>Source Code</a>
+        </nav>
+        <nav className="place-self-center">
+          <a href="https://icahn.mssm.edu/research/portal?tab=Labs" target='_blank'><img className="w-48" src="https://rummagene.com/images/ismms_white.png" alt="icahn school of medicine at mount sinai center for bioinformatics" /></a>
+        </nav>
+        <nav className="place-self-center">
+          <a href="https://labs.icahn.mssm.edu/maayanlab/" target='_blank'><img className="w-48" src="https://rummagene.com/images/maayanlab_white.png" alt="ma'ayan lab" /></a>
+        </nav>
+        <nav className="place-self-center">
+          <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target='_blank'><img className="w-48" src="https://rummagene.com/images/cc-by-nc-sa.png" alt="cc-by-4.0" /></a>
+        </nav>
       </footer>
     </div>
   )
