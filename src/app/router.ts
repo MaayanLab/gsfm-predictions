@@ -10,7 +10,7 @@ export default router({
       .select('name')
       .select('description')
       .where('symbol', '=', props.input)
-      .executeTakeFirstOrThrow()
+      .executeTakeFirst()
   }),
   gene_autocomplete: procedure.input(z.string()).query(async (props) => {
     return await db
