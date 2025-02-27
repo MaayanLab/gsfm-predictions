@@ -4,12 +4,20 @@ import { sql } from "kysely";
 import { z } from 'zod'
 
 export default router({
+  gene_info: procedure.input(z.string()).query(async (props) => {
+    return await db
+      .selectFrom('app.gene')
+      .select('name')
+      .select('description')
+      .where('symbol', '=', props.input)
+      .executeTakeFirstOrThrow()
+  }),
   gene_autocomplete: procedure.input(z.string()).query(async (props) => {
     return await db
       .selectFrom('app.gene')
-      .select('gene')
-      .where('gene', sql`%`, props.input)
-      .orderBy(sql`gene <-> ${props.input}`)
+      .select('symbol')
+      .where('symbol', sql`%`, props.input)
+      .orderBy(sql`symbol <-> ${props.input}`)
       .limit(10)
       .execute()
   }),

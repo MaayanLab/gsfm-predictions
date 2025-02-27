@@ -1,0 +1,73 @@
+import { sql, type Kysely } from 'kysely'
+
+export async function up(db: Kysely<any>): Promise<void> {
+  await db.schema.withSchema('app')
+    .dropView('gene_materialized')
+    .materialized()
+    .cascade()
+    .execute()
+  await db.schema.withSchema('app')
+    .createTable('gene')
+    .addColumn('symbol', 'varchar', c => c.primaryKey())
+    .addColumn('name', 'varchar')
+    .addColumn('description', 'text')
+    .execute()
+	await db.withSchema('app')
+		.insertInto('gene')
+		.columns(['symbol'])
+		.expression(eb => eb
+			.selectFrom('prediction')
+			.select(sql`gene`.as('symbol'))
+			.distinct()
+		)
+		.execute()
+  await db.schema.withSchema('app')
+    .dropIndex('prediction_gene')
+    .execute()
+  await db.schema.withSchema('app')
+    .createIndex('gene_trgm')
+    .on('gene')
+    .using('gin')
+    .expression(sql`symbol gin_trgm_ops`)
+    .execute()
+  await db.schema.withSchema('app')
+		.alterTable('prediction')
+		.addForeignKeyConstraint('prediction_gene_fk', ['gene'], 'gene', ['symbol'])
+		.execute()
+  }
+
+export async function down(db: Kysely<any>): Promise<void> {
+  await db.schema.withSchema('app')
+		.alterTable('prediction')
+		.dropConstraint('prediction_gene_fk')
+		.execute()
+  db.schema.withSchema('app')
+    .dropTable('gene')
+    .cascade()
+    .execute()
+
+  await db.schema.withSchema('app')
+    .createView('gene_materialized')
+    .materialized()
+    .as(
+      db
+      .selectFrom('prediction')
+      .select('gene')
+      .distinct()
+    )
+    .execute()
+  await db.schema.withSchema('app')
+    .createIndex('gene_trgm')
+    .on('gene_materialized')
+    .using('gin')
+    .expression(sql`gene gin_trgm_ops`)
+    .execute()
+  await db.schema.withSchema('app')
+    .createView('gene')
+    .as(
+      db
+      .selectFrom('gene_materialized')
+      .selectAll()
+    )
+    .execute()
+}

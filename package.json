@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev:next": "next dev --turbopack",
+    "dev:postgres": "docker compose up postgres",
+    "dev": "concurrently npm:dev:*",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -19,6 +21,7 @@
     "@trpc/server": "^11.0.0-rc.808",
     "@trpc/tanstack-react-query": "^11.0.0-rc.808",
     "classnames": "^2.5.1",
+    "immutable": "^5.0.3",
     "kysely": "^0.27.5",
     "kysely-codegen": "^0.17.0",
     "next": "15.1.7",

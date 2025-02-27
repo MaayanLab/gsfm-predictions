@@ -1,7 +1,7 @@
 'use client'
 import { useRouter } from 'next/navigation';
 import React from 'react';
-import GeneInput from './gene/[gene]/GeneInput';
+import GeneInput from '@/components/gene/GeneInput';
 
 export default function Home() {
   const router = useRouter()
