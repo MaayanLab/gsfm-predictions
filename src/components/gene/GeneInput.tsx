@@ -10,7 +10,7 @@ export default function GeneInput({ value, onChange }: { value?: string, onChang
   const validGene = React.useMemo(() => geneAutocomplete.data?.some(suggestion => suggestion.symbol === gene), [geneAutocomplete.data, gene])
   React.useEffect(() => {if (value) setGene(value)}, [value])
   return (
-    <div className={classNames('border join', { 'border-red-400': !validGene && !!gene })}>
+    <div className={classNames('border join', { 'border-red-400': validGene === false })}>
       <div className="join-item">
         <input className="input" type="text" value={gene} onChange={evt => {setGene(evt.currentTarget.value)}} list={geneAutocomplete.data ? "geneAutocomplete" : undefined} />
         <datalist id="geneAutocomplete">{geneAutocomplete.data?.map(suggestion => <option key={suggestion.symbol}>{suggestion.symbol}</option>)}</datalist>
