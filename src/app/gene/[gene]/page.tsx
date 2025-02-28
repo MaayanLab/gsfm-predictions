@@ -19,7 +19,8 @@ export default async function Home({ params }: { params: { gene: string } }) {
         </div>
         <div className="prose max-w-full border p-4">
           <div className="flex flex-row">
-            <img src={undefined} alt="GSFM" />
+            {/* <img src={undefined} alt="GSFM" /> */}
+            <div className="w-24 h-24 border m-4 self-center">&nbsp;</div>
             <div className="flex flex-col">
               <h2>GSFM gene annotation predictions</h2>
               <p>The gene annotations below have been generated using GSFM. GSFM uses is an auto-encoder-like deep machine learning model trained on gene sets from supplemental material of literature. More information about the method can be found <Link href="/about">here</Link>.</p>
