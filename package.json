@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "predev": "docker compose up -d postgres",
     "dev:next": "next dev --turbopack",
-    "dev:postgres": "docker compose up postgres",
     "dev": "concurrently npm:dev:*",
     "build": "next build",
     "start": "next start",
