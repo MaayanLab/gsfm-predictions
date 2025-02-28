@@ -17,6 +17,7 @@ const icons: Record<string, string> = {
   GTEx_Tissues_V8_2023: 'https://data.cfde.cloud/img/GTEx.png',
   IDG_Drug_Targets_2022: 'https://data.cfde.cloud/img/IDG.png',
   MoTrPAC_Endurance_Trained_Rats_2023: 'https://data.cfde.cloud/img/MoTrPAC.png',
+  KOMP2_Mouse_Phenotypes_2022: 'https://data.cfde.cloud/img/KOMP2.svg',
 }
 
 export default function AllPredictions() {
