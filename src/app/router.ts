@@ -7,8 +7,7 @@ export default router({
   gene_info: procedure.input(z.string()).query(async (props) => {
     return await db
       .selectFrom('app.gene')
-      .select('name')
-      .select('description')
+      .selectAll()
       .where('symbol', '=', props.input)
       .executeTakeFirst()
   }),
