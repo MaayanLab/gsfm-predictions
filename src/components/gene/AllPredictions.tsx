@@ -7,7 +7,7 @@ import { useWaypoints, Waypoint } from '@/components/waypoint';
 import trpc from '@/lib/trpc/client'
 import classNames from 'classnames';
 
-const icons: Record<string, string> = {
+const icons: Record<string, string | React.ReactElement> = {
   LINCS_L1000_Chem_Pert_Consensus_Sigs: 'https://cfde-drc.s3.amazonaws.com/assets/img/LINCS-logo.png',
   LINCS_L1000_CRISPR_KO_Consensus_Sigs: 'https://cfde-drc.s3.amazonaws.com/assets/img/LINCS-logo.png',
   LINCS_L1000_Consensus_Median_Signatures: 'https://cfde-drc.s3.amazonaws.com/assets/img/LINCS-logo.png',
@@ -18,6 +18,14 @@ const icons: Record<string, string> = {
   IDG_Drug_Targets_2022: 'https://data.cfde.cloud/img/IDG.png',
   MoTrPAC_Endurance_Trained_Rats_2023: 'https://data.cfde.cloud/img/MoTrPAC.png',
   KOMP2_Mouse_Phenotypes_2022: 'https://data.cfde.cloud/img/KOMP2.svg',
+  ChEA_2022: <img className="p-2 bg-gray-400" src="https://maayanlab.cloud/chea3/assets/images/chea3_logo.png" alt="ChEA 2022" />,
+  KEA_2015: 'https://maayanlab.cloud/kea3/static/KEA3_logo_transparent.png',
+  Human_Phenotype_Ontology: <img className="p-2 bg-gray-400" src="https://hpo.jax.org/assets/hpo-logo-white-no-words.png" alt="Human Phenotype Ontology" />,
+  GWAS_Catalog_2023: 'https://www.ebi.ac.uk/gwas/images/GWAS_Catalog_circle_178x178.png',
+  GO_Biological_Process_2023: 'https://geneontology.org/favicon.ico?1',
+  KEGG_2021_Human: 'https://www.genome.jp/Fig/kegg128.gif',
+  MGI_Mammalian_Phenotype_Level_4_2024: 'https://www.informatics.jax.org/webshare/images/mgi_logo.gif',
+  OMIM_Disease: 'https://www.omim.org/static/omim/icons/OMIM_davinciman.001.png',
 }
 
 export default function AllPredictions() {
@@ -31,7 +39,7 @@ export default function AllPredictions() {
         <Waypoint id={source}>
           <div className="flex-row gap-2 align-center items-center" onClick={evt => {scrollTo(source)}}>
             <div className="w-24 h-24 flex items-center">
-              <img src={icons[source]} alt={source} />
+              {typeof icons[source] === 'string' ? <img src={icons[source]} alt={source} /> : icons[source]}
             </div>
             <h3 className="text-wrap">{source.replaceAll('_', ' ')}</h3>
           </div>
