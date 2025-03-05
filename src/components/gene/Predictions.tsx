@@ -21,7 +21,7 @@ export default function Predictions(props: { source: string, gene: string, count
   })
   return (
     <>
-      <div className="overflow-auto flex-grow">
+      <div className="overflow-auto grow">
         <table className="table table-xs w-full">
           <thead>
             <tr>

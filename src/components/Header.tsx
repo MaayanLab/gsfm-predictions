@@ -37,7 +37,7 @@ export default function Header() {
             </div>
             <ul
               tabIndex={0}
-              className="menu menu-lg dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+              className="menu menu-lg dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow-sm">
               <li><a href="/downloads">Downloads</a></li>
               <li><a href="/about">About</a></li>
             </ul>

@@ -12,7 +12,7 @@ export default async function Home({ params }: { params: Promise<{ gene: string 
   if (!gene_info) notFound()
   return (
     <Waypoints>
-      <main className="container mx-auto flex flex-col gap-4 items-stretch flex-grow">
+      <main className="container mx-auto flex flex-col gap-4 items-stretch grow">
         <div className="prose max-w-full border p-4">
           <h1 className="mb-0">{gene_info.symbol}</h1>
           <h5 className="mt-0">{gene_info.name}</h5>
