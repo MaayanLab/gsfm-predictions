@@ -3,15 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "predev": "docker compose up -d postgres",
+    "predev": "docker compose up -d gsfm-postgres",
     "dev:next": "next dev --turbopack",
     "dev": "concurrently npm:dev:*",
-    "build": "next build",
+    "prebuild": "npm run codegen",
+    "build": "NEXT_PUBLIC_URL=https://gsfm.maayanlab.cloud next build",
     "start": "next start",
     "lint": "next lint",
     "codegen:kysely": "kysely-codegen",
     "codegen:trpc": "ts-node src/lib/trpc/codegen.ts",
-    "codegen": "concurrently npm:codegen:*"
+    "codegen": "concurrently npm:codegen:*",
+    "version": "npm run build && ts-node src/cli/version-compose.ts && docker compose build gsfm-app"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.66.9",

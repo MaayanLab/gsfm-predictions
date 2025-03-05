@@ -1,7 +1,31 @@
+x-kubernetes:
+  name: gsfm
+  namespace: gsfm
+
 services:
-  postgres:
+  gsfm-app:
+    build: .
+    image: maayanlab/gsfm:0.1.0
+    x-kubernetes:
+      imagePullPolicy: IfNotPresent
+      annotations:
+        maayanlab.cloud/ingress: https://gsfm.maayanlab.cloud
+    environment:
+      - DATABASE_URL=${PROD_DATABASE_URL:-postgres://postgres:${POSTGRES_PASSWORD}@gsfm-postgres:5432/postgres}
+      - NEXT_PUBLIC_URL=https://gsfm.maayanlab.cloud
+    ports:
+      - 3000
+  gsfm-postgres:
     image: postgres
     environment:
-    - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
-    - 5432:5432
+      - 5432:5432
+    volumes:
+      - gsfm-postgres:/var/lib/postgres/data
+
+volumes:
+  gsfm-postgres:
+    x-kubernetes:
+      size: 10Gi
+      class: gp2
