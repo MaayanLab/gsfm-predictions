@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { Waypoints } from '@/components/waypoint';
 import AllPredictions from '@/components/gene/AllPredictions';
 import { notFound } from 'next/navigation';
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 export default async function Home({ params }: { params: Promise<{ gene: string }> }) {
   const gene_info = await trpc.gene_info((await params).gene)
@@ -30,7 +32,7 @@ export default async function Home({ params }: { params: Promise<{ gene: string 
             {gene_info.deepdive_gemini_description && <>
               <input type="radio" name="my_tabs_2" role="tab" className="tab whitespace-nowrap" aria-label="AI Overview (DeepDive Gemini)" />
               <div role="tabpanel" className="tab-content bg-base-100 border-base-300 rounded-box px-6 prose prose-xl max-w-none">
-                {gene_info.deepdive_gemini_description}
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{gene_info.deepdive_gemini_description}</ReactMarkdown>
               </div>
             </>}
 
