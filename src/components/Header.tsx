@@ -12,7 +12,7 @@ export default function Header() {
     <header className="my-2 px-2">
       <div className="navbar bg-base-100">
         <div className="flex-1">
-          <Link className="btn btn-ghost text-xl" href="/">Gene Set Foundation Model (GSFM)</Link>
+          <Link className="btn btn-ghost text-4xl text-primary" href="/">Gene Set Foundation Model (GSFM)</Link>
         </div>
         <div className="flex-none">
           {pathname !== '/' && <GeneInput

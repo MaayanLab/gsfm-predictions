@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="footer bg-neutral text-neutral-content p-10">
+    <footer className="footer bg-primary text-primary-content p-10 flex justify-around">
       <nav className="place-self-center">
         <a className="link link-hover" href="mailto:avi.maayan@mssm.edu">Contact Us</a>
         <a className="link link-hover" href="https://github.com/maayanlab/gsfm-predictions" target='_blank'>Source Code</a>

@@ -11,12 +11,12 @@ export default async function Home({ params }: { params: Promise<{ gene: string 
   const gene_info = await trpc.gene_info((await params).gene)
   if (!gene_info) notFound()
   return (
-    <Waypoints>
-      <main className="container mx-auto flex flex-col gap-4 items-stretch grow">
-        <div className="prose max-w-full border p-4">
+    <main className="container mx-auto flex flex-col gap-4 items-stretch grow">
+      <Waypoints>
+        <div className="prose max-w-full border border-b-0 border-secondary rounded-t-lg p-4">
           <h1 className="mb-0">{gene_info.symbol}</h1>
           <h5 className="mt-0">{gene_info.name}</h5>
-          <div role="tablist" className="tabs tabs-lifted tabs-lg">
+          <div role="tablist" className="tabs tabs-lift tabs-lg">
             <input type="radio" name="my_tabs" role="tab" className="tab whitespace-nowrap" aria-label="NCBI Description" disabled={!gene_info.description} defaultChecked />
             <div role="tabpanel" className="tab-content bg-base-100 border-base-300 rounded-box px-6 prose prose-xl max-w-none">
               <p>{gene_info.description ?? ''}</p>
@@ -31,7 +31,7 @@ export default async function Home({ params }: { params: Promise<{ gene: string 
 
             {gene_info.deepdive_gemini_description && <>
               <input type="radio" name="my_tabs" role="tab" className="tab whitespace-nowrap" aria-label="AI Overview (DeepDive Gemini)" />
-              <div role="tabpanel" className="tab-content bg-base-100 border-base-300 rounded-box px-6 prose prose-xl max-w-none">
+              <div role="tabpanel" className="tab-content bg-base-100 border-base-300 rounded-box px-6 prose prose-xl max-w-none prose-p:m-0">
                 <style>{`
                   [aria-describedby="footnote-label"] {
                     margin-left: 2px;
@@ -56,7 +56,7 @@ export default async function Home({ params }: { params: Promise<{ gene: string 
             </>}
           </div>
         </div>
-        <div className="prose max-w-full border p-4">
+        <div className="prose max-w-full border border-t-0 border-secondary rounded-b-lg p-4">
           <div className="flex flex-row">
             {/* <img src={undefined} alt="GSFM" /> */}
             <div className="w-24 h-24 border m-4 self-center">&nbsp;</div>
@@ -67,7 +67,7 @@ export default async function Home({ params }: { params: Promise<{ gene: string 
           </div>
           <AllPredictions />
         </div>
-      </main>
-    </Waypoints>
+      </Waypoints>
+    </main>
   )
 }
