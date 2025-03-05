@@ -43,10 +43,11 @@ export function Waypoints(props: React.PropsWithChildren<{ className?: string }>
     setWaypointRefs(waypoints => waypoints.delete(id))
   }, [])
   React.useEffect(() => {
-    if (!ref.current || waypointRefs.size === 0) return
+    const current_ref = ref.current
+    if (!current_ref || waypointRefs.size === 0) return
     const listener = () => {
-      if (!ref.current) return
-      const scrollTop = ref.current.scrollTop + window.innerHeight/4
+      if (!current_ref) return
+      const scrollTop = current_ref.scrollTop + window.innerHeight/4
       const scrollBottom = scrollTop + window.innerHeight/2
       const head = waypointRefs.get('head')
       const scrollMarginTop = head ? `${head.clientHeight + 2}px` : `0px`
@@ -57,10 +58,10 @@ export function Waypoints(props: React.PropsWithChildren<{ className?: string }>
         return [key, { scrollMarginTop, active }]
       }))
     }
-    ref.current.addEventListener('scroll', listener)
+    current_ref.addEventListener('scroll', listener)
     listener()
     return () => {
-      ref.current?.removeEventListener('scroll', listener)
+      current_ref.removeEventListener('scroll', listener)
     }
   }, [ref, waypointRefs])
   React.useEffect(() => {

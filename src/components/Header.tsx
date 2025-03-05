@@ -1,6 +1,7 @@
 'use client'
 
 import GeneInput from "@/components/gene/GeneInput"
+import Link from "next/link"
 import { useParams, usePathname, useRouter } from "next/navigation"
 
 export default function Header() {
@@ -11,7 +12,7 @@ export default function Header() {
     <header className="my-2 px-2">
       <div className="navbar bg-base-100">
         <div className="flex-1">
-          <a className="btn btn-ghost text-xl" href="/">Gene Set Foundation Model (GSFM)</a>
+          <Link className="btn btn-ghost text-xl" href="/">Gene Set Foundation Model (GSFM)</Link>
         </div>
         <div className="flex-none">
           {pathname !== '/' && <GeneInput
