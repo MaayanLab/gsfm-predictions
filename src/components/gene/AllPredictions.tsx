@@ -35,19 +35,41 @@ export default function AllPredictions() {
   const geneParam = React.useMemo(() => params.gene ?? '', [params])
   const sources = trpc.sources.useQuery(geneParam, { enabled: !!geneParam })
   const { scrollTo } = useWaypoints()
-  return sources.data?.map(({ source, count }) =>
-    <React.Fragment key={`${source}-${geneParam}`}>
-      <div className={classNames("mx-4 p-4 flex flex-col overflow-hidden")}>
-        <Waypoint id={source}>
-          <div className="flex-row gap-2 align-center items-center" onClick={evt => {scrollTo(source)}}>
-            <div className="w-24 h-24 flex items-center">
-              {typeof icons[source] === 'string' ? <img src={icons[source]} alt={source} /> : icons[source]}
-            </div>
-            <h3 className="text-wrap">{source.replaceAll('_', ' ')}</h3>
-          </div>
-          <Predictions source={source} gene={geneParam} count={Number(count)} />
-        </Waypoint>
+  return <>
+    <div className="flex flex-row">
+      <div className="relative">
+        <ul className="sticky top-0 menu p-4">
+          {sources.data?.map(({ source, count }) => 
+            <li key={`${source}-${geneParam}`}>
+              <a href={`#${source}`}>
+                <div className="flex flex-row gap-2 align-center items-center" onClick={evt => {scrollTo(source)}}>
+                  <div className="w-8 h-8 flex items-center">
+                    {typeof icons[source] === 'string' ? <img src={icons[source]} alt={source} /> : icons[source]}
+                  </div>
+                  {source.replaceAll('_', ' ')}
+                </div>
+              </a>
+            </li>
+          )}
+        </ul>
       </div>
-    </React.Fragment>
-  )
+      <div className="grow flex flex-col">
+        {sources.data?.map(({ source, count }) => 
+          <React.Fragment key={`${source}-${geneParam}`}>
+            <div className={classNames("mx-4 p-4 flex flex-col overflow-hidden")}>
+              <Waypoint id={source}>
+                <div className="flex flex-row gap-2 align-center items-center" onClick={evt => {scrollTo(source)}}>
+                  <div className="w-24 h-24 flex items-center">
+                    {typeof icons[source] === 'string' ? <img src={icons[source]} alt={source} /> : icons[source]}
+                  </div>
+                  <h3 className="text-wrap">{source.replaceAll('_', ' ')}</h3>
+                </div>
+                <Predictions source={source} gene={geneParam} count={Number(count)} />
+              </Waypoint>
+            </div>
+          </React.Fragment>
+        )}
+      </div>
+    </div>
+  </>
 }
