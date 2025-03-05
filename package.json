@@ -1,9 +1,8 @@
 {
   "name": "gsfm",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "private": true,
   "scripts": {
-    "predev": "docker compose up -d gsfm-postgres",
     "dev:next": "next dev --turbopack",
     "dev": "concurrently npm:dev:*",
     "prebuild": "npm run codegen",
@@ -13,7 +12,7 @@
     "codegen:kysely": "kysely-codegen",
     "codegen:trpc": "ts-node src/lib/trpc/codegen.ts",
     "codegen": "concurrently npm:codegen:*",
-    "version": "npm run build && ts-node src/cli/version-compose.ts && docker compose build gsfm-app"
+    "version": "npm run build && ts-node src/cli/version-compose.ts && docker compose build gsfm-app && docker compose push gsfm-app"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.66.9",
