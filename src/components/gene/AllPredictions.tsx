@@ -26,6 +26,8 @@ const icons: Record<string, string | React.ReactElement> = {
   KEGG_2021_Human: 'https://www.genome.jp/Fig/kegg128.gif',
   MGI_Mammalian_Phenotype_Level_4_2024: 'https://www.informatics.jax.org/webshare/images/mgi_logo.gif',
   OMIM_Disease: 'https://www.omim.org/static/omim/icons/OMIM_davinciman.001.png',
+  HuBMAP_Azimuth: 'https://s3.amazonaws.com/maayan-kg/cfde-kg/assets/HuBMAP.png',
+  HuBMAP_ASCTpB: 'https://s3.amazonaws.com/maayan-kg/cfde-kg/assets/HuBMAP.png',
 }
 
 export default function AllPredictions() {
