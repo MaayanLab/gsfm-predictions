@@ -27,6 +27,7 @@ export default function Predictions(props: { source: string, gene: string, count
             <tr>
               <th>Term</th>
               <th>Proba</th>
+              <th>Term ROC AUC</th>
             </tr>
           </thead>
           <tbody>
@@ -35,9 +36,10 @@ export default function Predictions(props: { source: string, gene: string, count
               <td>&nbsp;</td>
             </tr>)}
             {predictions.data?.map(prediction =>
-              <tr key={prediction.term} className={classNames("hover:bg-base-200", { 'font-bold': prediction.known })}>
+              <tr key={prediction.term} className={classNames("hover:bg-base-200", { 'font-bold': prediction.known, 'text-red-600': prediction.proba < 0.5 && prediction.known })}>
                 <td className="w-full">{prediction.term}</td>
-                <td>{prediction.proba.toFixed(2)}</td>
+                <td className="text-right">{prediction.proba.toFixed(2)}</td>
+                <td className="text-right">{prediction.roc_auc?.toFixed(2)}</td>
               </tr>
             )}
           </tbody>

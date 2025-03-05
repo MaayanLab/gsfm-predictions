@@ -35,13 +35,15 @@ export default router({
     limit: z.number().transform(limit => Math.min(100, limit)),
   })).query(async (props) => {
     return await db
-      .selectFrom('app.prediction')
-      .select('term')
-      .select('proba')
-      .select('known')
-      .orderBy('proba desc')
-      .where('source', '=', props.input.source)
-      .where('gene', '=', props.input.gene)
+      .selectFrom('app.prediction as pred')
+      .select('pred.term')
+      .select('pred.proba')
+      .select('pred.known')
+      .leftJoin('app.performance as perf', j => j.on(sql`(perf.source, perf.term)`, '=', sql`(pred.source, pred.term)`))
+      .select('perf.roc_auc')
+      .orderBy('pred.proba desc')
+      .where('pred.source', '=', props.input.source)
+      .where('pred.gene', '=', props.input.gene)
       .offset(props.input.offset)
       .limit(props.input.limit)
       .execute()
