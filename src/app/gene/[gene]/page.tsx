@@ -37,7 +37,14 @@ export default async function Home({ params }: { params: Promise<{ gene: string 
                     margin-left: 2px;
                   }
                 `}</style>
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>{gene_info.deepdive_gemini_description}</ReactMarkdown>
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    h2: ({ children, ...props }) =>
+                      props.id === 'footnote-label' ? <h2 {...props}>References</h2>
+                    : <h2 {...props} />
+                  }}
+                >{gene_info.deepdive_gemini_description}</ReactMarkdown>
               </div>
             </>}
 
