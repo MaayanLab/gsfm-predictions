@@ -10,10 +10,11 @@ function range(n: number) {
   return L
 }
 
-export default function Predictions(props: { source: string, gene: string, count: number }) {
+export default function Predictions(props: { model?: string, source: string, gene: string, count: number }) {
   const pageSize = 10
   const [page, setPage] = React.useState(1)
   const predictions = trpc.predictions.useQuery({
+    model: props.model,
     source: props.source,
     gene: props.gene,
     offset: (page-1)*pageSize,

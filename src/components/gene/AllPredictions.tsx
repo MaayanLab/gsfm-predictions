@@ -30,10 +30,10 @@ const icons: Record<string, string | React.ReactElement> = {
   HuBMAP_ASCTpB: 'https://s3.amazonaws.com/maayan-kg/cfde-kg/assets/HuBMAP.png',
 }
 
-export default function AllPredictions() {
+export default function AllPredictions(props: { model?: string }) {
   const params = useParams<{ gene: string }>()
   const geneParam = React.useMemo(() => params.gene ?? '', [params])
-  const sources = trpc.sources.useQuery(geneParam, { enabled: !!geneParam })
+  const sources = trpc.sources.useQuery({ model: props.model, gene: geneParam }, { enabled: !!geneParam })
   const { scrollTo } = useWaypoints()
   return <>
     <div className="flex flex-row">
@@ -64,7 +64,7 @@ export default function AllPredictions() {
                   </div>
                   <h3 className="text-wrap">{source.replaceAll('_', ' ')}</h3>
                 </div>
-                <Predictions source={source} gene={geneParam} count={Number(count)} />
+                <Predictions model={props.model} source={source} gene={geneParam} count={Number(count)} />
               </Waypoint>
             </div>
           </React.Fragment>

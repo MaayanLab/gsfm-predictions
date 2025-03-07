@@ -20,15 +20,27 @@ export default router({
       .limit(10)
       .execute()
   }),
-  sources: procedure.input(z.string()).query(async (props) => {
+  models: procedure.query(async (props) => {
+    return await db
+      .selectFrom('app.prediction')
+      .select('model')
+      .distinct()
+      .execute()
+  }),
+  sources: procedure.input(z.object({
+    model: z.string().default('latest'),
+    gene: z.string(),
+  })).query(async (props) => {
     return await db
       .selectFrom('app.prediction')
       .select(eb => ['source', eb.fn.countAll().as('count')])
       .groupBy('source')
-      .where('gene', '=', props.input)
+      .where('model', '=', props.input.model)
+      .where('gene', '=', props.input.gene)
       .execute()
   }),
   predictions: procedure.input(z.object({
+    model: z.string().default('latest'),
     source: z.string(),
     gene: z.string(),
     offset: z.number().transform(offset => Math.max(0, offset)),
@@ -42,6 +54,7 @@ export default router({
       .leftJoin('app.performance as perf', j => j.on(sql`(perf.source, perf.term)`, '=', sql`(pred.source, pred.term)`))
       .select('perf.roc_auc')
       .orderBy('pred.proba desc')
+      .where('pred.model', '=', props.input.model)
       .where('pred.source', '=', props.input.source)
       .where('pred.gene', '=', props.input.gene)
       .offset(props.input.offset)
