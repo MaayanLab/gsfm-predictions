@@ -50,7 +50,7 @@ export default function Predictions(props: { model?: string, source: string, gen
         {page > 2 && <button className="join-item btn" onClick={evt => {setPage(page => 1)}}>1</button>}
         {page > 3 && <button className="join-item btn btn-disabled">...</button>}
         {page > 1 && <button className="join-item btn" onClick={evt => {setPage(page => page - 1)}}>{page - 1}</button>}
-        <button className="join-item btn btn-active">{page}</button>
+        <button className={classNames("btn btn-active", { 'rounded-lg': props.count <= pageSize, 'join-item': props.count > pageSize })}>{page}</button>
         {page*pageSize < props.count && <button className="join-item btn" onClick={evt => {setPage(page => page + 1)}}>{page + 1}</button>}
         {(page+2)*pageSize < props.count && <button className="join-item btn btn-disabled">...</button>}
         {(page+1)*pageSize < props.count && <button className="join-item btn" onClick={evt => {setPage(page => Math.ceil(props.count/pageSize))}}>{Math.ceil(props.count/pageSize)}</button>}

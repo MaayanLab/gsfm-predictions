@@ -1,17 +1,11 @@
-'use client'
-
+import trpc from '@/lib/trpc/server'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { notFound } from 'next/navigation';
 
-type GeneInfo = {
-  symbol: string;
-  name: string | null;
-  description: string | null;
-  deepdive_gpt4o_description: string | null;
-  deepdive_gemini_description: string | null;
-};
-
-export default function GeneInfo({ gene_info }: { gene_info: GeneInfo }) {
+export default async function GeneInfo(props: { gene: string }) {
+  const gene_info = await trpc.gene_info(props.gene)
+  if (!gene_info) notFound()
   return (
     <div className="prose max-w-full border border-b-0 border-secondary rounded-t-lg p-4">
       <h1 className="mb-0">{gene_info.symbol}</h1>
@@ -32,11 +26,6 @@ export default function GeneInfo({ gene_info }: { gene_info: GeneInfo }) {
         {gene_info.deepdive_gemini_description && <>
           <input type="radio" name="my_tabs" role="tab" className="tab whitespace-nowrap" aria-label="AI Overview (DeepDive Gemini)" />
           <div role="tabpanel" className="tab-content bg-base-100 border-base-300 rounded-box px-6 prose prose-xl max-w-none prose-p:m-0">
-            <style>{`
-              [aria-describedby="footnote-label"] {
-                margin-left: 2px;
-              }
-            `}</style>
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
