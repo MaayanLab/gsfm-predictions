@@ -12,11 +12,11 @@ export default function GeneInput({ value, onChange }: { value?: string, onChang
   return (
     <div className={classNames('border rounded-md join', { 'border-red-400': validGene === false })}>
       <div className="join-item">
-        <input className="input" type="text" value={gene} onChange={evt => {setGene(evt.currentTarget.value)}} list={geneAutocomplete.data ? "geneAutocomplete" : undefined} />
+        <input className="input border-none focus:-outline-offset-0 rounded-md rounded-r-none" type="text" value={gene} onChange={evt => {setGene(evt.currentTarget.value)}} list={geneAutocomplete.data ? "geneAutocomplete" : undefined} />
         <datalist id="geneAutocomplete">{geneAutocomplete.data?.map(suggestion => <option key={suggestion.symbol}>{suggestion.symbol}</option>)}</datalist>
       </div>
       <input
-        className="btn join-item"
+        className="btn join-item btn-primary"
         type="submit"
         disabled={!validGene}
         onClick={evt => {

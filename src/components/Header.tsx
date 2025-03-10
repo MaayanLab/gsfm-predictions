@@ -10,9 +10,9 @@ export default function Header() {
   const params = useParams<{ gene?: string }>()
   return (
     <header className="my-2 px-2">
-      <div className="navbar bg-base-100">
+      <div className="navbar bg-base-100 gap-2">
         <div className="flex-1">
-          <Link className="btn btn-ghost text-4xl text-primary" href="/">Gene Set Foundation Model (GSFM)</Link>
+          <Link className="font-bold text-xl lg:text-3xl xl:text-4xl text-primary" href="/">Gene Set Foundation Model (GSFM)</Link>
         </div>
         <div className="flex-none">
           {pathname !== '/' && <GeneInput

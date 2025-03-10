@@ -11,9 +11,9 @@ export default function Footer() {
       <nav className="place-self-center">
         <a href="https://labs.icahn.mssm.edu/maayanlab/" target='_blank'><img className="w-48" src="https://rummagene.com/images/maayanlab_white.png" alt="ma'ayan lab" /></a>
       </nav>
-      <nav className="place-self-center">
+      {/* <nav className="place-self-center">
         <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target='_blank'><img className="w-48" src="https://rummagene.com/images/cc-by-nc-sa.png" alt="cc-by-4.0" /></a>
-      </nav>
+      </nav> */}
     </footer>
   )
 }
