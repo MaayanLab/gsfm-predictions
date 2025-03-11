@@ -24,7 +24,7 @@ const source_tags: Record<string, string[]> = {
   MGI_Mammalian_Phenotype_Level_4_2024: [],
   OMIM_Disease: [],
   HuBMAP_Azimuth: ['CFDE'],
-  HuBMAP_ASCTpB: ['CFDE'],
+  'HuBMAP_ASCT+B': ['CFDE'],
 }
 
 export default router({
