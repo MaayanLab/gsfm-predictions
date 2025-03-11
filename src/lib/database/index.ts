@@ -13,5 +13,6 @@ const dialect = new PostgresDialect({
 
 export const db = new Kysely<DB>({
   dialect,
+  log: process.env.NODE_ENV === 'development' ? ['query'] : undefined,
 })
 
