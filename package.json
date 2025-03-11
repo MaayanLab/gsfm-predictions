@@ -12,7 +12,7 @@
     "codegen:kysely": "kysely-codegen",
     "codegen:trpc": "ts-node src/lib/trpc/codegen.ts",
     "codegen": "concurrently npm:codegen:*",
-    "version": "npm run build && ts-node src/cli/version-compose.ts && docker compose build gsfm-app && docker compose push gsfm-app"
+    "version": "npm run build && ts-node src/cli/version-compose.ts && git add docker-compose.yaml && docker compose build gsfm-app && docker compose push gsfm-app"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.66.9",
