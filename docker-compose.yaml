@@ -27,5 +27,5 @@ services:
 volumes:
   gsfm-postgres:
     x-kubernetes:
-      size: 10Gi
+      size: 25Gi
       class: gp2
