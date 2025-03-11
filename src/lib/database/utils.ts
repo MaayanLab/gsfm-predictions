@@ -10,7 +10,7 @@ export function select_distinct_loose_indexscan<TB extends keyof DB, CB extends 
     WITH RECURSIVE t AS (
       (SELECT ${sql.raw(column as string)} as "value" FROM ${sql.table(table)} ORDER BY value LIMIT 1)
     UNION ALL
-      SELECT (SELECT ${sql.raw(column as string)} as "value" FROM ${sql.table(table)} WHERE value > t.value ORDER BY value LIMIT 1)
+      SELECT (SELECT ${sql.raw(column as string)} as "value" FROM ${sql.table(table)} WHERE ${sql.raw(column as string)} > t.value ORDER BY value LIMIT 1)
       FROM t
       WHERE t.value IS NOT NULL
     )
