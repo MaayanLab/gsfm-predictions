@@ -1,7 +1,9 @@
 'use client'
 
 import GeneInput from "@/components/gene/GeneInput"
+import Image from "next/image"
 import Link from "next/link"
+import iconSvg from '@/app/icon.svg'
 import { useParams, usePathname, useRouter } from "next/navigation"
 
 export default function Header() {
@@ -12,7 +14,12 @@ export default function Header() {
     <header className="my-2 px-2">
       <div className="navbar bg-base-100 gap-2">
         <div className="flex-1">
-          <Link className="font-bold text-xl lg:text-3xl xl:text-4xl text-primary" href="/">Gene Set Foundation Model (GSFM)</Link>
+          <Link className="flex flex-row justify-start align-middle gap-2" href="/">
+            <Image className="w-6" src={iconSvg} alt="GSFM Logo" unoptimized />
+            <span className="font-bold text-xl lg:text-3xl xl:text-4xl text-primary">
+              Gene Set Foundation Model (GSFM)
+            </span>
+          </Link>
         </div>
         <div className="flex-none">
           {pathname !== '/' && <GeneInput
