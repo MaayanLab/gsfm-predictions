@@ -1,8 +1,11 @@
-import trpc from '@/lib/trpc/server'
+'use client'
+
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import remarkSupersub from 'remark-supersub'
-import { notFound } from 'next/navigation';
+import classNames from 'classnames';
+import useHash from '@/components/usehash';
+import type trpc from '@/lib/trpc/server'
 
 /**
  * Format citations
@@ -39,9 +42,10 @@ function reformat(text: string) {
   return new_text
 }
 
-export default async function GeneInfo(props: { gene: string }) {
-  const gene_info = await trpc.gene_info(props.gene)
-  if (!gene_info) notFound()
+type UnPromise<PT> = PT extends Promise<infer T> ? T : never
+
+export default function GeneInfo({ gene_info }: { gene_info: Exclude<UnPromise<ReturnType<typeof trpc.gene_info>>, undefined> }) {
+  const [hash, setHash] = useHash()
   return (
     <div className="prose max-w-full border border-b-0 border-secondary rounded-t-lg p-4">
       <h1 className="mb-0">{gene_info.symbol}</h1>
@@ -73,9 +77,18 @@ export default async function GeneInfo(props: { gene: string }) {
             <ReactMarkdown
               remarkPlugins={[remarkSupersub, remarkGfm]}
               components={{
-                h2: ({ children, ...props }) =>
-                  props.id === 'footnote-label' ? <h2 {...props}>References</h2>
-                : <h2 {...props} />
+                section: ({ node, children, className, ...props }) =>
+                  'data-footnotes' in props ?
+                  <section className={classNames(className, 'hidden')} {...props}>{children}</section>
+                  : <section className={className} {...props}>{children}</section>,
+                a: ({ node, children, ...props }) =>
+                  'data-footnote-ref' in props ?
+                    hash === `#${props.id}` ?
+                      <span className="tooltip tooltip-primary tooltip-open" data-tip={JSON.stringify(node)}>
+                        <a {...props} href={`#`} onClick={evt => {evt.preventDefault(); setHash(`#`)}}>{children}</a>
+                      </span>
+                      : <a {...props} href={`#${props.id}`} onClick={evt => {evt.preventDefault(); setHash(`#${props.id}`)}}>{children}</a>
+                    : <a {...props}>{children}</a>,
               }}
             >{reformat(gene_info.deepdive_gemini_description)}</ReactMarkdown>
           </div>
