@@ -12,8 +12,9 @@ export default function Home() {
         <p>Search your gene of interest to review GSFM&apos;s predictions across a variety of Common Fund Data Ecosystem (CFDE) gene set libraries & other public resources.</p>
       </div>
       <fieldset className="fieldset">
-        <legend className="fieldset-legend">Gene Symbol</legend>
+        <legend className="fieldset-legend text-lg">Search Gene Symbol</legend>
         <GeneInput
+          large
           onChange={value => {
             router.push(`/gene/${encodeURIComponent(value)}`)
           }}
