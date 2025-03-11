@@ -1,7 +1,43 @@
 import trpc from '@/lib/trpc/server'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import remarkSupersub from 'remark-supersub'
 import { notFound } from 'next/navigation';
+
+/**
+ * Format citations
+ */
+function reformat(text: string) {
+  let i = 0
+  let new_text = ''
+  // multiple citations at a time
+  for (const m1 of text.matchAll(/\[\^(\d+)\]((\s*\[\^\d+\])*)/g)) {
+    const updated = [] as string[]
+
+    let contiguous = [+m1[1]]
+    for (const m2 of m1[2].matchAll(/\[\^(\d+)\]/g)) {
+      const current = +m2[1]
+      if (current === contiguous[contiguous.length-1]+1) {
+        contiguous.push(current)
+      } else if (contiguous.length > 2) {
+        updated.push(`[^${contiguous[0]}-${contiguous[contiguous.length-1]}^](#ref-${contiguous[0]})`)
+        contiguous = [current]
+      } else {
+        updated.push(...contiguous.map(el => `[^${el}^](#ref-${el})`))
+        contiguous = [current]
+      }
+    }
+    if (contiguous.length > 2) {
+      updated.push(`[^${contiguous[0]}-${contiguous[contiguous.length-1]}^](#ref-${contiguous[0]})`)
+    } else  {
+      updated.push(...contiguous.map(el => `[^${el}^](#ref-${el})`))
+    }
+    new_text += text.slice(i, m1.index) + updated.join(' ')
+    i = m1.index + m1[0].length
+  }
+  new_text += text.slice(i)
+  return new_text
+}
 
 export default async function GeneInfo(props: { gene: string }) {
   const gene_info = await trpc.gene_info(props.gene)
@@ -26,14 +62,22 @@ export default async function GeneInfo(props: { gene: string }) {
         {gene_info.deepdive_gemini_description && <>
           <input type="radio" name="my_tabs" role="tab" className="tab whitespace-nowrap" aria-label="AI Overview (DeepDive Gemini)" />
           <div role="tabpanel" className="tab-content bg-base-100 border-base-300 rounded-box px-6 prose prose-xl max-w-none prose-p:m-0">
+            <style>{`
+              a:has(> sup) {
+                text-decoration: none;
+              }
+              a > sup {
+                color: rgb(6, 69, 173);
+              }
+            `}</style>
             <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
+              remarkPlugins={[remarkSupersub, remarkGfm]}
               components={{
                 h2: ({ children, ...props }) =>
                   props.id === 'footnote-label' ? <h2 {...props}>References</h2>
                 : <h2 {...props} />
               }}
-            >{gene_info.deepdive_gemini_description}</ReactMarkdown>
+            >{reformat(gene_info.deepdive_gemini_description)}</ReactMarkdown>
           </div>
         </>}
 
