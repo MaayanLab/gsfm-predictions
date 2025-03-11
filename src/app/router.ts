@@ -2,6 +2,7 @@ import { db } from "@/lib/database"
 import { procedure, router } from "@/lib/trpc";
 import { sql } from "kysely";
 import { z } from 'zod'
+import { select_distinct_loose_indexscan } from "@/lib/database/utils";
 
 const source_tags: Record<string, string[]> = {
   LINCS_L1000_Chem_Pert_Consensus_Sigs: ['CFDE'],
@@ -44,11 +45,10 @@ export default router({
       .execute()
   }),
   models: procedure.query(async (props) => {
-    return await db
-      .selectFrom('app.prediction')
-      .select('model')
-      .distinct()
-      .execute()
+    return (await
+      select_distinct_loose_indexscan('app.prediction', 'model')
+        .execute(db)
+    ).rows
   }),
   sources: procedure.input(z.object({
     model: z.string().default('latest'),
