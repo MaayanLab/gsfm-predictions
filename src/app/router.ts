@@ -80,7 +80,7 @@ export default router({
       .select('pred.term')
       .select('pred.proba')
       .select('pred.known')
-      .leftJoin('app.performance as perf', j => j.on(sql`(perf.model, perf.source, perf.term)`, '=', sql`(perf.model, pred.source, pred.term)`))
+      .leftJoin('app.performance as perf', j => j.on(sql`(perf.model, perf.source, perf.term)`, '=', sql`(pred.model, pred.source, pred.term)`))
       .select('perf.roc_auc')
       .orderBy('pred.proba desc')
       .where('pred.model', '=', props.input.model)
