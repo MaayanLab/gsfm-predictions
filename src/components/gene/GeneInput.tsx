@@ -12,8 +12,17 @@ export default function GeneInput({ value, onChange }: { value?: string, onChang
   return (
     <div className={classNames('border rounded-md join', { 'border-red-400': validGene === false })}>
       <div className="join-item">
-        <input className="input border-none focus:-outline-offset-0 rounded-md rounded-r-none" type="text" value={gene} onChange={evt => {setGene(evt.currentTarget.value)}} list={geneAutocomplete.data ? "geneAutocomplete" : undefined} />
-        <datalist id="geneAutocomplete">{geneAutocomplete.data?.map(suggestion => <option key={suggestion.symbol}>{suggestion.symbol}</option>)}</datalist>
+        <label className="input w-48 border-none rounded-md rounded-r-none focus-within:rounded-md focus-within:rounded-r-none focus-within:-outline-offset-1">
+          <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2.5" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></g></svg>
+          <input
+            type="search"
+            value={gene}
+            placeholder='e.g. ACE2, KLF4'
+            onChange={evt => {setGene(evt.currentTarget.value)}}
+            list={geneAutocomplete.data ? "geneAutocomplete" : undefined}
+          />
+          <datalist id="geneAutocomplete">{geneAutocomplete.data?.map(suggestion => <option key={suggestion.symbol}>{suggestion.symbol}</option>)}</datalist>
+        </label>
       </div>
       <input
         className="btn join-item btn-primary"

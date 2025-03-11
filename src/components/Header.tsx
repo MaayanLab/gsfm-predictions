@@ -21,7 +21,7 @@ export default function Header() {
             </span>
           </Link>
         </div>
-        <div className="flex-none">
+        <div className="flex-none flex flex-row gap-2 place-items-center">
           {pathname !== '/' && <GeneInput
             value={params.gene ?? ''}
             onChange={value => {
@@ -46,7 +46,6 @@ export default function Header() {
               tabIndex={0}
               className="menu menu-lg dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow-sm">
               <li><a href="/downloads">Downloads</a></li>
-              <li><a href="/about">About</a></li>
             </ul>
           </div>
         </div>

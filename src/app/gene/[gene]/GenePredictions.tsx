@@ -27,7 +27,6 @@ export default async function GenePredictions(props: { gene: string }) {
             <p>
               The gene annotations below have been generated using GSFM.
               GSFM is an auto-encoder-like deep machine learning model trained on {descriptions[model] ?? 'gene sets'}.
-              More information about the method can be found <Link href="/about">here</Link>.
             </p>
           </div>
         </div>
