@@ -22,7 +22,7 @@ export default function Home() {
       </fieldset>
       <img className="px-16 mr-24" src="/benchmark.svg" alt="GSFM Benchmark Results" />
       <div className="prose text-justify">
-        <p><strong>Figure 1.</strong> Median area under the receiver operating characteristic curve (AUROC) across all terms in each benchmarking library. Ge20[Rummagene] & Ge20[Rummageo] are the models used for predictions on this site, Fd1024e20[Rummagene|Rummageo] coming soon. PrismExp & Sim are the current state of the art methods used for gene function prediction on different underlying data sources.</p>
+        <p><strong>Figure 1.</strong> Median area under the receiver operating characteristic curve (AUROC) across all terms in each benchmarking library. Fd1024e20[Rummagene|Rummageo] is the model used for predictions on this site. PrismExp & Sim are the current state of the art methods used for gene function prediction on different underlying data sources.</p>
       </div>
     </main>
   )
