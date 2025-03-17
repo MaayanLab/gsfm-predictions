@@ -3,7 +3,7 @@
   "version": "0.2.10",
   "private": true,
   "scripts": {
-    "dev:next": "next dev --turbopack",
+    "dev:next": "next dev",
     "dev": "concurrently npm:dev:*",
     "prebuild": "npm run codegen",
     "build": "NEXT_PUBLIC_URL=https://gsfm.maayanlab.cloud next build",
@@ -15,12 +15,16 @@
     "version": "npm run build && ts-node src/cli/version-compose.ts && git add docker-compose.yaml && docker compose build gsfm-app && docker compose push gsfm-app"
   },
   "dependencies": {
+    "@mdx-js/loader": "^3.1.0",
+    "@mdx-js/react": "^3.1.0",
+    "@next/mdx": "^15.2.2",
     "@tanstack/react-query": "^5.66.9",
     "@trpc/client": "^11.0.0-rc.808",
     "@trpc/next": "^11.0.0-rc.808",
     "@trpc/react-query": "^11.0.0-rc.808",
     "@trpc/server": "^11.0.0-rc.808",
     "@trpc/tanstack-react-query": "^11.0.0-rc.808",
+    "@types/mdx": "^2.0.13",
     "classnames": "^2.5.1",
     "glob": "^11.0.1",
     "immutable": "^5.0.3",
