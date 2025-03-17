@@ -5,7 +5,7 @@ x-kubernetes:
 services:
   gsfm-app:
     build: .
-    image: maayanlab/gsfm:0.2.10
+    image: maayanlab/gsfm:0.2.11
     x-kubernetes:
       imagePullPolicy: IfNotPresent
       annotations:
