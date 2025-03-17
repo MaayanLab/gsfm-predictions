@@ -20,7 +20,9 @@ export default function RootLayout({
         <TrpcProvider>
           <div className="flex flex-col min-h-screen">
             <Header />
-            {children}
+            <main className="container mx-auto flex flex-col place-items-center items-center grow gap-4 my-4">
+              {children}
+            </main>
             <Footer />
           </div>
         </TrpcProvider>

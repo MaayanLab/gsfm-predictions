@@ -11,7 +11,7 @@ export default function AugmentPage() {
   const [geneSet, setGeneSet] = React.useState('')
   const [description, setDescription] = React.useState('')
   return (
-    <main className="container mx-auto flex flex-col place-items-center items-center grow gap-4 my-4">
+    <>
       <div className="prose text-justify">
         <p>Trained on millions of gene sets automatically extracted from literature and raw RNA-seq data, GSFM learns to recover held-out genes from gene sets. The resulting model exhibits state of the art performance on gene function prediction.</p>
         <p>Submit your set of known genes and get predictions for missing genes in the set.</p>
@@ -33,6 +33,6 @@ export default function AugmentPage() {
         <button className="btn" onClick={evt => {setGeneSet(example.gene_set); setDescription(example.description)}}>Example</button>
         <button className="btn btn-primary" disabled>Submit</button>
       </fieldset>
-    </main>
+    </>
   )
 }
