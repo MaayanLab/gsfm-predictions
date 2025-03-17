@@ -37,6 +37,7 @@ export default function Header() {
         <Link className={classNames("text-primary font-bold", { 'border-b-2': pathname === '/' || pathname.startsWith('/gene/') })} href="/">SEARCH</Link>
         <Link className={classNames("text-primary font-bold", { 'border-b-2': pathname === '/augment' })} href="/augment">AUGMENT</Link>
         <Link className={classNames("text-primary font-bold", { 'border-b-2': pathname === '/downloads' })} href="/downloads">DOWNLOADS</Link>
+        <Link className={classNames("text-primary font-bold", { 'border-b-2': pathname === '/about' })} href="/about">ABOUT</Link>
       </div>
     </header>
   )
