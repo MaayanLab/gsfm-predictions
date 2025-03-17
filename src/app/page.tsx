@@ -6,7 +6,7 @@ import GeneInput from '@/components/gene/GeneInput';
 export default function Home() {
   const router = useRouter()
   return (
-    <main className="container mx-auto flex flex-col place-items-center items-center grow gap-4 my-4">
+    <>
       <div className="prose text-justify">
         <p>Trained on millions of gene sets automatically extracted from literature and raw RNA-seq data, GSFM learns to recover held-out genes from gene sets. The resulting model exhibits state of the art performance on gene function prediction.</p>
         <p>Search your gene of interest to review GSFM&apos;s predictions across a variety of Common Fund Data Ecosystem (CFDE) gene set libraries & other public resources.</p>
@@ -24,6 +24,6 @@ export default function Home() {
       <div className="prose text-justify">
         <p><strong>Figure 1.</strong> Median area under the receiver operating characteristic curve (AUROC) across all terms in each benchmarking library. Rummagene+Rummageo F-type GSFM is the model used for predictions on this site. PrismExp & Gene-Gene Similarity are the current state of the art methods used for gene function prediction on different underlying data sources.</p>
       </div>
-    </main>
+    </>
   )
 }
