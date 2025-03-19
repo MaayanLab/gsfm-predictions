@@ -1,10 +1,14 @@
 @import 'tailwindcss';
 
 @plugin "@tailwindcss/typography";
-@plugin "daisyui";
+@plugin "daisyui" {
+  themes: false;
+};
+
 @plugin "daisyui/theme" {
   name: "gsfm";
   default: true;
+  prefersdark: true;
   color-scheme: "light";
   --color-base-100: oklch(100% 0 0);
   --color-base-200: oklch(93% 0 0);
