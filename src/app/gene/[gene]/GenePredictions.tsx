@@ -31,7 +31,7 @@ export default async function GenePredictions(props: { gene: string }) {
             : null}
           </div>
           <div className="flex flex-col">
-            <h2>GSFM gene annotation predictions ({model})</h2>
+            <h2>GSFM gene annotation predictions{models.length > 1 && <>&nbsp;({model})</>}</h2>
             <p>
               The gene annotations below have been generated using GSFM.
               GSFM is an auto-encoder-like deep machine learning model trained on {descriptions[model] ?? 'gene sets'}.
