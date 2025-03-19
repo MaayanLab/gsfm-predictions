@@ -53,7 +53,7 @@ export default function AllPredictions(props: { model?: string }) {
           )}
         </ul>
       </div>
-      <div className="grow flex flex-col">
+      <div className="grow grid grid-cols-1 2xl:grid-cols-2">
         {sources.data?.map(({ source, count }) => 
           <React.Fragment key={`${source}-${geneParam}`}>
             <div className={classNames("mx-4 p-4 flex flex-col overflow-hidden")}>
