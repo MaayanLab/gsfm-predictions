@@ -35,7 +35,7 @@ export default function Header() {
       </div>
       <div className="flex flex-row flex-wrap gap-8">
         <Link className={classNames("text-primary font-bold", { 'border-b-2': pathname === '/' || pathname.startsWith('/gene/') })} href="/">SEARCH</Link>
-        <Link className={classNames("text-primary font-bold", { 'border-b-2': pathname === '/augment' })} href="/augment">AUGMENT</Link>
+        <Link className={classNames("text-secondary font-bold pointer-events-none", { 'border-b-2': pathname === '/augment' })} href="/augment" aria-disabled >AUGMENT</Link>
         <Link className={classNames("text-primary font-bold", { 'border-b-2': pathname === '/downloads' })} href="/downloads">DOWNLOADS</Link>
         <Link className={classNames("text-primary font-bold", { 'border-b-2': pathname === '/about' })} href="/about">ABOUT</Link>
       </div>
