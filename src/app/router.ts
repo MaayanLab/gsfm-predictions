@@ -4,27 +4,27 @@ import { sql } from "kysely";
 import { z } from 'zod'
 import { select_distinct_loose_indexscan } from "@/lib/database/utils";
 
-const source_tags: Record<string, string[]> = {
-  LINCS_L1000_Chem_Pert_Consensus_Sigs: ['CFDE'],
-  LINCS_L1000_CRISPR_KO_Consensus_Sigs: ['CFDE'],
-  LINCS_L1000_Consensus_Median_Signatures: ['CFDE'],
-  ARCHS4_IDG_Coexp: ['CFDE'],
-  GlyGen_Glycosylated_Proteins_2022: ['CFDE'],
-  GTEx_Aging_Signatures_2021: ['CFDE'],
-  GTEx_Tissues_V8_2023: ['CFDE'],
-  IDG_Drug_Targets_2022: ['CFDE'],
-  MoTrPAC_Endurance_Trained_Rats_2023: ['CFDE'],
-  KOMP2_Mouse_Phenotypes_2022: ['CFDE'],
-  ChEA_2022: [],
-  KEA_2015: [],
-  Human_Phenotype_Ontology: [],
-  GWAS_Catalog_2023: [],
-  GO_Biological_Process_2023: [],
-  KEGG_2021_Human: [],
-  MGI_Mammalian_Phenotype_Level_4_2024: [],
-  OMIM_Disease: [],
-  HuBMAP_Azimuth: ['CFDE'],
-  'HuBMAP_ASCT+B': ['CFDE'],
+const source_pagerank: Record<string, number> = {
+  LINCS_L1000_Chem_Pert_Consensus_Sigs: 0,
+  LINCS_L1000_CRISPR_KO_Consensus_Sigs: 0,
+  LINCS_L1000_Consensus_Median_Signatures: 0,
+  ARCHS4_IDG_Coexp: 0,
+  GlyGen_Glycosylated_Proteins_2022: 0,
+  GTEx_Aging_Signatures_2021: 0,
+  GTEx_Tissues_V8_2023: 0,
+  IDG_Drug_Targets_2022: 0,
+  MoTrPAC_Endurance_Trained_Rats_2023: 1,
+  KOMP2_Mouse_Phenotypes_2022: 3,
+  ChEA_2022: 19,
+  KEA_2015: 16,
+  Human_Phenotype_Ontology: 17,
+  GWAS_Catalog_2023: 17,
+  GO_Biological_Process_2023: 18,
+  KEGG_2021_Human: 15,
+  MGI_Mammalian_Phenotype_Level_4_2024: 14,
+  OMIM_Disease: 13,
+  HuBMAP_Azimuth: 12,
+  'HuBMAP_ASCT+B': 12,
 }
 
 export default router({
@@ -61,9 +61,9 @@ export default router({
       .where('model', '=', props.input.model)
       .where('gene', '=', props.input.gene)
       .execute()
-    ).map(({ source, count }) => ({ source, count, tags: source_tags[source] ?? [] }))
+    ).map(({ source, count }) => ({ source, count, pagerank: source_pagerank[source] ?? 0 }))
     sources.sort((a, b) =>
-      (b.tags.length - a.tags.length)
+      (b.pagerank - a.pagerank)
       || (Number(b.count) - Number(a.count))
     )
     return sources
