@@ -6,6 +6,7 @@ services:
   gsfm-app:
     build: .
     image: maayanlab/gsfm:0.2.13
+    platform: linux/amd64
     x-kubernetes:
       imagePullPolicy: IfNotPresent
       annotations:
