@@ -15,11 +15,11 @@ export default function Footer() {
         <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target='_blank'><img className="w-48" src="https://rummagene.com/images/cc-by-nc-sa.png" alt="cc-by-4.0" /></a>
       </nav> */}
       <nav className="place-self-center">
-        <a className="flex flex-row items-center gap-2" href="https://info.cfde.cloud" target="_blank">
-          <div className="bg-white rounded-full p-2 w-24">
-            <img style={{ transform: 'translate(-5px, 0)' }} src="https://info.cfde.cloud/img/favicon.png" alt="CFDE DRC" />
+        <a className="flex flex-row items-center gap-4" href="https://info.cfde.cloud" target="_blank">
+          <div className="bg-white rounded-full p-1 w-12">
+            <img style={{ transform: 'translate(-2px, 0)' }} src="https://info.cfde.cloud/img/favicon.png" alt="CFDE DRC" />
           </div>
-          <span className="prose text-4xl text-white text-center">CFDE<br />DRC</span>
+          <span className="prose text-lg text-white text-center">CFDE WORKBENCH</span>
         </a>
       </nav>
     </footer>
