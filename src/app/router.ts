@@ -77,9 +77,9 @@ export default router({
   })).query(async (props) => {
     return await db
       .selectFrom('app.prediction as pred')
-      .selectAll('pred')
       .leftJoin('app.performance as perf', j => j.onRef('perf.model', '=', 'pred.model').onRef('perf.source', '=', 'pred.source').onRef('perf.term', '=', 'pred.term'))
       .selectAll('perf')
+      .selectAll('pred')
       .orderBy(['pred.proba desc', 'pred.zscore desc'])
       .where('pred.model', '=', props.input.model)
       .where('pred.source', '=', props.input.source)
