@@ -77,11 +77,9 @@ export default router({
   })).query(async (props) => {
     return await db
       .selectFrom('app.prediction as pred')
-      .select('pred.term')
-      .select('pred.proba')
-      .select('pred.known')
-      .leftJoin('app.performance as perf', j => j.on(sql`(perf.model, perf.source, perf.term)`, '=', sql`(pred.model, pred.source, pred.term)`))
-      .select('perf.roc_auc')
+      .selectAll('pred')
+      .leftJoin('app.performance as perf', j => j.onRef('perf.model', '=', 'pred.model').onRef('perf.source', '=', 'pred.source').onRef('perf.term', '=', 'pred.term'))
+      .selectAll('perf')
       .orderBy('pred.proba desc')
       .where('pred.model', '=', props.input.model)
       .where('pred.source', '=', props.input.source)

@@ -56,7 +56,7 @@ export default function AllPredictions(props: { model?: string }) {
       <div className="grow grid grid-cols-1 2xl:grid-cols-2">
         {sources.data?.map(({ source, count }) => 
           <React.Fragment key={`${source}-${geneParam}`}>
-            <div className={classNames("mx-4 p-4 flex flex-col overflow-hidden")}>
+            <div className={classNames("mx-4 p-4 flex flex-col")}>
               <Waypoint id={`${props.model}-${source}`}>
                 <div className="flex flex-row gap-2 align-center items-center" onClick={evt => {scrollTo(source)}}>
                   <div className="w-24 h-24 flex items-center">

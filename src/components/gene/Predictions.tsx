@@ -22,13 +22,25 @@ export default function Predictions(props: { model?: string, source: string, gen
   })
   return (
     <>
-      <div className="overflow-auto grow">
+      <div className="grow">
         <table className="table table-xs w-full">
           <thead>
             <tr>
-              <th>Term</th>
-              <th>Proba</th>
-              <th>Term ROC AUC</th>
+              <th><div className="tooltip" data-tip="Gene set description">
+                Term
+              </div></th>
+              <th><div className="tooltip" data-tip="Model assigned probability">
+                Proba
+              </div></th>
+              <th><div className="tooltip" data-tip="Model confidence in this gene compared to other genes for this term">
+                ZScore
+              </div></th>
+              <th><div className="tooltip" data-tip="Performance on recovering random slices of this gene set">
+                Term AUROC
+              </div></th>
+              <th><div className="tooltip" data-tip="Genes with this term ranked in the top 10 predictions / Genes with this term predicted">
+                Uniqueness
+              </div></th>
             </tr>
           </thead>
           <tbody>
@@ -38,9 +50,11 @@ export default function Predictions(props: { model?: string, source: string, gen
             </tr>)}
             {predictions.data?.map(prediction =>
               <tr key={prediction.term} className={classNames("hover:bg-base-200", { 'font-bold': prediction.known, 'text-red-600': prediction.proba < 0.5 && prediction.known })}>
-                <td className="w-full">{prediction.term}</td>
+                <td className="w-full">{prediction.known ? '*' : ' '}{prediction.term}</td>
                 <td className="text-right">{prediction.proba.toFixed(2)}</td>
+                <td className="text-right">{prediction.zscore.toFixed(2)}</td>
                 <td className="text-right">{prediction.roc_auc?.toFixed(2)}</td>
+                <td className="text-right whitespace-nowrap">{prediction.genes_with_term_in_top_10 && prediction.genes_with_term_predicted && <>{prediction.genes_with_term_in_top_10} / {prediction.genes_with_term_predicted}</>}</td>
               </tr>
             )}
           </tbody>
