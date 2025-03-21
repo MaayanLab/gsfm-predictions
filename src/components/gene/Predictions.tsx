@@ -52,7 +52,7 @@ export default function Predictions(props: { model?: string, source: string, gen
               <tr key={prediction.term} className={classNames("hover:bg-base-200", { 'font-bold': prediction.known, 'text-red-600': prediction.proba < 0.5 && prediction.known })}>
                 <td className="w-full">{prediction.known ? '*' : ' '}{prediction.term}</td>
                 <td className="text-right">{prediction.proba.toFixed(2)}</td>
-                <td className="text-right">{prediction.zscore.toFixed(2)}</td>
+                <td className="text-right">{prediction.zscore?.toFixed(2)}</td>
                 <td className="text-right">{prediction.roc_auc?.toFixed(2)}</td>
                 <td className="text-right whitespace-nowrap">{prediction.genes_with_term_in_top_10 && prediction.genes_with_term_predicted && <>{prediction.genes_with_term_in_top_10} / {prediction.genes_with_term_predicted}</>}</td>
               </tr>
