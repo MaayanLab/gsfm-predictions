@@ -7,6 +7,7 @@ const dialect = new PostgresDialect({
   pool: new Pool({
     connectionString: process.env.DATABASE_URL,
     max: 10,
+    statement_timeout: 30000,
   }),
   cursor: Cursor,
 })
