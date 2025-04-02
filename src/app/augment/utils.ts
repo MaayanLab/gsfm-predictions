@@ -10,7 +10,7 @@ export async function inferencGSFM(gene_set: string[]): Promise<{ predictions: a
   const geneSetTensor = await loadGSFMGeneSet(gene_set, geneVocab)
   const [logits, inferenceTime] = await runGSFMModel(geneSetTensor);
   const logitsMapped = logits.map((logit, i) => [geneVocab.index_to_token[i], logit] as const)
-  logitsMapped.sort(([_a, aLogit], [_b, bLogit]) => aLogit - bLogit)
+  logitsMapped.sort(([_a, aLogit], [_b, bLogit]) => bLogit - aLogit)
   const predictionsMappedSorted = logitsMapped.map(([gene, logit]) => [gene, sigmoid(logit)])
   return {
     predictions: Object.fromEntries(predictionsMappedSorted),
@@ -54,8 +54,8 @@ async function runInference(session: ort.InferenceSession, preprocessedData: any
   const output = (await session.run({
     [session.inputNames[0]]: preprocessedData,
   }))[session.outputNames[0]];
-  const outputSoftmax = Array.prototype.slice.call(output.data).map(sigmoid);
+  const outputLogits = Array.prototype.slice.call(output.data);
   const end = new Date();
   const inferenceTime = (end.getTime() - start.getTime())/1000;
-  return [outputSoftmax, inferenceTime];
+  return [outputLogits, inferenceTime];
 }
