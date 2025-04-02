@@ -1,7 +1,7 @@
 'use client'
 
 import React from "react"
-import { inferencGSFM } from "./utils"
+import trpc from '@/lib/trpc/client'
 import classNames from "classnames"
 
 const example = {
@@ -60,26 +60,18 @@ function DataTable<C extends {}>(props: { columns: { [k in keyof C]: React.React
 export default function AugmentPage() {
   const [geneSet, setGeneSet] = React.useState('')
   const [description, setDescription] = React.useState('')
-  const [loading, setLoading] = React.useState(false)
-  const [results, setResults] = React.useState<{ predictions: Record<string, number>, geneSet: Set<string>, inferenceTime: number } | { error: string } | null>(null)
   const geneSetParsed = React.useMemo(() =>
     !geneSet ? [] : geneSet.split(/[\s\r?\n]+/g).filter(gene => !!gene)
   , [geneSet])
-  const submit = React.useCallback((geneSet: typeof geneSetParsed) => {
-    setLoading(() => true)
-    setResults(() => null)
-    inferencGSFM(geneSet)
-      .then(({ predictions, inferenceTime }) => setResults(() => ({ predictions, geneSet: new Set(geneSet), inferenceTime })))
-      .catch((error) => setResults(() => ({ error: error.toString() })))
-      .finally(() => setLoading(() => false))
-  }, [])
+  const predictions = trpc.augment.useMutation()
   const downloadPredictions = React.useCallback(() => {
-    if (!(results && 'predictions' in results)) return
+    predictions.isSuccess
+    if (!predictions.isSuccess) return
     downloadBlob([
       ['Gene', 'Score', 'Known'].join('\t'),
-      ...Object.entries(results.predictions).map(([gene, score]) => [gene, `${score}`, results.geneSet.has(gene) ? 1 : 0].join('\t')),
+      ...Object.entries(predictions.data.predictions).map(([gene, score]) => [gene, `${score}`, predictions.variables.gene_set.includes(gene) ? 1 : 0].join('\t')),
     ].join('\n'), 'predictions.tsv', 'text/tab-separated-values;charset=utf-8')
-  }, [results])
+  }, [predictions])
   return (
     <>
       <div className="prose text-justify">
@@ -103,12 +95,12 @@ export default function AugmentPage() {
             placeholder="Gene set description"
           />
           <button className="btn" onClick={evt => {setGeneSet(example.gene_set); setDescription(example.description)}}>Example</button>
-          <button className="btn btn-primary" onClick={evt => submit(geneSetParsed)} disabled={!(geneSetParsed.length <= 512)}>Submit</button>
-          <button className="btn btn-success" disabled={!(results && 'predictions' in results)} onClick={downloadPredictions}>Download Results</button>
+          <button className="btn btn-primary" onClick={evt => predictions.mutate({ gene_set: geneSetParsed })} disabled={!(geneSetParsed.length <= 512)}>Submit</button>
+          <button className="btn btn-success" disabled={!predictions.isSuccess} onClick={downloadPredictions}>Download Results</button>
         </fieldset>
-        {loading && <>Loading...</>}
-        {results && 'error' in results && <div className="alert alert-error">{results.error}</div>}
-        {results && 'predictions' in results && <div>
+        {predictions.isPending && <>Loading...</>}
+        {predictions.isError && <div className="alert alert-error">{predictions.error.message}</div>}
+        {predictions.isSuccess && <div>
           <fieldset className="fieldset w-80">
           <legend className="fieldset-legend text-lg">Results</legend>
             <DataTable
@@ -117,7 +109,7 @@ export default function AugmentPage() {
                 score: <>Score</>,
                 known: <>Known</>,
               }}
-              data={Object.entries(results.predictions).map(([gene, score]) => ({ gene, score: score.toPrecision(3), known: results.geneSet.has(gene) ? 1 : 0 }))}
+              data={Object.entries(predictions.data.predictions).map(([gene, score]) => ({ gene, score: score.toPrecision(3), known: predictions.variables.gene_set.includes(gene) ? 1 : 0 }))}
             />
           </fieldset>
         </div>}

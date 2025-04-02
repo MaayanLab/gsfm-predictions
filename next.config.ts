@@ -17,7 +17,8 @@ const nextConfig: NextConfig = {
           {
             from: './node_modules/onnxruntime-web/dist/ort-wasm-simd-threaded.wasm',
             to: 'static/chunks/pages',
-          },             {
+          },
+          {
             from: './node_modules/onnxruntime-web/dist/ort-wasm-simd-threaded.mjs',
             to: 'static/chunks/pages',
           },

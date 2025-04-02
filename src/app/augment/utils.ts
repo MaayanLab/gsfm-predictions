@@ -1,6 +1,6 @@
 import singleton from '@/lib/singleton';
 import * as ort from 'onnxruntime-web';
-
+ort.env.wasm.wasmPaths = 'onnxruntime-web/dist/ort-wasm-simd-threaded.wasm'
 export const base = 'https://s3.dev.maayanlab.cloud/gsfm'
 
 const sigmoid = (x: number) => 1 / (1 + Math.exp(-x));
@@ -8,7 +8,7 @@ type AsyncReturnType<T> = T extends (...args: any) => Promise<infer R> ? R : nev
 
 const max_gene_set_size = 512
 
-export async function inferencGSFM(gene_set: string[]): Promise<{ predictions: any, inferenceTime: number }> {
+export async function inferenceGSFM(gene_set: string[]): Promise<{ predictions: Record<string, number>, inferenceTime: number }> {
   const geneVocab = await getGeneVocab()
   const geneSetTensor = await loadGSFMGeneSet(gene_set, geneVocab)
   const [logits, inferenceTime] = await runGSFMModel(geneSetTensor);
@@ -50,7 +50,10 @@ async function runGSFMModel(preprocessedData: any): Promise<[number[], number]> 
   const session = await singleton('gsfmSession', async () =>
     await ort.InferenceSession.create(
       `${base}/gsfm.onnx`,
-      { executionProviders: ['webgl', 'wasm'], graphOptimizationLevel: 'all' }
+      {
+        executionProviders: ['wasm'],
+        graphOptimizationLevel: 'all',
+      }
     )
   );
   var [results, inferenceTime] =  await runInference(session, preprocessedData);
