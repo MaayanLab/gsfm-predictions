@@ -1,6 +1,8 @@
 import singleton from '@/lib/singleton';
 import * as ort from 'onnxruntime-web';
 
+export const base = 'https://s3.dev.maayanlab.cloud/gsfm'
+
 const sigmoid = (x: number) => 1 / (1 + Math.exp(-x));
 type AsyncReturnType<T> = T extends (...args: any) => Promise<infer R> ? R : never
 
@@ -21,7 +23,7 @@ export async function inferencGSFM(gene_set: string[]): Promise<{ predictions: a
 
 async function getGeneVocab() {
   return await singleton('geneVocab', async () => {
-    const index_to_token = (await (await fetch('./_next/static/chunks/pages/vocab.txt')).text()).split(/\r?\n/g)
+    const index_to_token = (await (await fetch(`${base}/vocab.txt`)).text()).split(/\r?\n/g)
     const token_to_index = Object.fromEntries(Object.entries(index_to_token).map(([index, token]) => [token, index]))
     return { index_to_token, token_to_index }
   })
@@ -47,7 +49,7 @@ async function runGSFMModel(preprocessedData: any): Promise<[number[], number]> 
   //https://onnxruntime.ai/docs/api/js/interfaces/InferenceSession.SessionOptions.html#graphOptimizationLevel
   const session = await singleton('gsfmSession', async () =>
     await ort.InferenceSession.create(
-      './_next/static/chunks/pages/gsfm.onnx',
+      `${base}/gsfm.onnx`,
       { executionProviders: ['webgl', 'wasm'], graphOptimizationLevel: 'all' }
     )
   );
