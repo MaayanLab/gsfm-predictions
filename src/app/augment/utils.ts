@@ -1,3 +1,4 @@
+import singleton from '@/lib/singleton';
 import * as ort from 'onnxruntime-web';
 
 const sigmoid = (x: number) => 1 / (1 + Math.exp(-x));
@@ -19,9 +20,11 @@ export async function inferencGSFM(gene_set: string[]): Promise<{ predictions: a
 }
 
 async function getGeneVocab() {
-  const index_to_token = (await (await fetch('./_next/static/chunks/pages/vocab.txt')).text()).split(/\r?\n/g)
-  const token_to_index = Object.fromEntries(Object.entries(index_to_token).map(([index, token]) => [token, index]))
-  return { index_to_token, token_to_index }
+  return await singleton('geneVocab', async () => {
+    const index_to_token = (await (await fetch('./_next/static/chunks/pages/vocab.txt')).text()).split(/\r?\n/g)
+    const token_to_index = Object.fromEntries(Object.entries(index_to_token).map(([index, token]) => [token, index]))
+    return { index_to_token, token_to_index }
+  })
 }
 
 async function loadGSFMGeneSet(gene_set: string[], gene_vocab: AsyncReturnType<typeof getGeneVocab>) {
@@ -42,9 +45,12 @@ async function loadGSFMGeneSet(gene_set: string[], gene_vocab: AsyncReturnType<t
 
 async function runGSFMModel(preprocessedData: any): Promise<[number[], number]> {
   //https://onnxruntime.ai/docs/api/js/interfaces/InferenceSession.SessionOptions.html#graphOptimizationLevel
-  const session = await ort.InferenceSession
-                          .create('./_next/static/chunks/pages/gsfm.onnx',
-                          { executionProviders: ['webgl', 'wasm'], graphOptimizationLevel: 'all' });
+  const session = await singleton('gsfmSession', async () =>
+    await ort.InferenceSession.create(
+      './_next/static/chunks/pages/gsfm.onnx',
+      { executionProviders: ['webgl', 'wasm'], graphOptimizationLevel: 'all' }
+    )
+  );
   var [results, inferenceTime] =  await runInference(session, preprocessedData);
   return [results, inferenceTime];
 }
