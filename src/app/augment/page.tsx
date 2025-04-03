@@ -21,13 +21,13 @@ function downloadBlob(content: string, filename: string, contentType: string) {
   pom.click();
 }
 
-function DataTable<C extends {}>(props: { columns: { [k in keyof C]: React.ReactNode }, data: { [k in keyof C]: C[k] }[] }) {
+function DataTable<C extends object>(props: { columns: { [k in keyof C]: React.ReactNode }, data: { [k in keyof C]: C[k] }[] }) {
   const pageSize = 10
   const totalCount = props.data.length
   const [page, setPage] = React.useState(1)
   const view = React.useMemo(() =>
     props.data.slice((page-1)*pageSize, page*pageSize)
-  , [page])
+  , [props.data, page, pageSize])
   return (
     <div className="flex flex-col place-items-center gap-2">
       <div className="overflow-x-auto">
@@ -65,7 +65,6 @@ export default function AugmentPage() {
   , [geneSet])
   const predictions = trpc.augment.useMutation()
   const downloadPredictions = React.useCallback(() => {
-    predictions.isSuccess
     if (!predictions.isSuccess) return
     downloadBlob([
       ['Gene', 'Score', 'Known'].join('\t'),
