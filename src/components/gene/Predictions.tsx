@@ -30,7 +30,7 @@ export default function Predictions(props: { model?: string, source: string, gen
                 Term
               </div></th>
               <th><div className="tooltip" data-tip="Model assigned probability">
-                Proba
+                Score
               </div></th>
               <th><div className="tooltip" data-tip="Model confidence in this gene compared to other genes for this term">
                 ZScore
