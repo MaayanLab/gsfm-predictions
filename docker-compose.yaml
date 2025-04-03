@@ -16,6 +16,8 @@ services:
       - NEXT_PUBLIC_URL=https://gsfm.maayanlab.cloud
     ports:
       - 3000
+    volumes:
+      - gsfm-app-model:/app/model
   gsfm-postgres:
     image: postgres
     environment:
@@ -26,6 +28,11 @@ services:
       - gsfm-postgres:/var/lib/postgresql/data
 
 volumes:
+  gsfm-app-model:
+    x-kubernetes:
+      size: 1Gi
+      class: gp2
+
   gsfm-postgres:
     x-kubernetes:
       size: 100Gi
