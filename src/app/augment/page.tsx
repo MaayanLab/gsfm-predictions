@@ -94,7 +94,7 @@ export default function AugmentPage() {
             placeholder="Gene set description"
           />
           <button className="btn" onClick={evt => {setGeneSet(example.gene_set); setDescription(example.description)}}>Example</button>
-          <button className="btn btn-primary" onClick={evt => predictions.mutate({ gene_set: geneSetParsed })} disabled={!(geneSetParsed.length <= 512)}>Submit</button>
+          <button className="btn btn-primary" onClick={evt => predictions.mutate({ gene_set: geneSetParsed, description })} disabled={!(geneSetParsed.length <= 512)}>Submit</button>
           <button className="btn btn-success" disabled={!predictions.isSuccess} onClick={downloadPredictions}>Download Results</button>
         </fieldset>
         {predictions.isPending && <>Loading...</>}
