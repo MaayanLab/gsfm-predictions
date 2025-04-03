@@ -12,4 +12,5 @@ EXPOSE 3000
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 VOLUME ["/app/model"]
+ENTRYPOINT ["/bin/sh"]
 CMD ["ensure-model.sh", "node", "server.js"]
