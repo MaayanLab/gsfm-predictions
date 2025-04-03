@@ -77,7 +77,7 @@ export default function AugmentPage() {
       <div className="prose text-justify">
         <p>Trained on millions of gene sets automatically extracted from literature and raw RNA-seq data, GSFM learns to recover held-out genes from gene sets. The resulting model exhibits state of the art performance on gene function prediction.</p>
         <p>Submit your set of known genes and get predictions for missing genes in the set.</p>
-        <p>NOTE: This model runs client side in your own web browser! The maximum gene set size is currently 512 genes.</p>
+        <p>NOTE: The maximum gene set size is currently 512 genes.</p>
       </div>
       <div className="flex flex-col gap-2">
         <fieldset className="fieldset w-80">

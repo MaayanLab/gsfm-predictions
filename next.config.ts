@@ -25,9 +25,15 @@ const nextConfig: NextConfig = {
         ],
       }),
     );
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      "sharp$": false,
+      "onnxruntime-node$": false,
+    }
 
     return config;
-  } 
+  },
+  serverExternalPackages: ['sharp', 'onnxruntime-node'],
 }
 
 const withMDX = createMDX({
