@@ -23,7 +23,7 @@ export default function Predictions(props: { model?: string, source: string, gen
   return (
     <>
       <div className="grow">
-        <table className="table table-xs w-full">
+        <table className="table table-xs md:table-md w-full">
           <thead>
             <tr>
               <th><div className="tooltip" data-tip="Gene set description">
