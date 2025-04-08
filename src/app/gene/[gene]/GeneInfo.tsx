@@ -55,7 +55,6 @@ function reformat(text: string) {
 type UnPromise<PT> = PT extends Promise<infer T> ? T : never
 
 export default function GeneInfo({ gene_info }: { gene_info: Exclude<UnPromise<ReturnType<typeof trpc.gene_info>>, undefined> }) {
-  const [hash, setHash] = useHash()
   return (
     <div className="prose max-w-full border border-b-0 border-secondary rounded-t-lg p-4 flex flex-col gap-4">
       <div className="flex flex-col">
