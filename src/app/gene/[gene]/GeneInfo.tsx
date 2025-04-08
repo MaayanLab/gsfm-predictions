@@ -1,41 +1,51 @@
 'use client'
 
 import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
-import remarkSupersub from 'remark-supersub'
-import classNames from 'classnames';
+import rehypeRaw from "rehype-raw";
 import useHash from '@/components/usehash';
 import type trpc from '@/lib/trpc/server'
 
 /**
- * Format citations
+ * Format citations by:
+ *   - collapsing consecutive citations
+ *   - adding the anchor to footnotes
  */
 function reformat(text: string) {
+  let first_footnote = true
   let i = 0
   let new_text = ''
   // multiple citations at a time
-  for (const m1 of text.matchAll(/\[\^(\d+)\]((\s*\[\^\d+\])*)/g)) {
+  for (const m1 of text.matchAll(/\[\^(\d+)\]((\s*\[\^\d+\])*)(:?)/g)) {
     const updated = [] as string[]
 
-    let contiguous = [+m1[1]]
-    for (const m2 of m1[2].matchAll(/\[\^(\d+)\]/g)) {
-      const current = +m2[1]
-      if (current === contiguous[contiguous.length-1]+1) {
-        contiguous.push(current)
-      } else if (contiguous.length > 2) {
-        updated.push(`[^${contiguous[0]}-${contiguous[contiguous.length-1]}^](#ref-${contiguous[0]})`)
-        contiguous = [current]
-      } else {
-        updated.push(...contiguous.map(el => `[^${el}^](#ref-${el})`))
-        contiguous = [current]
+    if (m1[4] === ':') {
+      if (first_footnote) {
+        updated.push('\n## References\n')
+        first_footnote = false
       }
+      updated.push(`\n<a id="ref-${m1[1]}" class="no-underline"><strong>[${m1[1]}]:</strong></a>\n`)
+      new_text += text.slice(i, m1.index) + updated.join('')
+    } else {
+      let contiguous = [+m1[1]]
+      for (const m2 of m1[2].matchAll(/\[\^(\d+)\]/g)) {
+        const current = +m2[1]
+        if (current === contiguous[contiguous.length-1]+1) {
+          contiguous.push(current)
+        } else if (contiguous.length > 2) {
+          updated.push(`[${contiguous[0]}](#ref-${contiguous[0]})-[${contiguous[contiguous.length-1]}](#ref-${contiguous[contiguous.length-1]})`)
+          contiguous = [current]
+        } else {
+          updated.push(...contiguous.map(el => `[${el}](#ref-${el})`))
+          contiguous = [current]
+        }
+      }
+      if (contiguous.length > 2) {
+        updated.push(`[${contiguous[0]}](#ref-${contiguous[0]})-[${contiguous[contiguous.length-1]}](#ref-${contiguous[contiguous.length-1]})`)
+      } else  {
+        updated.push(...contiguous.map(el => `[${el}](#ref-${el})`))
+      }
+      new_text += text.slice(i, m1.index) + `<sup>${updated.join(',')}</sup>`
     }
-    if (contiguous.length > 2) {
-      updated.push(`[^${contiguous[0]}-${contiguous[contiguous.length-1]}^](#ref-${contiguous[0]})`)
-    } else  {
-      updated.push(...contiguous.map(el => `[^${el}^](#ref-${el})`))
-    }
-    new_text += text.slice(i, m1.index) + updated.join(' ')
     i = m1.index + m1[0].length
   }
   new_text += text.slice(i)
@@ -67,29 +77,13 @@ export default function GeneInfo({ gene_info }: { gene_info: Exclude<UnPromise<R
           <input type="radio" name="my_tabs" role="tab" className="tab whitespace-nowrap" aria-label="AI Overview (DeepDive Gemini)" />
           <div role="tabpanel" className="tab-content bg-base-100 border-base-300 rounded-box px-6 prose prose-xl max-w-none prose-p:m-0">
             <style>{`
-              a:has(> sup) {
+              sup > a {
                 text-decoration: none;
-              }
-              a > sup {
                 color: rgb(6, 69, 173);
               }
             `}</style>
             <ReactMarkdown
-              remarkPlugins={[remarkSupersub, remarkGfm]}
-              components={{
-                section: ({ node, children, className, ...props }) =>
-                  'data-footnotes' in props ?
-                  <section className={classNames(className, 'hidden')} {...props}>{children}</section>
-                  : <section className={className} {...props}>{children}</section>,
-                a: ({ node, children, ...props }) =>
-                  'data-footnote-ref' in props ?
-                    hash === `#${props.id}` ?
-                      <span className="tooltip tooltip-primary tooltip-open" data-tip={JSON.stringify(node)}>
-                        <a {...props} href={`#`} onClick={evt => {evt.preventDefault(); setHash(`#`)}}>{children}</a>
-                      </span>
-                      : <a {...props} href={`#${props.id}`} onClick={evt => {evt.preventDefault(); setHash(`#${props.id}`)}}>{children}</a>
-                    : <a {...props}>{children}</a>,
-              }}
+              rehypePlugins={[rehypeRaw]}
             >{reformat(gene_info.deepdive_gemini_description)}</ReactMarkdown>
           </div>
         </>}
