@@ -2,59 +2,12 @@
 
 import React from "react"
 import trpc from '@/lib/trpc/client'
-import classNames from "classnames"
+import downloadBlob from "@/components/downloadBlob"
+import DataTable from "@/components/DataTable"
 
 const example = {
   gene_set: `TYROBP\nLILRB1\nSLC11A1\nTNFSF18\nFCER1G\nEIF2AK4\nMDK\nSEMA6D\nIFNA6\nIFNK\nIFNB1\nIFNA2\nIFNA14\nIFNA7\nIFNA1\nIFNE\nIFNA4\nIFNA5\nPLXNA1\nITGAL\nICAM1\nF2RL1\nTOX4\nCD74\nIFNA21\nIFNA8\nIFNW1\nIFNA16\nIFNA10\nIFNA17`,
   description: 'T Cell Activation Involved in Immune Response (GO:0002286)',
-}
-
-function downloadBlob(content: string, filename: string, contentType: string) {
-  // Create a blob
-  var blob = new Blob([content], { type: contentType });
-  var url = URL.createObjectURL(blob);
-
-  // Create a link to download it
-  var pom = document.createElement('a');
-  pom.href = url;
-  pom.setAttribute('download', filename);
-  pom.click();
-}
-
-function DataTable<C extends object>(props: { columns: { [k in keyof C]: React.ReactNode }, data: { [k in keyof C]: C[k] }[] }) {
-  const pageSize = 10
-  const totalCount = props.data.length
-  const [page, setPage] = React.useState(1)
-  const view = React.useMemo(() =>
-    props.data.slice((page-1)*pageSize, page*pageSize)
-  , [props.data, page, pageSize])
-  return (
-    <div className="flex flex-col place-items-center gap-2">
-      <div className="overflow-x-auto">
-        <table className="table table-sm">
-          <thead>
-            <tr>
-              {Object.entries<React.ReactNode>(props.columns).map(([column, colRender]) => <th key={column}>{colRender}</th>)}
-            </tr>
-          </thead>
-          <tbody>
-            {view.map((datum, i) => <tr key={i}>
-              {Object.keys(props.columns).map((col, j) => <td key={j}>{datum[col as keyof C] as React.ReactNode}</td>)}
-            </tr>)}
-          </tbody>
-        </table>
-      </div>
-      <div className="place-self-center join items-center justify-center">
-        {page > 2 && <button className="join-item btn" onClick={evt => {setPage(page => 1)}}>1</button>}
-        {page > 3 && <button className="join-item btn btn-disabled">...</button>}
-        {page > 1 && <button className="join-item btn" onClick={evt => {setPage(page => page - 1)}}>{page - 1}</button>}
-        <button className={classNames("btn btn-active", { 'rounded-lg': totalCount <= pageSize, 'join-item': totalCount > pageSize })}>{page}</button>
-        {page*pageSize < totalCount && <button className="join-item btn" onClick={evt => {setPage(page => page + 1)}}>{page + 1}</button>}
-        {(page+2)*pageSize < totalCount && <button className="join-item btn btn-disabled">...</button>}
-        {(page+1)*pageSize < totalCount && <button className="join-item btn" onClick={evt => {setPage(page => Math.ceil(totalCount/pageSize))}}>{Math.ceil(totalCount/pageSize)}</button>}
-      </div>
-    </div>
-  )
 }
 
 export default function AugmentPage() {
