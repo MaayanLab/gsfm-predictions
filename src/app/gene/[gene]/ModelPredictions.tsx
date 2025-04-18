@@ -58,7 +58,7 @@ export default function AllPredictions(props: { model?: string }) {
           <React.Fragment key={`${source}-${geneParam}`}>
             <div className={classNames("mx-4 p-4 flex flex-col")}>
               <Waypoint id={`${props.model}-${source}`}>
-                <div className="flex flex-row gap-2 align-center items-center" onClick={evt => {scrollTo(source)}}>
+                <div className="flex flex-row gap-2 align-center items-center" onClick={evt => {scrollTo(`${props.model}-${source}`)}}>
                   <div className="w-24 h-24 flex items-center">
                     {typeof icons[source] === 'string' ? <img src={icons[source]} alt={source} /> : icons[source]}
                   </div>
