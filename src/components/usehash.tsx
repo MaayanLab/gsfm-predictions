@@ -15,9 +15,9 @@ export default function useHash() {
       window.removeEventListener('hashchange', listener)
     }
   }, [])
-  return [hash, (newhash: string, push: boolean = false) => {
-    if (push) history.pushState(null, '', newhash ? `#${newhash.slice(1)}` : '')
-    else history.replaceState(null, '', newhash ? `#${newhash.slice(1)}` : '')
+  return [hash, (newhash: string, opts?: { push?: boolean } ) => {
+    const historyAugment = opts?.push ? history.pushState : history.replaceState
+    historyAugment(null, '', newhash ? `#${newhash.slice(1)}` : '')
     window.dispatchEvent(new HashChangeEvent('hashchange'))
   }] as const
 }
