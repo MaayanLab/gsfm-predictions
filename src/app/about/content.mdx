@@ -6,3 +6,11 @@ Daniel J. B. Clarke<sup>1</sup>, Giacomo Marino<sup>1</sup>, Avi Ma’ayan<sup>1
 
 ### Abstract
 Foundation models have proven highly effective in several scientific and commercial domains. Trained on massive datasets, foundation models can effectively capture complex patterns within these datasets and convert these patterns into “embeddings” that can be used for a variety of useful applications. Here we created a gene-centric foundation model that was trained using millions of unlabeled gene sets automatically extracted from tables within supplemental materials of published research articles listed on PubMed Central (PMC). Several model architectures and training methodologies were compared to other state-of-the-art gene function prediction methods and models. The models were evaluated based on their ability to predict gene function by holding-out labeled genes from gene sets created from the Gene Ontology Biological Processes (GO-BP), Kyoto Encyclopedia of Genes and Genomes (KEGG), Genome-wide Association Study (GWAS) Catalog, and ChIP-X Enrichment Analysis (ChEA). One of the foundation models that we have developed achieves superior performance in predicting gene function for genes that are members of sets created from both literature-based and data-driven sources. Next, to apply the model for a useful task, we systematically augmented gene sets from a variety of gene set libraries. The gene function predictions and the model is made accessible for download, search, and visualization through an easy-to-use website.
+
+### Results
+
+[![GSFM Benchmark Results](/fig-1.svg)](/fig-1.svg)
+**Figure 1.** Median area under the receiver operating characteristic curve (AUROC) across all terms in each benchmarking library. GSFM Rummagene is the model used for predictions on this site.
+
+[![GSFM Predictions](/fig-2.svg)](/fig-2.svg)
+**Figure 2.** Median area under the receiver operating characteristic curve (AUROC) distributions across all terms in all libraries used for prediction on this site.
