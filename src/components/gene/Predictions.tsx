@@ -35,6 +35,9 @@ export default function Predictions(props: { model?: string, source: string, gen
               <th><div className="tooltip" data-tip="Model confidence in this gene compared to other genes for this term">
                 ZScore
               </div></th>
+              <th><div className="tooltip" data-tip="Is this gene already known to be associated with this term (yes: 1 / no: 0)?">
+                Known
+              </div></th>
               <th><div className="tooltip" data-tip="Performance on recovering random slices of this gene set">
                 Term AUROC
               </div></th>
@@ -49,10 +52,11 @@ export default function Predictions(props: { model?: string, source: string, gen
               <td>&nbsp;</td>
             </tr>)}
             {predictions.data?.map(prediction =>
-              <tr key={prediction.term} className={classNames("hover:bg-base-200", { 'font-bold': prediction.known, 'text-red-600': prediction.proba < 0.5 && prediction.known })}>
-                <td className="w-full">{prediction.known ? '*' : ' '}{prediction.term}</td>
+              <tr key={prediction.term} className={classNames("hover:bg-base-200", { 'bg-blue-100': prediction.known })}>
+                <td className="w-full">{prediction.term}</td>
                 <td className="text-right">{prediction.proba.toFixed(2)}</td>
                 <td className="text-right">{prediction.zscore?.toFixed(2)}</td>
+                <td className="text-right">{prediction.known ? 1 : 0}</td>
                 <td className="text-right">{prediction.roc_auc?.toFixed(2)}</td>
                 <td className="text-right whitespace-nowrap">{prediction.genes_with_term_in_top_10 && prediction.genes_with_term_predicted && <>{prediction.genes_with_term_in_top_10} / {prediction.genes_with_term_predicted}</>}</td>
               </tr>
