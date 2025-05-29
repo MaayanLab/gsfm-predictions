@@ -22,7 +22,7 @@ export default function Predictions(props: { model?: string, source: string, gen
   })
   return (
     <>
-      <div className="grow">
+      <div className="grow overflow-auto">
         <table className="table table-xs md:table-md w-full">
           <thead>
             <tr>

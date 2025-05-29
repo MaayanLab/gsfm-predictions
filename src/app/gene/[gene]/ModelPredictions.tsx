@@ -37,7 +37,7 @@ export default function AllPredictions(props: { model?: string }) {
   const { scrollTo } = useWaypoints()
   return <>
     <div className="flex flex-row">
-      <div className="relative">
+      <div className="hidden lg:block relative">
         <ul className="sticky top-0 menu p-4">
           {sources.data?.map(({ source, count }) => 
             <li key={`${source}-${geneParam}`}>
@@ -46,7 +46,9 @@ export default function AllPredictions(props: { model?: string }) {
                   <div className="w-8 h-8 flex items-center">
                     {typeof icons[source] === 'string' ? <img src={icons[source]} alt={source} /> : icons[source]}
                   </div>
-                  {source.replaceAll('_', ' ')}
+                  <div className="w-24">
+                    {source.replaceAll('_', ' ')}
+                  </div>
                 </div>
               </a>
             </li>
