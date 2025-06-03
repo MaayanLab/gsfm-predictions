@@ -1,4 +1,9 @@
+'use client'
+import { useSearchParams } from "next/navigation"
+
 export default function Footer() {
+  const searchParams = useSearchParams()
+  if (searchParams.get('embed') !== null) return null
   return (
     <footer className="footer bg-primary text-primary-content p-10 flex justify-around">
       <nav className="place-self-center">
