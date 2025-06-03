@@ -4,6 +4,7 @@ import TrpcProvider from '@/lib/trpc/provider'
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import Analytics from "@/components/analytics";
 
 export const metadata: Metadata = {
   title: {
@@ -62,6 +63,7 @@ export default function RootLayout({
             </React.Suspense>
           </div>
         </TrpcProvider>
+        <Analytics />
       </body>
     </html>
   );
