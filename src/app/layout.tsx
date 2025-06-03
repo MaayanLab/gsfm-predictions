@@ -1,3 +1,4 @@
+import React from "react"
 import type { Metadata } from "next";
 import TrpcProvider from '@/lib/trpc/provider'
 import "./globals.css";
@@ -52,11 +53,13 @@ export default function RootLayout({
       <body>
         <TrpcProvider>
           <div className="flex flex-col min-h-screen">
-            <Header />
-            <main className="container mx-auto flex flex-col place-items-center items-center grow gap-4 my-4">
-              {children}
-            </main>
-            <Footer />
+            <React.Suspense fallback={null}>
+              <Header />
+              <main className="container mx-auto flex flex-col place-items-center items-center grow gap-4 my-4">
+                {children}
+              </main>
+              <Footer />
+            </React.Suspense>
           </div>
         </TrpcProvider>
       </body>
