@@ -30,7 +30,7 @@ export default function Footer() {
         </nav>
       </footer>
       <div className="alert bg-secondary prose prose-sm prose-p:m-0 max-w-full rounded-none flex flex-col">
-        <p className="font-bold">Please acknowledge Playbook Workflow Builder in your publications by citing the following reference:</p>
+        <p className="font-bold">Please acknowledge the Gene Set Foundation Model in your publications by citing the following reference:</p>
         <p>Clarke, D. J. B. et al. A Gene Set Foundation Model Pre-Trained on a Massive Collection of Diverse Gene Sets. Preprint on bioRxiv (2025). <a href="https://doi.org/10.1101/2025.05.30.657124" target="_blank">doi:10.1101/2025.05.30.657124</a></p>
       </div>
     </>
