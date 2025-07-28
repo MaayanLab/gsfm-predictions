@@ -79,6 +79,7 @@ export default router({
       z.literal('auroc asc'), z.literal('auroc desc'),
       z.literal('uniqueness asc'), z.literal('uniqueness desc'),
     ]).optional().default('proba desc'),
+    filter: z.string().optional(),
     offset: z.number().transform(offset => Math.max(0, offset)),
     limit: z.number().transform(limit => Math.min(100, limit)),
   })).query(async (props) => {
@@ -114,6 +115,7 @@ export default router({
       .where('pred.model', '=', props.input.model)
       .where('pred.source', '=', props.input.source)
       .where('pred.gene', '=', props.input.gene)
+      .$if(!!props.input.filter, qb => qb.where('pred.term', 'ilike', `%${props.input.filter ?? ''}%`))
       .offset(props.input.offset)
       .limit(props.input.limit)
       .execute()
