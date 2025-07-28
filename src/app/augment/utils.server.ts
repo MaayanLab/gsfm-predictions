@@ -12,7 +12,10 @@ export async function inferenceGSFM(gene_set: string[]): Promise<{ predictions: 
   const geneVocab = await getGeneVocab()
   const geneSetTensor = await loadGSFMGeneSet(gene_set, geneVocab)
   const [logits, inferenceTime] = await runGSFMModel(geneSetTensor);
-  const logitsMapped = logits.map((logit, i) => [geneVocab.index_to_token[i], logit] as const)
+  const logitsMapped = logits
+    .map((logit, i) => [geneVocab.index_to_token[i], logit] as const)
+    // exclude special tokens
+    .filter(([token, logit]) => /^<.+>$/.exec(token) === null)
   logitsMapped.sort(([_a, aLogit], [_b, bLogit]) => bLogit - aLogit)
   const predictionsMappedSorted = logitsMapped.map(([gene, logit]) => [gene, sigmoid(logit)])
   return {
