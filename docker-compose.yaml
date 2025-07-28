@@ -5,28 +5,28 @@ x-kubernetes:
 services:
   gsfm-app:
     build: .
-    image: maayanlab/gsfm:0.7.3
+    image: maayanlab/gsfm:0.8.0
     platform: linux/amd64
     x-kubernetes:
       imagePullPolicy: IfNotPresent
       annotations:
         maayanlab.cloud/ingress: https://gsfm.maayanlab.cloud
     environment:
-      - DATABASE_URL=${PROD_DATABASE_URL:-postgres://postgres:${POSTGRES_PASSWORD}@gsfm-postgres:5432/postgres}
-      - NEXT_PUBLIC_URL=https://gsfm.maayanlab.cloud
-      - NEXT_PUBLIC_GA_MEASUREMENT_ID
+    - DATABASE_URL=${PROD_DATABASE_URL:-postgres://postgres:${POSTGRES_PASSWORD}@gsfm-postgres:5432/postgres}
+    - NEXT_PUBLIC_URL=https://gsfm.maayanlab.cloud
+    - NEXT_PUBLIC_GA_MEASUREMENT_ID
     ports:
-      - 3000
+    - 3000
     volumes:
-      - gsfm-app-model:/app/model
+    - gsfm-app-model:/app/model
   gsfm-postgres:
     image: postgres
     environment:
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
-      - 5432:5432
+    - 5432:5432
     volumes:
-      - gsfm-postgres:/var/lib/postgresql/data
+    - gsfm-postgres:/var/lib/postgresql/data
 
 volumes:
   gsfm-app-model:
