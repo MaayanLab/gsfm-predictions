@@ -72,6 +72,13 @@ export default router({
     model: z.string().default('latest'),
     source: z.string(),
     gene: z.string(),
+    orderBy: z.union([
+      z.literal('proba asc'), z.literal('proba desc'),
+      z.literal('zscore asc'), z.literal('zscore desc'),
+      z.literal('known asc'), z.literal('known desc'),
+      z.literal('auroc asc'), z.literal('auroc desc'),
+      z.literal('uniqueness asc'), z.literal('uniqueness desc'),
+    ]).optional().default('proba desc'),
     offset: z.number().transform(offset => Math.max(0, offset)),
     limit: z.number().transform(limit => Math.min(100, limit)),
   })).query(async (props) => {
@@ -80,7 +87,30 @@ export default router({
       .leftJoin('app.performance as perf', j => j.onRef('perf.model', '=', 'pred.model').onRef('perf.source', '=', 'pred.source').onRef('perf.term', '=', 'pred.term'))
       .selectAll('perf')
       .selectAll('pred')
-      .orderBy(['pred.proba desc', 'pred.zscore desc'])
+      .$call(qb => {
+        if (props.input.orderBy === 'proba asc')
+          return qb.orderBy('pred.proba', 'asc').orderBy('pred.zscore', 'desc')
+        else if (props.input.orderBy === 'proba desc')
+          return qb.orderBy('pred.proba', 'desc').orderBy('pred.zscore', 'desc')
+        else if (props.input.orderBy === 'zscore asc')
+          return qb.orderBy('pred.zscore', 'asc')
+        else if (props.input.orderBy === 'zscore desc')
+          return qb.orderBy('pred.zscore', 'desc')
+        else if (props.input.orderBy === 'known asc')
+          return qb.orderBy('pred.known', 'asc').orderBy('pred.zscore', 'desc')
+        else if (props.input.orderBy === 'known desc')
+          return qb.orderBy('pred.known', 'desc').orderBy('pred.zscore', 'desc')
+        else if (props.input.orderBy === 'auroc asc')
+          return qb.orderBy('perf.roc_auc', 'asc').orderBy('pred.zscore', 'desc')
+        else if (props.input.orderBy === 'auroc desc')
+          return qb.orderBy('perf.roc_auc', 'desc').orderBy('pred.zscore', 'desc')
+        else if (props.input.orderBy === 'uniqueness asc')
+          return qb.orderBy('perf.genes_with_term_predicted', 'asc').orderBy('pred.zscore', 'desc')
+        else if (props.input.orderBy === 'uniqueness desc')
+          return qb.orderBy('perf.genes_with_term_predicted', 'desc').orderBy('pred.zscore', 'desc')
+        else
+          return qb
+      })
       .where('pred.model', '=', props.input.model)
       .where('pred.source', '=', props.input.source)
       .where('pred.gene', '=', props.input.gene)

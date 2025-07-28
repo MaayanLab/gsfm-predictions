@@ -13,10 +13,12 @@ function range(n: number) {
 export default function Predictions(props: { model?: string, source: string, gene: string, count: number }) {
   const pageSize = 10
   const [page, setPage] = React.useState(1)
+  const [orderBy, setOrderBy] = React.useState<'proba desc' | 'proba asc' | 'zscore asc' | 'zscore desc' | 'known asc' | 'known desc' | 'auroc asc' | 'auroc desc' | 'uniqueness asc' | 'uniqueness desc' | undefined>('proba desc')
   const predictions = trpc.predictions.useQuery({
     model: props.model,
     source: props.source,
     gene: props.gene,
+    orderBy: orderBy,
     offset: (page-1)*pageSize,
     limit: pageSize,
   })
@@ -29,20 +31,35 @@ export default function Predictions(props: { model?: string, source: string, gen
               <th><div className="tooltip" data-tip="Gene set description">
                 Term
               </div></th>
-              <th><div className="tooltip" data-tip="Model assigned probability">
+              <th><div className="tooltip cursor-pointer" data-tip="Model assigned probability" onClick={evt => {setOrderBy(orderBy => orderBy === 'proba desc' ? 'proba asc' : 'proba desc')}}>
                 Score
+                {orderBy === 'proba asc' ? <>&uarr;</>
+                  : orderBy === 'proba desc' ? <>&darr;</>
+                  : <span className="invisible">&darr;</span>}
               </div></th>
-              <th><div className="tooltip" data-tip="Model confidence in this gene compared to other genes for this term">
+              <th><div className="tooltip cursor-pointer" data-tip="Model confidence in this gene compared to other genes for this term" onClick={evt => {setOrderBy(orderBy => orderBy === 'zscore desc' ? 'zscore asc' : 'zscore desc')}}>
                 ZScore
+                {orderBy === 'zscore asc' ? <>&uarr;</>
+                  : orderBy === 'zscore desc' ? <>&darr;</>
+                  : <span className="invisible">&darr;</span>}
               </div></th>
-              <th><div className="tooltip" data-tip="Is this gene already known to be associated with this term (yes: 1 / no: 0)?">
+              <th><div className="tooltip cursor-pointer" data-tip="Is this gene already known to be associated with this term (yes: 1 / no: 0)?" onClick={evt => {setOrderBy(orderBy => orderBy === 'known desc' ? 'known asc' : 'known desc')}}>
                 Known
+                {orderBy === 'known asc' ? <>&uarr;</>
+                  : orderBy === 'known desc' ? <>&darr;</>
+                  : <span className="invisible">&darr;</span>}
               </div></th>
-              <th><div className="tooltip" data-tip="Performance on recovering random slices of this gene set">
+              <th><div className="tooltip cursor-pointer" data-tip="Performance on recovering random slices of this gene set" onClick={evt => {setOrderBy(orderBy => orderBy === 'auroc desc' ? 'auroc asc' : 'auroc desc')}}>
                 Term AUROC
+                {orderBy === 'auroc asc' ? <>&uarr;</>
+                  : orderBy === 'auroc desc' ? <>&darr;</>
+                  : <span className="invisible">&darr;</span>}
               </div></th>
-              <th><div className="tooltip" data-tip="Genes with this term ranked in the top 10 predictions / Genes with this term predicted">
+              <th><div className="tooltip cursor-pointer" data-tip="Genes with this term ranked in the top 10 predictions / Genes with this term predicted" onClick={evt => {setOrderBy(orderBy => orderBy === 'uniqueness desc' ? 'uniqueness asc' : 'uniqueness desc')}}>
                 Uniqueness
+                {orderBy === 'uniqueness asc' ? <>&uarr;</>
+                  : orderBy === 'uniqueness desc' ? <>&darr;</>
+                  : <span className="invisible">&darr;</span>}
               </div></th>
             </tr>
           </thead>
