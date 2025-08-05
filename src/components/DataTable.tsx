@@ -22,8 +22,8 @@ export default function DataTable<C extends object>(props: { columns: { [k in ke
     }
     if (orderBy) {
       const [col, direction] = orderBy.split(' ') as [keyof C, 'asc' | 'desc']
-      if (direction === 'asc') view.sort((a, b) => b[col] > a[col] ? -1 : b[col] < a[col] ? 1 : 0)
-      else if (direction === 'desc') view.sort((a, b) => a[col] ? 1 : b[col] < a[col] ? -1 : 0)
+      if (direction === 'asc') view.sort((a, b) => b[col] < a[col] ? 1 : b[col] > a[col] ? -1 : 0)
+      else if (direction === 'desc') view.sort((a, b) => b[col] < a[col] ? -1 : b[col] > a[col] ? 1 : 0)
       else throw new Error(`Invalid direction ${direction}`)
     }
     return view.slice((page-1)*pageSize, page*pageSize)
