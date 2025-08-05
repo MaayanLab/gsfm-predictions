@@ -57,11 +57,16 @@ export default function AugmentPage() {
           <legend className="fieldset-legend text-lg">Results</legend>
             <DataTable
               columns={{
-                gene: <>Gene</>,
-                score: <>Score</>,
-                known: <>Known</>,
+                gene: {th: <>Gene</>, td: (gene: string) => gene},
+                score: {th: <>Score</>, td: (score: number) => score.toPrecision(3)},
+                known: {th: <>Known</>, td: (known: number) => known},
               }}
-              data={Object.entries(predictions.data.predictions).map(([gene, score]) => ({ gene, score: score.toPrecision(3), known: predictions.variables.gene_set.includes(gene) ? 1 : 0 }))}
+              defaultOrderBy={'score desc'}
+              data={Object.entries(predictions.data.predictions).map(([gene, score]) => ({
+                gene,
+                score,
+                known: predictions.variables.gene_set.includes(gene) ? 1 : 0
+              }))}
             />
           </fieldset>
         </div>}
