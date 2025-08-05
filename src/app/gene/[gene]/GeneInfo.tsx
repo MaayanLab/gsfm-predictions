@@ -14,7 +14,7 @@ export default function GeneInfo({ gene_info }: { gene_info: Exclude<UnPromise<R
       if (gene_info.deepdive_gpt4o_description) setSearchParams(sp => sp.set('geneinfo', 'gpt4o'))
       else if (gene_info.deepdive_gemini_description) setSearchParams(sp => sp.set('geneinfo', 'gemini'))
     }
-  }, [gene_info])
+  }, [gene_info, searchParams, setSearchParams])
 
   return (
     <div className="prose max-w-full border border-b-0 border-secondary rounded-t-lg p-4 flex flex-col gap-4">
