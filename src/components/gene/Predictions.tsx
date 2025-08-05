@@ -33,7 +33,7 @@ export default function Predictions(props: { model?: string, source: string, gen
               <th colSpan={6}>
                 <div className="flex flex-row justify-end">
                   <label className="input input-bordered flex items-center gap-2">
-                    <input type="text" className="grow" placeholder="Filter table" value={filter} onChange={evt => {setFilter(() => evt.target.value)}} />
+                    <input type="text" className="grow" placeholder="Filter table" value={filter} onChange={evt => {setFilter(() => evt.target.value); setPage(1)}} />
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 16 16"
@@ -52,31 +52,31 @@ export default function Predictions(props: { model?: string, source: string, gen
               <th><div className="tooltip" data-tip="Gene set description">
                 Term
               </div></th>
-              <th><div className="tooltip cursor-pointer" data-tip="Model assigned probability" onClick={evt => {setOrderBy(orderBy => orderBy === 'proba desc' ? 'proba asc' : 'proba desc')}}>
+              <th><div className="tooltip cursor-pointer" data-tip="Model assigned probability" onClick={evt => {setOrderBy(orderBy => orderBy === 'proba desc' ? 'proba asc' : 'proba desc'); setPage(1)}}>
                 Score
                 {orderBy === 'proba asc' ? <>&uarr;</>
                   : orderBy === 'proba desc' ? <>&darr;</>
                   : <span className="invisible">&darr;</span>}
               </div></th>
-              <th><div className="tooltip cursor-pointer" data-tip="Model confidence in this gene compared to other genes for this term" onClick={evt => {setOrderBy(orderBy => orderBy === 'zscore desc' ? 'zscore asc' : 'zscore desc')}}>
+              <th><div className="tooltip cursor-pointer" data-tip="Model confidence in this gene compared to other genes for this term" onClick={evt => {setOrderBy(orderBy => orderBy === 'zscore desc' ? 'zscore asc' : 'zscore desc'); setPage(1)}}>
                 ZScore
                 {orderBy === 'zscore asc' ? <>&uarr;</>
                   : orderBy === 'zscore desc' ? <>&darr;</>
                   : <span className="invisible">&darr;</span>}
               </div></th>
-              <th><div className="tooltip cursor-pointer" data-tip="Is this gene already known to be associated with this term (yes: 1 / no: 0)?" onClick={evt => {setOrderBy(orderBy => orderBy === 'known desc' ? 'known asc' : 'known desc')}}>
+              <th><div className="tooltip cursor-pointer" data-tip="Is this gene already known to be associated with this term (yes: 1 / no: 0)?" onClick={evt => {setOrderBy(orderBy => orderBy === 'known desc' ? 'known asc' : 'known desc'); setPage(1)}}>
                 Known
                 {orderBy === 'known asc' ? <>&uarr;</>
                   : orderBy === 'known desc' ? <>&darr;</>
                   : <span className="invisible">&darr;</span>}
               </div></th>
-              <th><div className="tooltip cursor-pointer" data-tip="Performance on recovering random slices of this gene set" onClick={evt => {setOrderBy(orderBy => orderBy === 'auroc desc' ? 'auroc asc' : 'auroc desc')}}>
+              <th><div className="tooltip cursor-pointer" data-tip="Performance on recovering random slices of this gene set" onClick={evt => {setOrderBy(orderBy => orderBy === 'auroc desc' ? 'auroc asc' : 'auroc desc'); setPage(1)}}>
                 Term AUROC
                 {orderBy === 'auroc asc' ? <>&uarr;</>
                   : orderBy === 'auroc desc' ? <>&darr;</>
                   : <span className="invisible">&darr;</span>}
               </div></th>
-              <th><div className="tooltip cursor-pointer" data-tip="Genes with this term ranked in the top 10 predictions / Genes with this term predicted" onClick={evt => {setOrderBy(orderBy => orderBy === 'uniqueness desc' ? 'uniqueness asc' : 'uniqueness desc')}}>
+              <th><div className="tooltip cursor-pointer" data-tip="Genes with this term ranked in the top 10 predictions / Genes with this term predicted" onClick={evt => {setOrderBy(orderBy => orderBy === 'uniqueness desc' ? 'uniqueness asc' : 'uniqueness desc'); setPage(1)}}>
                 Uniqueness
                 {orderBy === 'uniqueness asc' ? <>&uarr;</>
                   : orderBy === 'uniqueness desc' ? <>&darr;</>
