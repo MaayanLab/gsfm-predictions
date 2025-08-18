@@ -32,7 +32,7 @@ export default router({
     return await db
       .selectFrom('app.gene')
       .selectAll()
-      .where('symbol', '=', props.input)
+      .where(sql`upper(symbol)`, '=', sql`upper(${props.input})`)
       .executeTakeFirst()
   }),
   gene_autocomplete: procedure.input(z.string()).query(async (props) => {
