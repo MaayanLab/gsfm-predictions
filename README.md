@@ -2,6 +2,8 @@
 
 A website for the gene set foundation model.
 
+For the GSFM model code, see [this repo](https://github.com/maayanlab/gsfm).
+
 ## Development
 This app uses [Next.js](https://nextjs.org/), a framework for jointly developing the server side and client side of a web application using react and server side rendering.
 
