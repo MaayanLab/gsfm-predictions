@@ -1,4 +1,4 @@
-# GSFM
+# GSFM Predictions
 
 A website for the gene set foundation model.
 
