@@ -26,3 +26,12 @@ npm i
 npm run codegen
 npm run dev
 ```
+
+## Ingest
+```bash
+# todo explain how to assemble deepdive descriptions
+#  (you can download what we've prepared from https://gsfm.maayanlab.cloud/downloads)
+# see the gsfm repo for how to generate the site-predictions directory
+python scripts/ingest.py genes --preds ../gsfm/data/site-predictions/
+python scripts/ingest.py predictions --preds ../gsfm/data/site-predictions/
+```
