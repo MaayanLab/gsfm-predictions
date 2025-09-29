@@ -23,6 +23,7 @@ export const source_icons: Record<string, string | React.ReactElement> = {
   OMIM_Disease: 'https://www.omim.org/static/omim/icons/OMIM_davinciman.001.png',
   HuBMAP_Azimuth: 'https://s3.amazonaws.com/maayan-kg/cfde-kg/assets/HuBMAP.png',
   HuBMAP_ASCTpB: 'https://s3.amazonaws.com/maayan-kg/cfde-kg/assets/HuBMAP.png',
+  'HuBMAP_ASCT+B': 'https://s3.amazonaws.com/maayan-kg/cfde-kg/assets/HuBMAP.png',
 }
 
 export const source_rename: Record<string, string> = {
@@ -53,6 +54,7 @@ export const source_pagerank: Record<string, number> = {
 }
 
 export const model_icons = {
+  'rummagene': 'https://rummagene.com/images/rummagene_logo.png',
   'gsfm-rummagene': 'https://rummagene.com/images/rummagene_logo.png',
   'gsfm-rummageo': 'https://rummageo.com/images/rummageo_logo.png',
   'gsfm-rummage': <div className="flex flex-row gap-2">
@@ -62,12 +64,14 @@ export const model_icons = {
 } as Record<string, string | React.ReactNode>
 
 export const model_descriptions = {
+  'rummagene': <>gene sets from supplemental material of literature from <a href="https://rummagene.com" target='_blank'>Rummagene</a></>,
   'gsfm-rummagene': <>gene sets from supplemental material of literature from <a href="https://rummagene.com" target='_blank'>Rummagene</a></>,
   'gsfm-rummageo': <>differentially expressed genes in GEO studies from <a href="https://rummageo.com" target='_blank'>RummaGEO</a></>,
   'gsfm-rummage': <>gene sets from supplemental material of literature from <a href="https://rummagene.com" target='_blank'>Rummagene</a> and differentially expressed genes in GEO studies from <a href="https://rummageo.com" target='_blank'>RummaGEO</a></>,
 } as Record<string, React.ReactNode>
 
 export const model_name = {
+  'rummagene': 'Rummagene GSFM',
   'gsfm-rummagene': 'Rummagene GSFM',
   'gsfm-rummage': 'RummaGEO/Gene GSFM',
   'gsfm-rummageo': 'RummaGEO GSFM',
