@@ -3,12 +3,7 @@
 import React from 'react';
 import trpc from '@/lib/trpc/client'
 import classNames from 'classnames';
-
-function range(n: number) {
-  const L: number[] = []
-  for (let i = 0; i < n; i++) L.push(i)
-  return L
-}
+import range from '@/components/range'
 
 export default function Predictions(props: { model?: string, source: string, gene: string, count: number }) {
   const pageSize = 10
