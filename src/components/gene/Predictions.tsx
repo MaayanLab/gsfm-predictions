@@ -86,7 +86,7 @@ export default function Predictions(props: { model?: string, source: string, gen
             </tr>)}
             {predictions.data?.map(prediction =>
               <tr key={prediction.term} className={classNames("hover:bg-base-200", { 'bg-blue-100': prediction.known })}>
-                <td className="w-full"><a href={`/term/${encodeURIComponent(prediction.source)}/${encodeURIComponent(prediction.term)}`}>{prediction.term}</a></td>
+                <td className="w-full"><a href={`/term/${encodeURIComponent(prediction.source)}/${encodeURIComponent(prediction.term)}${props.model ? `?model=${encodeURIComponent(props.model)}` : ''}`}>{prediction.term}</a></td>
                 <td className="text-right">{prediction.proba.toFixed(2)}</td>
                 <td className="text-right">{prediction.zscore?.toFixed(2)}</td>
                 <td className="text-right">{prediction.known ? 1 : 0}</td>

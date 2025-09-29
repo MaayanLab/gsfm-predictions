@@ -55,7 +55,7 @@ export default function AugmentPage() {
             onChange={evt => {setModel(evt.currentTarget.value)}}
           >
             {models.isLoading && <option key="" value="">Loading...</option>}
-            {models.data && models.data.map(({ model }) => <option key={model} value={model}>{model_name[model]}</option>)}
+            {models.data && models.data.map(({ model }) => <option key={model} value={model}>{model_name[model] ?? model}</option>)}
           </select>
           <button className="btn" onClick={evt => {setGeneSet(example.gene_set); setDescription(example.description)}}>Example</button>
           <button className="btn btn-primary" onClick={evt => predictions.mutate({ model, gene_set: geneSetParsed, description })} disabled={!(geneSetParsed.length <= 512)}>Submit</button>

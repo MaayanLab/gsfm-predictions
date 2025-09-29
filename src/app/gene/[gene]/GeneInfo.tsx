@@ -9,12 +9,15 @@ type UnPromise<PT> = PT extends Promise<infer T> ? T : never
 
 export default function GeneInfo({ gene_info }: { gene_info: Exclude<UnPromise<ReturnType<typeof trpc.gene_info>>, undefined> }) {
   const [searchParams, setSearchParams] = useRWSearchParams()
+  const ncbi_available = React.useMemo(() => !!gene_info.description, [gene_info])
+  const gpt4o_available = React.useMemo(() => gene_info.deepdive_gpt4o_description && JSON.parse(gene_info.deepdive_gpt4o_description), [gene_info])
+  const gemini_available = React.useMemo(() => gene_info.deepdive_gemini_description && JSON.parse(gene_info.deepdive_gemini_description), [gene_info])
   React.useEffect(() => {
     if (searchParams.get('geneinfo') === null && !gene_info.description) {
-      if (gene_info.deepdive_gpt4o_description) setSearchParams(sp => sp.set('geneinfo', 'gpt4o'))
-      else if (gene_info.deepdive_gemini_description) setSearchParams(sp => sp.set('geneinfo', 'gemini'))
+      if (gpt4o_available) setSearchParams(sp => sp.set('geneinfo', 'gpt4o'))
+      else if (gemini_available) setSearchParams(sp => sp.set('geneinfo', 'gemini'))
     }
-  }, [gene_info, searchParams, setSearchParams])
+  }, [gpt4o_available, gemini_available, gene_info, searchParams, setSearchParams])
 
   return (
     <div className="prose max-w-full border border-b-0 border-secondary rounded-t-lg p-4 flex flex-col gap-4">
@@ -23,16 +26,18 @@ export default function GeneInfo({ gene_info }: { gene_info: Exclude<UnPromise<R
         <h5 className="mt-0 text-2xl">{gene_info.name}</h5>
       </div>
       <div role="tablist" className="tabs tabs-lift tabs-xl">
-        <input type="radio" name="geneinfo-tabs" role="tab" className="tab whitespace-nowrap" aria-label="NCBI Description" disabled={!gene_info.description}
-          checked={searchParams.get('geneinfo') === null} onChange={evt => {setSearchParams(sp => { if (evt.currentTarget.checked) { sp.delete('geneinfo') } })}}
-        />
-        <div role="tabpanel" className="tab-content bg-base-100 border-base-300 px-6 prose max-w-none">
-          <p>{gene_info.description ?? ''}</p>
-          <p><i>Sourced from NCBI EUtils.</i></p>
-        </div>
+        {(ncbi_available || gpt4o_available || gemini_available) && <>
+          <input type="radio" name="geneinfo-tabs" role="tab" className="tab whitespace-nowrap" aria-label="NCBI Description" disabled={!gene_info.description}
+            checked={searchParams.get('geneinfo') === null} onChange={evt => {setSearchParams(sp => { if (evt.currentTarget.checked) { sp.delete('geneinfo') } })}}
+          />
+          <div role="tabpanel" className="tab-content bg-base-100 border-base-300 px-6 prose max-w-none">
+            <p>{gene_info.description ?? ''}</p>
+            <p><i>Sourced from NCBI EUtils.</i></p>
+          </div>
+        </>}
 
-        {gene_info.deepdive_gpt4o_description && <>
-          <input type="radio" name="geneinfo-tabs" role="tab" className="tab whitespace-nowrap" aria-label="AI Overview (DeepDive GPT4o)" disabled={!gene_info.deepdive_gpt4o_description}
+        {gpt4o_available && gene_info.deepdive_gpt4o_description && <>
+          <input type="radio" name="geneinfo-tabs" role="tab" className="tab whitespace-nowrap" aria-label="AI Overview (DeepDive GPT4o)" disabled={!gpt4o_available}
           checked={searchParams.get('geneinfo') === 'gpt4o'} onChange={evt => {setSearchParams(sp => { if (evt.currentTarget.checked) { sp.set('geneinfo', 'gpt4o') } })}}
            />
           <div role="tabpanel" className="tab-content bg-base-100 border-base-300 px-6 prose max-w-none">
@@ -41,7 +46,7 @@ export default function GeneInfo({ gene_info }: { gene_info: Exclude<UnPromise<R
           </div>
         </>}
 
-        {gene_info.deepdive_gemini_description && <>
+        {gemini_available && gene_info.deepdive_gemini_description && <>
           <input type="radio" name="geneinfo-tabs" role="tab" className="tab whitespace-nowrap" aria-label="AI Overview (DeepDive Gemini)"
             checked={searchParams.get('geneinfo') === 'gemini'} onChange={evt => {setSearchParams(sp => { if (evt.currentTarget.checked) { sp.set('geneinfo', 'gemini') } })}}
           />
@@ -51,7 +56,7 @@ export default function GeneInfo({ gene_info }: { gene_info: Exclude<UnPromise<R
           </div>
         </>}
 
-        {!gene_info.description && !gene_info.deepdive_gpt4o_description && !gene_info.deepdive_gemini_description && <>
+        {!ncbi_available && !gpt4o_available && !gemini_available && <>
           <input type="radio" name="geneinfo-tabs" role="tab" className="tab whitespace-nowrap" aria-label="Coming Soon" defaultChecked />
           <div role="tabpanel" className="tab-content bg-base-100 border-base-300 px-6 prose prose-xl max-w-none">
             <p>Descriptions for this gene are not yet available but should be coming soon!</p>
