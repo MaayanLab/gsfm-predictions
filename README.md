@@ -27,6 +27,12 @@ npm run codegen
 npm run dev
 ```
 
+## Prepare models for augment feature
+```bash
+# export models from huggingface to onnx for inference from NodeJS
+python scripts/prepare_model.py
+```
+
 ## Ingest
 ```bash
 # todo explain how to assemble deepdive descriptions
