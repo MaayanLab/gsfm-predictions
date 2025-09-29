@@ -4,8 +4,7 @@ import React from 'react'
 import MDT from '@/components/mdt'
 import useRWSearchParams from '@/components/rwsearchparams'
 import type trpc from '@/lib/trpc/server'
-
-type UnPromise<PT> = PT extends Promise<infer T> ? T : never
+import { UnPromise } from '@/components/types'
 
 export default function GeneInfo({ gene_info }: { gene_info: Exclude<UnPromise<ReturnType<typeof trpc.gene_info>>, undefined> }) {
   const [searchParams, setSearchParams] = useRWSearchParams()
