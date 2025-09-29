@@ -66,3 +66,9 @@ export const model_descriptions = {
   'gsfm-rummageo': <>differentially expressed genes in GEO studies from <a href="https://rummageo.com" target='_blank'>RummaGEO</a></>,
   'gsfm-rummage': <>gene sets from supplemental material of literature from <a href="https://rummagene.com" target='_blank'>Rummagene</a> and differentially expressed genes in GEO studies from <a href="https://rummageo.com" target='_blank'>RummaGEO</a></>,
 } as Record<string, React.ReactNode>
+
+export const model_name = {
+  'gsfm-rummagene': 'Rummagene GSFM',
+  'gsfm-rummage': 'RummaGEO/Gene GSFM',
+  'gsfm-rummageo': 'RummaGEO GSFM',
+} as Record<string, string>

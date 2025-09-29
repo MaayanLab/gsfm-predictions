@@ -1,17 +1,17 @@
 import singleton from '@/lib/singleton';
 import * as ort from 'onnxruntime-node';
 import * as fs from 'fs';
-export const base = process.env.MODEL_PATH || '.'
+export const base = process.env.MODEL_PATH || 'model'
 
 const sigmoid = (x: number) => 1 / (1 + Math.exp(-x));
 type AsyncReturnType<T> = T extends (...args: any) => Promise<infer R> ? R : never
 
 const max_gene_set_size = 512
 
-export async function inferenceGSFM(gene_set: string[]): Promise<{ predictions: Record<string, number>, inferenceTime: number }> {
-  const geneVocab = await getGeneVocab()
+export async function inferenceGSFM(model: string, gene_set: string[]): Promise<{ predictions: Record<string, number>, inferenceTime: number }> {
+  const geneVocab = await getGeneVocab(model)
   const geneSetTensor = await loadGSFMGeneSet(gene_set, geneVocab)
-  const [logits, inferenceTime] = await runGSFMModel(geneSetTensor);
+  const [logits, inferenceTime] = await runGSFMModel(model, geneSetTensor);
   const logitsMapped = logits
     .map((logit, i) => [geneVocab.index_to_token[i], logit] as const)
     // exclude special tokens
@@ -24,9 +24,9 @@ export async function inferenceGSFM(gene_set: string[]): Promise<{ predictions: 
   }
 }
 
-async function getGeneVocab() {
-  return await singleton('geneVocab', async () => {
-    const vocab_txt = await new Promise<string>((resolve, reject) => fs.readFile(`${base}/vocab.txt`, (err, data) => {
+async function getGeneVocab(model: string) {
+  return await singleton(`geneVocab[${model}]`, async () => {
+    const vocab_txt = await new Promise<string>((resolve, reject) => fs.readFile(`${base}/${model}/vocab.txt`, (err, data) => {
       if (err) reject(err)
       else resolve(data.toString('utf-8'))
     }))
@@ -52,11 +52,11 @@ async function loadGSFMGeneSet(gene_set: string[], gene_vocab: AsyncReturnType<t
   return new ort.Tensor('int64', gene_token_ids, [1, max_gene_set_size])
 }
 
-async function runGSFMModel(preprocessedData: any): Promise<[number[], number]> {
+async function runGSFMModel(model: string, preprocessedData: any): Promise<[number[], number]> {
   //https://onnxruntime.ai/docs/api/js/interfaces/InferenceSession.SessionOptions.html#graphOptimizationLevel
-  const session = await singleton('gsfmSession', async () =>
+  const session = await singleton(`gsfmSession[${model}]`, async () =>
     await ort.InferenceSession.create(
-      `${base}/gsfm.onnx`,
+      `${base}/${model}/gsfm.onnx`,
       {
         // executionProviders: ['node'],
         graphOptimizationLevel: 'all',

@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 export default router({
   augment: procedure.input(z.object({
+    model: z.string().default('latest'),
     gene_set: z.string().array(),
     description: z.string().optional(),
   })).mutation(async (props) => {
@@ -16,6 +17,6 @@ export default router({
         description: props.input.description,
       })
       .execute()
-    return await inferenceGSFM(props.input.gene_set)
+    return await inferenceGSFM(props.input.model, props.input.gene_set)
   }),
 })

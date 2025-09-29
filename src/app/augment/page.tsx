@@ -4,6 +4,7 @@ import React from "react"
 import trpc from '@/lib/trpc/client'
 import downloadBlob from "@/components/downloadBlob"
 import DataTable from "@/components/DataTable"
+import { model_name } from "@/components/resources"
 
 const example = {
   gene_set: `TYROBP\nLILRB1\nSLC11A1\nTNFSF18\nFCER1G\nEIF2AK4\nMDK\nSEMA6D\nIFNA6\nIFNK\nIFNB1\nIFNA2\nIFNA14\nIFNA7\nIFNA1\nIFNE\nIFNA4\nIFNA5\nPLXNA1\nITGAL\nICAM1\nF2RL1\nTOX4\nCD74\nIFNA21\nIFNA8\nIFNW1\nIFNA16\nIFNA10\nIFNA17`,
@@ -13,6 +14,8 @@ const example = {
 export default function AugmentPage() {
   const [geneSet, setGeneSet] = React.useState('')
   const [description, setDescription] = React.useState('')
+  const [model, setModel] = React.useState('gsfm-rummagene')
+  const models = trpc.models.useQuery()
   const geneSetParsed = React.useMemo(() =>
     !geneSet ? [] : geneSet.split(/[\s\r?\n]+/g).filter(gene => !!gene)
   , [geneSet])
@@ -46,15 +49,23 @@ export default function AugmentPage() {
             onChange={evt => {setDescription(evt.currentTarget.value)}}
             placeholder="Gene set description"
           />
+          <select
+            className="select"
+            value={model}
+            onChange={evt => {setModel(evt.currentTarget.value)}}
+          >
+            {models.isLoading && <option key="" value="">Loading...</option>}
+            {models.data && models.data.map(({ model }) => <option key={model} value={model}>{model_name[model]}</option>)}
+          </select>
           <button className="btn" onClick={evt => {setGeneSet(example.gene_set); setDescription(example.description)}}>Example</button>
-          <button className="btn btn-primary" onClick={evt => predictions.mutate({ gene_set: geneSetParsed, description })} disabled={!(geneSetParsed.length <= 512)}>Submit</button>
+          <button className="btn btn-primary" onClick={evt => predictions.mutate({ model, gene_set: geneSetParsed, description })} disabled={!(geneSetParsed.length <= 512)}>Submit</button>
           <button className="btn btn-success" disabled={!predictions.isSuccess} onClick={downloadPredictions}>Download Results</button>
         </fieldset>
         {predictions.isPending && <>Loading...</>}
         {predictions.isError && <div className="alert alert-error">{predictions.error.message}</div>}
         {predictions.isSuccess && <div>
           <fieldset className="fieldset w-80">
-          <legend className="fieldset-legend text-lg">Results</legend>
+            <legend className="fieldset-legend text-lg">Results</legend>
             <DataTable
               columns={{
                 gene: {th: <>Gene</>, td: (gene: string) => gene},
