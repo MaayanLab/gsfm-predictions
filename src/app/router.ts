@@ -7,11 +7,20 @@ import { source_pagerank } from "@/components/resources";
 
 export default router({
   gene_info: procedure.input(z.string()).query(async (props) => {
-    return await db
-      .selectFrom('app.gene')
-      .selectAll()
-      .where(sql`upper(symbol)`, '=', sql`upper(${props.input})`)
-      .executeTakeFirst()
+    try {
+      return await db
+        .selectFrom('app.gene')
+        .selectAll()
+        .where('symbol', '=', props.input)
+        .executeTakeFirstOrThrow()
+    } catch (e) {
+      // Fall back to case insensitive gene match
+      return await db
+        .selectFrom('app.gene')
+        .selectAll()
+        .where(sql`upper(symbol)`, '=', sql`upper(${props.input})`)
+        .executeTakeFirst()
+    }
   }),
   gene_autocomplete: procedure.input(z.string()).query(async (props) => {
     return await db
