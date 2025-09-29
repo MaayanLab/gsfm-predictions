@@ -2,6 +2,7 @@
 import Predictions from "@/components/gene/Predictions";
 import { model_descriptions, model_name, source_icons, source_rename } from '@/components/resources';
 import useRWSearchParams from '@/components/rwsearchparams';
+import { Tab, TabContainer, TabContent } from "@/components/tabs";
 import type { UnPromise } from '@/components/types';
 import { useWaypoints, Waypoint } from '@/components/waypoint';
 import trpc from '@/lib/trpc/client';
@@ -12,9 +13,9 @@ import React from 'react';
 export default function GenePredictions(props: { gene: string, models: string[] }) {
   return (
     <div className="prose max-w-full border border-t-0 border-secondary rounded-b-lg p-4 flex flex-col gap-4">
-      <div role="tablist" className="tabs tabs-lift tabs-xl">
+      <TabContainer className="tabs-lift tabs-xl" name="model-gene-tabs">
         {props.models.map(model => <ModelTab key={model} model={model} gene={props.gene} />)}
-      </div>
+      </TabContainer>
     </div>
   )
 }
@@ -23,10 +24,13 @@ function ModelTab(props: { model: string, gene: string }) {
   const [searchParams, setSearchParams] = useRWSearchParams()
   const sources = trpc.sources.useQuery({ model: props.model, gene: props.gene })
   return !!sources.data?.length && <>
-    <input type="radio" name="model-tabs" role="tab" className="tab whitespace-nowrap" aria-label={model_name[props.model] ?? props.model}
-      checked={searchParams.get('model') === props.model} onChange={evt => {setSearchParams(sp => { if (evt.currentTarget.checked) { sp.set('model', props.model) } })}}
+    <Tab
+      id={props.model}
+      label={model_name[props.model] ?? props.model}
+      checked={searchParams.get('model') === props.model}
+      onChange={() => {setSearchParams(sp => { sp.set('model', props.model) })}}
     />
-    <div role="tabpanel" className="tab-content bg-base-100 border-base-300 prose max-w-none">
+    <TabContent className="bg-base-100 border-base-300 prose max-w-none">
       <div className="prose max-w-full p-4 px-6">
         <h2 className="text-4xl mb-2">{model_name[props.model] ?? props.model} gene annotation predictions</h2>
         <p>
@@ -34,7 +38,7 @@ function ModelTab(props: { model: string, gene: string }) {
         </p>
         {searchParams.get('model') === props.model && <ModelPredictions model={props.model} gene={props.gene} sources={sources.data} />}
       </div>
-    </div>
+    </TabContent>
   </>
 }
 
