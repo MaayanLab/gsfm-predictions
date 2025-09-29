@@ -25,7 +25,7 @@ export default function AugmentPage() {
     downloadBlob([
       ['Gene', 'Score', 'Known'].join('\t'),
       ...Object.entries(predictions.data.predictions).map(([gene, score]) => [gene, `${score}`, predictions.variables.gene_set.includes(gene) ? 1 : 0].join('\t')),
-    ].join('\n'), 'predictions.tsv', 'text/tab-separated-values;charset=utf-8')
+    ].join('\n'), `${model}-predictions.tsv`, 'text/tab-separated-values;charset=utf-8')
   }, [predictions])
   return (
     <>
@@ -34,11 +34,11 @@ export default function AugmentPage() {
         <p>Submit your set of known genes and get predictions for missing genes in the set.</p>
         <p>NOTE: The maximum gene set size is currently 512 genes.</p>
       </div>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-row flex-wrap gap-4 justify-center">
         <fieldset className="fieldset w-80">
           <legend className="fieldset-legend text-lg">Augment Gene Set</legend>
           <textarea
-            className="input h-48 whitespace-pre"
+            className="input h-72 whitespace-pre"
             value={geneSet}
             onChange={evt => {setGeneSet(evt.currentTarget.value)}}
             placeholder={`Gene\nSymbols\nLine\nBy\nLine\n...`}
@@ -61,26 +61,25 @@ export default function AugmentPage() {
           <button className="btn btn-primary" onClick={evt => predictions.mutate({ model, gene_set: geneSetParsed, description })} disabled={!(geneSetParsed.length <= 512)}>Submit</button>
           <button className="btn btn-success" disabled={!predictions.isSuccess} onClick={downloadPredictions}>Download Results</button>
         </fieldset>
-        {predictions.isPending && <>Loading...</>}
-        {predictions.isError && <div className="alert alert-error">{predictions.error.message}</div>}
-        {predictions.isSuccess && <div>
-          <fieldset className="fieldset w-80">
-            <legend className="fieldset-legend text-lg">Results</legend>
-            <DataTable
-              columns={{
-                gene: {th: <>Gene</>, td: (gene: string) => gene},
-                score: {th: <>Score</>, td: (score: number) => score.toPrecision(3)},
-                known: {th: <>Known</>, td: (known: number) => known},
-              }}
-              defaultOrderBy={'score desc'}
-              data={Object.entries(predictions.data.predictions).map(([gene, score]) => ({
-                gene,
-                score,
-                known: predictions.variables.gene_set.includes(gene) ? 1 : 0
-              }))}
-            />
+        <fieldset className="fieldset min-w-72">
+          <legend className="fieldset-legend text-lg">Results</legend>
+            {predictions.isPending && <div className="flex-auto">Loading...</div>}
+            {predictions.isError && <div className="alert alert-error">{predictions.error.message}</div>}
+            {predictions.isSuccess &&
+              <DataTable
+                columns={{
+                  gene: {th: <>Gene</>, td: (gene: string) => gene},
+                  score: {th: <>Score</>, td: (score: number) => score.toPrecision(3)},
+                  known: {th: <>Known</>, td: (known: number) => known},
+                }}
+                defaultOrderBy={'score desc'}
+                data={Object.entries(predictions.data.predictions).map(([gene, score]) => ({
+                  gene,
+                  score,
+                  known: predictions.variables.gene_set.includes(gene) ? 1 : 0
+                }))}
+              />}
           </fieldset>
-        </div>}
       </div>
     </>
   )
