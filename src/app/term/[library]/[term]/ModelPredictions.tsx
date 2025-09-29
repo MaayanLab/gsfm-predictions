@@ -3,10 +3,9 @@
 import React from 'react';
 import { useParams } from 'next/navigation';
 import Predictions from "@/components/term/Predictions"
-import { useWaypoints, Waypoint } from '@/components/waypoint';
 import trpc from '@/lib/trpc/client'
 import classNames from 'classnames';
-import { source_icons } from '@/components/resources';
+import { source_icons, source_rename } from '@/components/resources';
 
 export default function AllPredictions(props: { model?: string }) {
   const params = useParams<{ library: string, term: string }>()
@@ -16,9 +15,9 @@ export default function AllPredictions(props: { model?: string }) {
   return <div className={classNames("mx-4 p-4 flex flex-col")}>
     <div className="flex flex-row gap-2 align-center items-center">
       <div className="w-24 h-24 flex items-center">
-        {typeof source_icons[source] === 'string' ? <img src={source_icons[source]} alt={source} /> : source_icons[source]}
+        {typeof source_icons[source] === 'string' ? <img src={source_icons[source]} alt={(source_rename[source] ?? source).replaceAll('_', ' ')} /> : source_icons[source]}
       </div>
-      <h3 className="text-wrap">{source.replaceAll('_', ' ')}</h3>
+      <h3 className="text-wrap">{(source_rename[source] ?? source).replaceAll('_', ' ')}</h3>
     </div>
     <Predictions model={props.model} source={source} term={termParam} count={termGenes.data.count} />
   </div>
