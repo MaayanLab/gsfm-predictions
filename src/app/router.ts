@@ -46,6 +46,20 @@ export default router({
     )
     return sources
   }),
+  termGenes: procedure.input(z.object({
+    model: z.string().default('latest'),
+    source: z.string(),
+    term: z.string(),
+  })).query(async (props) => {
+    return (await db
+      .selectFrom('app.prediction')
+      .select(eb => eb.fn.countAll<number>().as('count'))
+      .where('model', '=', props.input.model)
+      .where('source', '=', props.input.source)
+      .where('term', '=', props.input.term)
+      .executeTakeFirstOrThrow()
+    )
+  }),
   predictions: procedure.input(z.object({
     model: z.string().default('latest'),
     source: z.string(),
@@ -94,6 +108,48 @@ export default router({
       .where('pred.source', '=', props.input.source)
       .where('pred.gene', '=', props.input.gene)
       .$if(!!props.input.filter, qb => qb.where('pred.term', 'ilike', `%${props.input.filter ?? ''}%`))
+      .offset(props.input.offset)
+      .limit(props.input.limit)
+      .execute()
+  }),
+  termPredictions: procedure.input(z.object({
+    model: z.string().default('latest'),
+    source: z.string(),
+    term: z.string(),
+    orderBy: z.union([
+      z.literal('proba asc'), z.literal('proba desc'),
+      z.literal('zscore asc'), z.literal('zscore desc'),
+      z.literal('known asc'), z.literal('known desc'),
+      z.literal('auroc asc'), z.literal('auroc desc'),
+      z.literal('uniqueness asc'), z.literal('uniqueness desc'),
+    ]).optional().default('proba desc'),
+    filter: z.string().optional(),
+    offset: z.number().transform(offset => Math.max(0, offset)),
+    limit: z.number().transform(limit => Math.min(100, limit)),
+  })).query(async (props) => {
+    return await db
+      .selectFrom('app.prediction as pred')
+      .selectAll('pred')
+      .$call(qb => {
+        if (props.input.orderBy === 'proba asc')
+          return qb.orderBy('pred.proba', 'asc').orderBy('pred.zscore', 'desc')
+        else if (props.input.orderBy === 'proba desc')
+          return qb.orderBy('pred.proba', 'desc').orderBy('pred.zscore', 'desc')
+        else if (props.input.orderBy === 'zscore asc')
+          return qb.orderBy('pred.zscore', 'asc')
+        else if (props.input.orderBy === 'zscore desc')
+          return qb.orderBy('pred.zscore', 'desc')
+        else if (props.input.orderBy === 'known asc')
+          return qb.orderBy('pred.known', 'asc').orderBy('pred.zscore', 'desc')
+        else if (props.input.orderBy === 'known desc')
+          return qb.orderBy('pred.known', 'desc').orderBy('pred.zscore', 'desc')
+        else
+          return qb
+      })
+      .where('pred.model', '=', props.input.model)
+      .where('pred.source', '=', props.input.source)
+      .where('pred.term', '=', props.input.term)
+      .$if(!!props.input.filter, qb => qb.where('pred.gene', 'ilike', `%${props.input.filter ?? ''}%`))
       .offset(props.input.offset)
       .limit(props.input.limit)
       .execute()

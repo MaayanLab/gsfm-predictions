@@ -5,15 +5,15 @@ import trpc from '@/lib/trpc/client'
 import classNames from 'classnames';
 import range from '@/components/range'
 
-export default function Predictions(props: { model?: string, source: string, gene: string, count: number }) {
+export default function Predictions(props: { model?: string, source: string, term: string, count: number }) {
   const pageSize = 10
   const [filter, setFilter] = React.useState('')
   const [page, setPage] = React.useState(1)
   const [orderBy, setOrderBy] = React.useState<'proba desc' | 'proba asc' | 'zscore asc' | 'zscore desc' | 'known asc' | 'known desc' | 'auroc asc' | 'auroc desc' | 'uniqueness asc' | 'uniqueness desc' | undefined>('proba desc')
-  const predictions = trpc.predictions.useQuery({
+  const predictions = trpc.termPredictions.useQuery({
     model: props.model,
     source: props.source,
-    gene: props.gene,
+    term: props.term,
     orderBy: orderBy,
     filter: filter,
     offset: (page-1)*pageSize,
@@ -45,7 +45,7 @@ export default function Predictions(props: { model?: string, source: string, gen
             </tr>
             <tr>
               <th><div className="tooltip" data-tip="Gene set description">
-                Term
+                Gene
               </div></th>
               <th><div className="tooltip cursor-pointer" data-tip="Model assigned probability" onClick={evt => {setOrderBy(orderBy => orderBy === 'proba desc' ? 'proba asc' : 'proba desc'); setPage(1)}}>
                 Score
@@ -65,18 +65,6 @@ export default function Predictions(props: { model?: string, source: string, gen
                   : orderBy === 'known desc' ? <>&darr;</>
                   : <span className="invisible">&darr;</span>}
               </div></th>
-              <th><div className="tooltip cursor-pointer" data-tip="Performance on recovering random slices of this gene set" onClick={evt => {setOrderBy(orderBy => orderBy === 'auroc desc' ? 'auroc asc' : 'auroc desc'); setPage(1)}}>
-                Term AUROC
-                {orderBy === 'auroc asc' ? <>&uarr;</>
-                  : orderBy === 'auroc desc' ? <>&darr;</>
-                  : <span className="invisible">&darr;</span>}
-              </div></th>
-              <th><div className="tooltip cursor-pointer" data-tip="Genes with this term ranked in the top 10 predictions / Genes with this term predicted" onClick={evt => {setOrderBy(orderBy => orderBy === 'uniqueness desc' ? 'uniqueness asc' : 'uniqueness desc'); setPage(1)}}>
-                Uniqueness
-                {orderBy === 'uniqueness asc' ? <>&uarr;</>
-                  : orderBy === 'uniqueness desc' ? <>&darr;</>
-                  : <span className="invisible">&darr;</span>}
-              </div></th>
             </tr>
           </thead>
           <tbody>
@@ -85,13 +73,11 @@ export default function Predictions(props: { model?: string, source: string, gen
               <td>&nbsp;</td>
             </tr>)}
             {predictions.data?.map(prediction =>
-              <tr key={prediction.term} className={classNames("hover:bg-base-200", { 'bg-blue-100': prediction.known })}>
-                <td className="w-full"><a href={`/term/${encodeURIComponent(prediction.source)}/${encodeURIComponent(prediction.term)}`}>{prediction.term}</a></td>
+              <tr key={prediction.gene} className={classNames("hover:bg-base-200", { 'bg-blue-100': prediction.known })}>
+                <td className="w-full"><a href={`/gene/${encodeURIComponent(prediction.gene)}`}>{prediction.gene}</a></td>
                 <td className="text-right">{prediction.proba.toFixed(2)}</td>
                 <td className="text-right">{prediction.zscore?.toFixed(2)}</td>
                 <td className="text-right">{prediction.known ? 1 : 0}</td>
-                <td className="text-right">{prediction.roc_auc?.toFixed(2)}</td>
-                <td className="text-right whitespace-nowrap">{prediction.genes_with_term_in_top_10 && prediction.genes_with_term_predicted && <>{prediction.genes_with_term_in_top_10} / {prediction.genes_with_term_predicted}</>}</td>
               </tr>
             )}
           </tbody>

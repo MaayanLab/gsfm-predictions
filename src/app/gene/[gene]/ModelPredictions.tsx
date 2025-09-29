@@ -10,7 +10,7 @@ import { library_icons } from '@/components/resources'
 
 export default function AllPredictions(props: { model?: string }) {
   const params = useParams<{ gene: string }>()
-  const geneParam = React.useMemo(() => params.gene ?? '', [params])
+  const geneParam = React.useMemo(() => decodeURIComponent(params.gene ?? ''), [params])
   const sources = trpc.sources.useQuery({ model: props.model, gene: geneParam }, { enabled: !!geneParam })
   const { scrollTo } = useWaypoints()
   return <>
