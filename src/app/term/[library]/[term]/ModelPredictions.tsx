@@ -6,7 +6,7 @@ import Predictions from "@/components/term/Predictions"
 import { useWaypoints, Waypoint } from '@/components/waypoint';
 import trpc from '@/lib/trpc/client'
 import classNames from 'classnames';
-import { library_icons } from '@/components/resources';
+import { source_icons } from '@/components/resources';
 
 export default function AllPredictions(props: { model?: string }) {
   const params = useParams<{ library: string, term: string }>()
@@ -16,7 +16,7 @@ export default function AllPredictions(props: { model?: string }) {
   return <div className={classNames("mx-4 p-4 flex flex-col")}>
     <div className="flex flex-row gap-2 align-center items-center">
       <div className="w-24 h-24 flex items-center">
-        {typeof library_icons[source] === 'string' ? <img src={library_icons[source]} alt={source} /> : library_icons[source]}
+        {typeof source_icons[source] === 'string' ? <img src={source_icons[source]} alt={source} /> : source_icons[source]}
       </div>
       <h3 className="text-wrap">{source.replaceAll('_', ' ')}</h3>
     </div>

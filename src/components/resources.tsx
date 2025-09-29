@@ -1,4 +1,4 @@
-export const library_icons: Record<string, string | React.ReactElement> = {
+export const source_icons: Record<string, string | React.ReactElement> = {
   LINCS_L1000_Chem_Pert_Consensus_Sigs: 'https://cfde-drc.s3.amazonaws.com/assets/img/LINCS-logo.png',
   LINCS_L1000_CRISPR_KO_Consensus_Sigs: 'https://cfde-drc.s3.amazonaws.com/assets/img/LINCS-logo.png',
   LINCS_L1000_Consensus_Median_Signatures: 'https://cfde-drc.s3.amazonaws.com/assets/img/LINCS-logo.png',
@@ -22,7 +22,11 @@ export const library_icons: Record<string, string | React.ReactElement> = {
   MGI_Mammalian_Phenotype_Level_4_2024: 'https://www.informatics.jax.org/webshare/images/mgi_logo.gif',
   OMIM_Disease: 'https://www.omim.org/static/omim/icons/OMIM_davinciman.001.png',
   HuBMAP_Azimuth: 'https://s3.amazonaws.com/maayan-kg/cfde-kg/assets/HuBMAP.png',
-  'HuBMAP_ASCT+B': 'https://s3.amazonaws.com/maayan-kg/cfde-kg/assets/HuBMAP.png',
+  HuBMAP_ASCTpB: 'https://s3.amazonaws.com/maayan-kg/cfde-kg/assets/HuBMAP.png',
+}
+
+export const source_rename: Record<string, string> = {
+  HuBMAP_ASCTpB: 'HuBMAP ASCT+B',
 }
 
 export const source_pagerank: Record<string, number> = {
@@ -45,7 +49,7 @@ export const source_pagerank: Record<string, number> = {
   MGI_Mammalian_Phenotype_Level_4_2024: 14,
   OMIM_Disease: 13,
   HuBMAP_Azimuth: 12,
-  'HuBMAP_ASCT+B': 12,
+  HuBMAP_ASCTpB: 12,
 }
 
 export const model_icons = {

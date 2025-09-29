@@ -6,7 +6,7 @@ import Predictions from "@/components/gene/Predictions"
 import { useWaypoints, Waypoint } from '@/components/waypoint';
 import trpc from '@/lib/trpc/client'
 import classNames from 'classnames'
-import { library_icons } from '@/components/resources'
+import { source_icons } from '@/components/resources'
 
 export default function AllPredictions(props: { model?: string }) {
   const params = useParams<{ gene: string }>()
@@ -22,7 +22,7 @@ export default function AllPredictions(props: { model?: string }) {
               <a href={`#${props.model}-${source}`}>
                 <div className="flex flex-row gap-2 align-center items-center" onClick={evt => {scrollTo(source)}}>
                   <div className="w-8 h-8 flex items-center">
-                    {typeof library_icons[source] === 'string' ? <img src={library_icons[source]} alt={source} /> : library_icons[source]}
+                    {typeof source_icons[source] === 'string' ? <img src={source_icons[source]} alt={source} /> : source_icons[source]}
                   </div>
                   <div className="w-24">
                     {source.replaceAll('_', ' ')}
@@ -40,7 +40,7 @@ export default function AllPredictions(props: { model?: string }) {
               <Waypoint id={`${props.model}-${source}`}>
                 <div className="flex flex-row gap-2 align-center items-center" onClick={evt => {scrollTo(`${props.model}-${source}`)}}>
                   <div className="w-24 h-24 flex items-center">
-                    {typeof library_icons[source] === 'string' ? <img src={library_icons[source]} alt={source} /> : library_icons[source]}
+                    {typeof source_icons[source] === 'string' ? <img src={source_icons[source]} alt={source} /> : source_icons[source]}
                   </div>
                   <h3 className="text-wrap">{source.replaceAll('_', ' ')}</h3>
                 </div>
