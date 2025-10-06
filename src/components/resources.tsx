@@ -80,6 +80,6 @@ export const model_descriptions = {
 export const model_name = {
   'rummagene': 'Rummagene GSFM',
   'gsfm-rummagene': 'Rummagene GSFM',
-  'gsfm-rummage': 'RummaGEO/Gene GSFM',
+  'gsfm-rummage': 'RummaGEO/Rummagene GSFM',
   'gsfm-rummageo': 'RummaGEO GSFM',
 } as Record<string, string>
