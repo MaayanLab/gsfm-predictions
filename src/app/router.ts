@@ -3,7 +3,7 @@ import { procedure, router } from "@/lib/trpc";
 import { sql } from "kysely";
 import { z } from 'zod'
 import { select_distinct_loose_indexscan } from "@/lib/database/utils";
-import { source_pagerank } from "@/components/resources";
+import { source_pagerank, model_pagerank } from "@/components/resources";
 
 export default router({
   gene_info: procedure.input(z.string()).query(async (props) => {
@@ -32,10 +32,12 @@ export default router({
       .execute()
   }),
   models: procedure.query(async (props) => {
-    return (await
+    const models = (await
       select_distinct_loose_indexscan('app.prediction', 'model')
         .execute(db)
-    ).rows
+    ).rows.map(({ model }) => ({ model, pagerank: model_pagerank[model] ?? 0 }))
+    models.sort((a, b) => b.pagerank - a.pagerank)
+    return models
   }),
   sources: procedure.input(z.object({
     model: z.string().default('latest'),

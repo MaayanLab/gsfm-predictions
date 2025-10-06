@@ -83,3 +83,9 @@ export const model_name = {
   'gsfm-rummage': 'RummaGEO/Rummagene GSFM',
   'gsfm-rummageo': 'RummaGEO GSFM',
 } as Record<string, string>
+
+export const model_pagerank = {
+  'gsfm-rummagene': 10,
+  'gsfm-rummage': 9,
+  'gsfm-rummageo': 8,
+} as Record<string, number>
