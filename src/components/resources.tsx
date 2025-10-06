@@ -28,9 +28,18 @@ export const source_icons: Record<string, string | React.ReactElement> = {
 
 export const source_rename: Record<string, string> = {
   HuBMAP_ASCTpB: 'HuBMAP ASCT+B',
+  GO_Process: 'GO Biological Process 2025',
+  GO_Function: 'GO Molecular Function 2025',
+  GO_Component: 'GO Cellular Component 2025',
 }
 
 export const source_pagerank: Record<string, number> = {
+  GO_Process: 100,
+  GO_Function: 99,
+  GO_Component: 98,
+  GWAS_Catalog_2025: 90,
+  KOMP2_Mouse_Phenotypes_2022: 80,
+  KEGG_2021_Human: 70,
   LINCS_L1000_Chem_Pert_Consensus_Sigs: 0,
   LINCS_L1000_CRISPR_KO_Consensus_Sigs: 0,
   LINCS_L1000_Consensus_Median_Signatures: 0,
@@ -40,13 +49,11 @@ export const source_pagerank: Record<string, number> = {
   GTEx_Tissues_V8_2023: 0,
   IDG_Drug_Targets_2022: 0,
   MoTrPAC_Endurance_Trained_Rats_2023: 1,
-  KOMP2_Mouse_Phenotypes_2022: 3,
   ChEA_2022: 19,
   KEA_2015: 16,
   Human_Phenotype_Ontology: 17,
   GWAS_Catalog_2023: 17,
   GO_Biological_Process_2023: 18,
-  KEGG_2021_Human: 15,
   MGI_Mammalian_Phenotype_Level_4_2024: 14,
   OMIM_Disease: 13,
   HuBMAP_Azimuth: 12,
