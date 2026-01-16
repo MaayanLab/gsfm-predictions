@@ -8,13 +8,13 @@
 @plugin "daisyui/theme" {
   name: "gsfm";
   default: true;
-  prefersdark: true;
+  prefersdark: false;
   color-scheme: "light";
   --color-base-100: oklch(100% 0 0);
   --color-base-200: oklch(93% 0 0);
   --color-base-300: oklch(86% 0 0);
   --color-base-content: oklch(22.389% 0.031 278.072);
-  --color-primary: rgb(45, 89, 134);
+  --color-primary: "#013cc6ff";
   --color-primary-content: oklch(100% 0 0);
   --color-secondary: rgb(165, 180, 219);
   --color-secondary-content: oklch(100% 0 0);
