@@ -1,4 +1,9 @@
 @import 'tailwindcss';
+@import url("https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk&display=swap");
+
+@theme {
+  --font-sans: "Schibsted Grotesk", sans-serif;
+}
 
 @plugin "@tailwindcss/typography";
 @plugin "daisyui" {
@@ -14,10 +19,10 @@
   --color-base-200: oklch(93% 0 0);
   --color-base-300: oklch(86% 0 0);
   --color-base-content: oklch(22.389% 0.031 278.072);
-  --color-primary: "#013cc6ff";
+  --color-primary: "#013CC6";
   --color-primary-content: oklch(100% 0 0);
-  --color-secondary: rgb(165, 180, 219);
-  --color-secondary-content: oklch(100% 0 0);
+  --color-secondary: "#EEF5FF";
+  --color-secondary-content: "#013CC6";
   --color-accent: oklch(60% 0.118 184.704);
   --color-accent-content: oklch(100% 0 0);
   --color-neutral: oklch(0% 0 0);

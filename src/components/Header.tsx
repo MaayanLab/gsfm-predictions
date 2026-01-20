@@ -3,8 +3,6 @@
 import GeneInput from "@/components/gene/GeneInput"
 import Image from "next/image"
 import Link from "next/link"
-import iconSvg from '@/app/icon.svg'
-import searchIconSvg from '@/app/search-icon.svg'
 import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation"
 import classNames from "classnames"
 
@@ -15,24 +13,16 @@ export default function Header() {
   const searchParams = useSearchParams()
   if (searchParams.get('embed') !== null) return null
   return (
-    <header className="my-2 px-2 shadow bg-white z-1">
-      <div className="navbar bg-base-100 gap-x-10 justify-stretch flex flex-row">
-        <Link className="flex flex-row gap-2" href="/">
-          <Image src={iconSvg} alt="GSFM Logo" unoptimized />
+    <header className="my-2 px-2 shadow bg-white z-1 h-[92px] items-center">
+      <div className="navbar bg-base-100 gap-x-10 size-full flex flex-row">
+        <Link className="flex flex-row gap-2 overflow-clip px-2 shrink-0" href="/">
+          <img src="/resources/Logo.svg" />
         </Link>
-        <div className="flex-none flex flex-row gap-2 my-2 place-items-center">
-          {pathname !== '/' && <GeneInput
-            value={params.gene ?? ''}
-            onChange={value => {
-              router.push(`/gene/${encodeURIComponent(value)}`)
-            }}
-          />}
-        </div>
         <div className="flex-grow">&nbsp;</div>
         <Link className={classNames("text-primary font-semibold", { 'border-b-2': pathname === '/about' })} href="/about">About</Link>
         <Link className={classNames("text-primary font-semibold", { 'border-b-2': pathname === '/augment' })} href="/augment" >Augment</Link>
         <Link className={classNames("text-primary font-semibold", { 'border-b-2': pathname === '/downloads' })} href="/downloads">Downloads</Link>
-        <Link className={classNames("flex flex-row gap-4 border rounded-full p-4 text-primary font-semibold", { 'border-b-2': pathname === '/' || pathname.startsWith('/gene/') })} href="/"><Image src={searchIconSvg} alt="" unoptimized />Search&nbsp;</Link>
+        <Link className={classNames("flex flex-row gap-4 border rounded-full p-4 text-primary font-semibold shrink-0", { 'border-b-2': pathname === '/' || pathname.startsWith('/gene/') })} href="/"><img src="/resources/SearchIcon.svg" />Search&nbsp;</Link>
       </div>
     </header>
   )
