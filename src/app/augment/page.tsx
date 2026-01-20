@@ -26,7 +26,7 @@ export default function AugmentPage() {
       ['Gene', 'Score', 'Known'].join('\t'),
       ...Object.entries(predictions.data.predictions).map(([gene, score]) => [gene, `${score}`, predictions.variables.gene_set.includes(gene) ? 1 : 0].join('\t')),
     ].join('\n'), `${model}-predictions.tsv`, 'text/tab-separated-values;charset=utf-8')
-  }, [predictions])
+  }, [model, predictions])
   return (
     <main className="bg-white">
       <div className="mx-auto prose prose-h1:text-primary text-justify">
