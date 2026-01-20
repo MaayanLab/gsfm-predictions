@@ -1,0 +1,36 @@
+<svg width="1440" height="85" viewBox="0 0 1440 85" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<path d="M-19 0H1447V85H-19V0Z" fill="url(#pattern0_2005_167)"/>
+<defs>
+<pattern id="pattern0_2005_167" patternUnits="userSpaceOnUse" patternTransform="matrix(254 0 0 167.2 -19 0)" preserveAspectRatio="none" viewBox="0 0 508 334.4" width="1" height="1">
+<use xlink:href="#pattern0_2005_167_inner" transform="translate(-508 0)"/>
+<g id="pattern0_2005_167_inner">
+<circle cx="35" cy="27" r="6" fill="#006DFF"/>
+<path d="M50 27H198" stroke="#006DFF"/>
+<circle cx="213" cy="27" r="6" fill="#006DFF"/>
+<circle cx="6" cy="6" r="6" transform="matrix(-1 0 0 1 397 119)" fill="#006DFF"/>
+<path d="M369 125L319 125" stroke="#006DFF"/>
+<circle cx="6" cy="6" r="6" transform="matrix(-1 0 0 1 310 119)" fill="#006DFF"/>
+<circle cx="6" cy="6" r="6" transform="matrix(-1 0 0 1 397 21)" fill="#006DFF"/>
+<path d="M369 27L319 27" stroke="#006DFF"/>
+<circle cx="6" cy="6" r="6" transform="matrix(-1 0 0 1 310 21)" fill="#006DFF"/>
+<circle cx="6" cy="6" r="6" transform="matrix(-1 0 0 1 484 119)" fill="#006DFF"/>
+<path d="M456 125L406 125" stroke="#006DFF"/>
+<circle cx="6" cy="6" r="6" transform="matrix(-1 0 0 1 397 119)" fill="#006DFF"/>
+<circle cx="126" cy="125" r="6" fill="#006DFF"/>
+<path d="M148 125L198 125" stroke="#006DFF"/>
+<circle cx="213" cy="125" r="6" fill="#006DFF"/>
+<circle cx="35" cy="125" r="6" fill="#006DFF"/>
+<path d="M50 125L105 125" stroke="#006DFF"/>
+<path d="M149 76L198 76" stroke="#006DFF"/>
+<circle cx="213" cy="76" r="6" fill="#006DFF"/>
+<circle cx="126" cy="76" r="6" fill="#006DFF"/>
+<path d="M213 40L213 63" stroke="#006DFF"/>
+<path d="M213 90L213 113" stroke="#006DFF"/>
+<path d="M391 90L391 113" stroke="#006DFF"/>
+<path d="M228 76H376" stroke="#006DFF"/>
+<circle cx="391" cy="76" r="6" fill="#006DFF"/>
+</g>
+<use xlink:href="#pattern0_2005_167_inner" transform="translate(-254 167.2)"/>
+<use xlink:href="#pattern0_2005_167_inner" transform="translate(254 167.2)"/>
+</pattern></defs>
+</svg>
