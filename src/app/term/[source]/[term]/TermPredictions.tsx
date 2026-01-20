@@ -5,6 +5,7 @@ import { Tab, TabContainer, TabContent } from '@/components/tabs';
 import Predictions from "@/components/term/Predictions";
 import trpc from '@/lib/trpc/client';
 import classNames from 'classnames';
+import Image from 'next/image'
 import React from 'react';
 
 export default function TermPredictions(props: { source: string, term: string, models: string[] }) {

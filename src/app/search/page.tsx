@@ -1,8 +1,7 @@
 'use client'
 import { useRouter } from 'next/navigation';
-import Content from './content.mdx'
 import GeneInput from '@/components/gene/GeneInput';
-import Link from 'next/link';
+import Image from 'next/image'
 
 export default function Search() {
   const router = useRouter()
@@ -62,13 +61,13 @@ export default function Search() {
               }}
             />
           </div>
-          <img className="shrink-0" src="/resources/Ellipse11.svg" />
+          <img className="shrink-0" src="/resources/Ellipse11.svg" alt="" />
         </div>
         <div className="self-stretch bg-white p-8 mx-auto flex flex-col items-center">
           <div className="prose prose-h3:text-primary prose-p:text-primary">
-            <p>Search your gene of interest to review GSFM's predictions across a variety of Common Fund Data Ecosystem (CFDE) gene set libraries & other public resources.</p>
+            <p>Search your gene of interest to review GSFM&apos;s predictions across a variety of Common Fund Data Ecosystem (CFDE) gene set libraries & other public resources.</p>
           </div>
-          <img src="/fig-1-restyled.svg" />
+          <img src="/fig-1-restyled.svg" alt="" />
         </div>
       </main>
     </>

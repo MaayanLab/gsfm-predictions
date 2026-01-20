@@ -34,7 +34,7 @@ export function TabContainer(props: React.PropsWithChildren<{ name: string, clas
 
 export function Tab(props: { id: string, label: string, checked: boolean, onChange: (id: string) => void }) {
   const ctx = React.useContext(TabContext)
-  React.useEffect(() => ctx.register(props), [props.id])
+  React.useEffect(() => ctx.register({ id: props.id, onChange: props.onChange }), [ctx, props.id, props.onChange])
   return <input
     type="radio"
     role="tab"

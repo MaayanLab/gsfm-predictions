@@ -9,6 +9,7 @@ import trpc from '@/lib/trpc/client';
 import type trpcT from '@/lib/trpc/server';
 import classNames from 'classnames';
 import React from 'react';
+import Image from 'next/image'
 
 export default function GenePredictions(props: { gene: string, models: string[] }) {
   return (

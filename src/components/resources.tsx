@@ -1,3 +1,4 @@
+import Image from 'next/image'
 export const source_icons: Record<string, string | React.ReactElement> = {
   LINCS_L1000_Chem_Pert_Consensus_Sigs: '/source_icons/LINCS-logo.png',
   LINCS_L1000_CRISPR_KO_Consensus_Sigs: '/source_icons/LINCS-logo.png',

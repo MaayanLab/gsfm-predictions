@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image'
 import Link from 'next/link';
 
 export default function Home() {
@@ -44,14 +45,14 @@ export default function Home() {
             </div>
             <div>
               <Link href="/search" className="btn btn-primary font-semibold bg-[#006DFF] border-0 rounded-full">Start predicting</Link>
-              <Link href="/search" className="btn btn-primary font-semibold bg-[#006DFF] border-0 rounded-full"><img src="/resources/RightArrowIcon.svg" /></Link>
+              <Link href="/search" className="btn btn-primary font-semibold bg-[#006DFF] border-0 rounded-full"><img src="/resources/RightArrowIcon.svg" alt="" /></Link>
             </div>
           </div>
         </div>
         <div className="bg-secondary self-stretch flex flex-row">
           <div className="flex flex-col items-start gap-4 my-4 mx-auto shrink-0">
             <div className="flex items-center gap-2">
-              <img src="/resources/BulletIcon.svg" />
+              <img src="/resources/BulletIcon.svg" alt="" />
               <span className="text-primary font-semibold text-xl">WHAT IS GSFM?</span>
             </div>
             <div className="prose">
@@ -60,7 +61,7 @@ export default function Home() {
               </p>
             </div>
           </div>
-          <img className="shrink-0" src="/resources/Ellipse11.svg" />
+          <img className="shrink-0" src="/resources/Ellipse11.svg" alt="" />
         </div>
         <div className="bg-primary self-stretch flex flex-row text-primary-content p-8 justify-around">
           <nav className="place-self-center">
@@ -88,7 +89,7 @@ export default function Home() {
             <h3>How it Works</h3>
             <div>
               <button className="btn btn-primary font-semibold bg-[#006DFF] border-0 rounded-full">Start predicting</button>
-              <button className="btn btn-primary font-semibold bg-[#006DFF] border-0 rounded-full"><img src="/resources/RightArrowIcon.svg" /></button>
+              <button className="btn btn-primary font-semibold bg-[#006DFF] border-0 rounded-full"><img src="/resources/RightArrowIcon.svg" alt="" /></button>
             </div>
           </div>
         </div> */}
@@ -97,7 +98,7 @@ export default function Home() {
             <h3>Model performance & validation</h3>
             <p>GSFM generalizes across diverse biological domains, supporting its design as a true foundation model for gene function prediction.</p>
           </div>
-          <img src="/fig-1-restyled.svg" />
+          <img src="/fig-1-restyled.svg" alt="" />
         </div>
         <div className="self-stretch bg-white p-8">
           <div className="prose prose-h3:text-primary prose-p:text-primary">
@@ -107,28 +108,28 @@ export default function Home() {
             <Link href="/search">
               <div className="border-1 border-[#6992C8] rounded-sm bg-[#F9FAFE] p-3">
                 <div className="bg-[#DCEBFF] text-[#013CC6] rounded-full p-2 flex flex-row justify-between">
-                  <span>Search for genes or biological terms</span><img className="inline-block" src="/resources/LinkOutIcon.svg" />
+                  <span>Search for genes or biological terms</span><img className="inline-block" src="/resources/LinkOutIcon.svg" alt="" />
                 </div>
               </div>
             </Link>
             <Link href="/augment">
               <div className="border-1 border-[#6992C8] rounded-sm bg-[#F9FAFE] p-3">
                 <div className="bg-[#DCEBFF] text-[#013CC6] rounded-full p-2 flex flex-row gap-2 justify-between">
-                  <span>Augment gene sets</span><img src="/resources/LinkOutIcon.svg" />
+                  <span>Augment gene sets</span><img src="/resources/LinkOutIcon.svg" alt="" />
                 </div>
               </div>
             </Link>
             <Link href="/about">
               <div className="border-1 border-[#6992C8] rounded-sm bg-[#F9FAFE] p-3">
                 <div className="bg-[#DCEBFF] text-[#013CC6] rounded-full p-2 flex flex-row gap-2 justify-between">
-                  <span>Visualize prediction scores</span><img src="/resources/LinkOutIcon.svg" />
+                  <span>Visualize prediction scores</span><img src="/resources/LinkOutIcon.svg" alt="" />
                 </div>
               </div>
             </Link>
             <Link href="/downloads">
               <div className="border-1 border-[#6992C8] rounded-sm bg-[#F9FAFE] p-3">
                 <div className="bg-[#DCEBFF] text-[#013CC6] rounded-full p-2 flex flex-row gap-2 justify-between">
-                  <span>Download results for further analysis</span><img src="/resources/LinkOutIcon.svg" />
+                  <span>Download results for further analysis</span><img src="/resources/LinkOutIcon.svg" alt="" />
                 </div>
               </div>
             </Link>
