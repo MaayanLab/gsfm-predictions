@@ -22,7 +22,7 @@ export default function Header() {
         <Link className={classNames("text-primary font-semibold", { 'border-b-2': pathname === '/about' })} href="/about">About</Link>
         <Link className={classNames("text-primary font-semibold", { 'border-b-2': pathname === '/augment' })} href="/augment" >Augment</Link>
         <Link className={classNames("text-primary font-semibold", { 'border-b-2': pathname === '/downloads' })} href="/downloads">Downloads</Link>
-        <Link className={classNames("flex flex-row gap-4 border rounded-full p-4 text-primary font-semibold shrink-0", { 'border-b-2': pathname === '/' || pathname.startsWith('/gene/') })} href="/"><img src="/resources/SearchIcon.svg" />Search&nbsp;</Link>
+        <Link className={classNames("flex flex-row gap-4 border rounded-full p-4 text-primary font-semibold shrink-0")} href="/search"><img src="/resources/SearchIcon.svg" />Search&nbsp;</Link>
       </div>
     </header>
   )

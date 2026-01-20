@@ -28,8 +28,9 @@ export default function AugmentPage() {
     ].join('\n'), `${model}-predictions.tsv`, 'text/tab-separated-values;charset=utf-8')
   }, [predictions])
   return (
-    <>
-      <div className="prose text-justify">
+    <main className="bg-white">
+      <div className="mx-auto prose prose-h1:text-primary text-justify">
+        <h1>GSFM Augment</h1>
         <p>Trained on millions of gene sets automatically extracted from literature and raw RNA-seq data, GSFM learns to recover held-out genes from gene sets. The resulting model exhibits state of the art performance on gene function prediction.</p>
         <p>Submit your set of known genes and get predictions for missing genes in the set.</p>
         <p>NOTE: The maximum gene set size is currently 512 genes.</p>
@@ -81,6 +82,6 @@ export default function AugmentPage() {
               />}
           </fieldset>
       </div>
-    </>
+    </main>
   )
 }
