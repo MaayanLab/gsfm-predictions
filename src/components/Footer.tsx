@@ -20,7 +20,7 @@ export default function Footer() {
           <nav className="flex flex-col p-8 gap-4">
             <a className="font-semibold link link-hover" href="/about">About</a>
             <a className="font-semibold link link-hover" href="/augment">Augment</a>
-            <a className="font-semibold link link-hover" href="/research">Research</a>
+            <a className="font-semibold link link-hover" href="https://labs.icahn.mssm.edu/maayanlab/" target="_blank">Research</a>
             <a className="font-semibold link link-hover" href="/downloads">Downloads</a>
           </nav>
           <nav className="flex flex-col p-8 gap-4">

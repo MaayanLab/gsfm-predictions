@@ -10,33 +10,47 @@ export default function GeneInput({ large, value, onChange }: { large?: boolean,
   const validGene = React.useMemo(() => geneAutocomplete.data?.some(suggestion => suggestion.symbol === gene), [geneAutocomplete.data, gene])
   React.useEffect(() => {if (value) setGene(value)}, [value])
   return (
-    <div className={classNames('border rounded-md join', { 'border-red-400': validGene === false })}>
-      <div className="join-item">
-        <label className={classNames("input w-42 border-none rounded-md rounded-r-none focus-within:rounded-md focus-within:rounded-r-none focus-within:-outline-offset-1", { 'w-64': large, 'input-xl': large })}>
-          <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2.5" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></g></svg>
-          <input
-            type="search"
-            value={gene}
-            placeholder='e.g. ACE2, KLF4'
-            onChange={evt => {setGene(evt.currentTarget.value)}}
-            list={geneAutocomplete.data ? "geneAutocomplete" : undefined}
-          />
-          <datalist id="geneAutocomplete">{geneAutocomplete.data?.map(suggestion => <option key={suggestion.symbol}>{suggestion.symbol}</option>)}</datalist>
-        </label>
-      </div>
-      <input
-        className={classNames("btn join-item btn-primary", { 'btn-xl': large })}
-        type="submit"
-        disabled={!validGene}
-        onClick={evt => {
-          evt.preventDefault()
-          if (onChange) onChange(gene)
-        }}
-      ></input>
-      <button className={classNames("btn join-item", { 'btn-xl': large })} onClick={evt => {
-        setGene('ACE2')
-        if (onChange) onChange('ACE2')
-      }}>Example</button>
-    </div>
+            <div className="flex flex-row gap-6">
+              <label className={classNames("input bg-transparent text-4xl", { 'border-red-400': validGene === false })}>
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M41.9998 42L33.3198 33.32" stroke="#013CC6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M22 38C30.8366 38 38 30.8366 38 22C38 13.1634 30.8366 6 22 6C13.1634 6 6 13.1634 6 22C6 30.8366 13.1634 38 22 38Z" stroke="#013CC6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                <input
+                  type="search"
+                  value={gene}
+                  placeholder="e.g. ACE2, KLF4"
+                  onChange={evt => {setGene(evt.currentTarget.value)}}
+                  list={geneAutocomplete.data ? "geneAutocomplete" : undefined}
+                  required
+                />
+                <datalist id="geneAutocomplete">{geneAutocomplete.data?.map(suggestion => <option key={suggestion.symbol}>{suggestion.symbol}</option>)}</datalist>
+              </label>
+              <button
+                className={classNames("btn btn-primary bg-[#006DFF]", { 'btn-xl': large })}
+                type="submit"
+                disabled={!validGene}
+                onClick={evt => {
+                  evt.preventDefault()
+                  if (onChange) onChange(gene)
+                }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M21.0002 21L16.6602 16.66" stroke="white" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="white" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                Search
+              </button>
+              <button className={classNames("text-[#013CC6] flex flex-row items-center", { 'btn-xl': large })}  onClick={evt => {
+                setGene('ACE2')
+                if (onChange) onChange('ACE2')
+              }}>
+                See example
+                &nbsp;
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M6.89258 1L12.7851 6.89256L6.89258 12.7851" stroke="#013CC6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M1.00002 6.89256H12.7851" stroke="#013CC6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+            </div>
   )
 }

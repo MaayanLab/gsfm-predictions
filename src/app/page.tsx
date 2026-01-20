@@ -1,11 +1,7 @@
-'use client'
-import { useRouter } from 'next/navigation';
 import React from 'react';
-import GeneInput from '@/components/gene/GeneInput';
 import Link from 'next/link';
 
 export default function Home() {
-  const router = useRouter()
   return (
       <>
       <div
@@ -40,15 +36,15 @@ export default function Home() {
       <main className="flex flex-col place-items-center items-center grow bg-white">
         <div className="flex flex-row p-8 gap-16 place-items-center align-center">
           <div className="prose prose-h1:text-primary prose-h1:font-normal prose-h1:text-6xl">
-            <h1><span className="link text-blue-500">AI-powered gene</span> function prediction & biological discovery</h1>
+            <h1><span className="underline text-[#006DFF]">AI-powered gene</span> function prediction & biological discovery</h1>
           </div>
           <div className="flex flex-col gap-6">
             <div className="prose prose-p:text-primary">
               <p>Search your gene of interest to review GSFM&apos;s predictions across a variety of Common Fund Data Ecosystem (CFDE) gene set libraries & other public resources.</p>
             </div>
             <div>
-              <button className="btn btn-primary font-semibold bg-[#006DFF] border-0 rounded-full">Start predicting</button>
-              <button className="btn btn-primary font-semibold bg-[#006DFF] border-0 rounded-full"><img src="/resources/RightArrowIcon.svg" /></button>
+              <Link href="/search" className="btn btn-primary font-semibold bg-[#006DFF] border-0 rounded-full">Start predicting</Link>
+              <Link href="/search" className="btn btn-primary font-semibold bg-[#006DFF] border-0 rounded-full"><img src="/resources/RightArrowIcon.svg" /></Link>
             </div>
           </div>
         </div>
@@ -101,7 +97,7 @@ export default function Home() {
             <h3>Model performance & validation</h3>
             <p>GSFM generalizes across diverse biological domains, supporting its design as a true foundation model for gene function prediction.</p>
           </div>
-          <img src="/fig-1.svg" />
+          <img src="/fig-1-restyled.svg" />
         </div>
         <div className="self-stretch bg-white p-8">
           <div className="prose prose-h3:text-primary prose-p:text-primary">
@@ -122,7 +118,7 @@ export default function Home() {
                 </div>
               </div>
             </Link>
-            <Link href="">
+            <Link href="/about">
               <div className="border-1 border-[#6992C8] rounded-sm bg-[#F9FAFE] p-3">
                 <div className="bg-[#DCEBFF] text-[#013CC6] rounded-full p-2 flex flex-row gap-2 justify-between">
                   <span>Visualize prediction scores</span><img src="/resources/LinkOutIcon.svg" />
