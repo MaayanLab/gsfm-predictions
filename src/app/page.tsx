@@ -37,7 +37,7 @@ export default function Home() {
       <main className="flex flex-col place-items-center items-center grow bg-white">
         <div className="flex flex-row p-8 gap-16 place-items-center align-center">
           <div className="prose prose-h1:text-primary prose-h1:font-normal prose-h1:text-6xl">
-            <h1><span className="underline text-[#006DFF]">AI-powered gene</span> function prediction & biological discovery</h1>
+            <h1><span className="underline text-[#006DFF]">AI-powered gene</span> function prediction & gene set augmentation</h1>
           </div>
           <div className="flex flex-col gap-6">
             <div className="prose prose-p:text-primary">
