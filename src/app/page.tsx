@@ -41,7 +41,7 @@ export default function Home() {
           </div>
           <div className="flex flex-col gap-6">
             <div className="prose prose-p:text-primary">
-              <p>Search your gene of interest to review GSFM&apos;s predictions across a variety of Common Fund Data Ecosystem (CFDE) gene set libraries & other public resources.</p>
+              <p>Enter a human gene name to receive AI-powered predictions about the role of the gene across key contexts such as pathway membership, disease associations, GO biological processes, knockout mouse phenotypes, and more.</p>
             </div>
             <div>
               <Link href="/search" className="btn btn-primary font-semibold bg-[#006DFF] border-0 rounded-full">Start predicting</Link>
