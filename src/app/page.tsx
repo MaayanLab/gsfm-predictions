@@ -1,5 +1,4 @@
 import React from 'react';
-import Image from 'next/image'
 import Link from 'next/link';
 
 export default function Home() {
@@ -95,14 +94,14 @@ export default function Home() {
         </div> */}
         <div className="self-stretch bg-white p-8">
           <div className="prose prose-h3:text-primary prose-p:text-primary">
-            <h3>Model performance & validation</h3>
+            <h3>Model Performance and Validation</h3>
             <p>GSFM generalizes across diverse biological domains, supporting its design as a true foundation model for gene function prediction.</p>
           </div>
           <img src="/fig-1-restyled.svg" alt="" />
         </div>
         <div className="self-stretch bg-white p-8">
           <div className="prose prose-h3:text-primary prose-p:text-primary">
-            <h3>Explore the platform</h3>
+            <h3>Explore the Platform</h3>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <Link href="/search">
