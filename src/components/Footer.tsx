@@ -32,7 +32,7 @@ export default function Footer() {
           <img className="shrink-0" src="/resources/Ellipse2.svg" alt="" />
         </div>
         <div className="py-6 px-8 border-[#6992C8] border-t-1 font-semibold bg-secondary text-sm">
-          Clarke, D. J. B. et al. A Gene Set Foundation Model Pre-Trained on a Massive Collection of Diverse Gene Sets. Preprint on bioRxiv (2025). <a href="https://doi.org/10.1101/2025.05.30.657124" target="_blank">doi:10.1101/2025.05.30.657124</a>
+          <a href="https://doi.org/10.1101/2025.05.30.657124" target="_blank">Clarke, D. J. B. et al. A Gene Set Foundation Model Pre-Trained on a Massive Collection of Diverse Gene Sets. Preprint on bioRxiv (2025). doi:10.1101/2025.05.30.657124</a>
         </div>
       </div>
     </>
