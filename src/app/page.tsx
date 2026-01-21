@@ -57,7 +57,7 @@ export default function Home() {
             </div>
             <div className="prose">
               <p className="text-primary">
-                The Gene Set Foundation Model (GSFM) is a pre‑trained machine learning model designed to learn latent biological knowledge from a vast collection of gene sets. By capturing shared patterns across biological annotations, pathways, perturbation experiments, and functional datasets, GSFM enables researchers to generate new biological insights without training task‑specific models.
+                Gene Set Foundation Model (GSFM) is a pre‑trained Deep Learning model designed to learn the next expected gene by learning from a vast collection of gene sets. By capturing shared patterns within gene sets created from many sources, for example, disease associations, pathway membership, perturbation followed by expression experiments, and other omics datasets, GSFM discovers new biological contexts for single genes and gene sets without training task‑specific models.
               </p>
             </div>
           </div>
