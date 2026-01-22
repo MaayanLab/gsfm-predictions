@@ -1,10 +1,6 @@
-'use client'
-import { useRouter } from 'next/navigation';
 import GeneInput from '@/components/gene/GeneInput';
-import Image from 'next/image'
 
 export default function Search() {
-  const router = useRouter()
   return (
       <>
       <div
@@ -55,11 +51,7 @@ export default function Search() {
         <div className="z-10 bg-secondary self-stretch flex flex-row">
           <div className="flex flex-col items-start gap-4 my-4 mx-auto shrink-0">
             <span className="text-primary font-semibold text-xl">SEARCH GENE SYMBOL</span>
-            <GeneInput
-              onChange={value => {
-                router.push(`/gene/${encodeURIComponent(value)}`)
-              }}
-            />
+            <GeneInput />
           </div>
           <img className="shrink-0" src="/resources/Ellipse11.svg" alt="" />
         </div>

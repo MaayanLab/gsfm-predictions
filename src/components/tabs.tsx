@@ -32,20 +32,20 @@ export function TabContainer(props: React.PropsWithChildren<{ name: string, clas
   )
 }
 
-export function Tab(props: { id: string, label: string, checked: boolean, onChange: (id: string) => void }) {
+export function Tab(props: { id: string, className?: string, label: string, checked: boolean, onChange: (id: string) => void }) {
   const ctx = React.useContext(TabContext)
   React.useEffect(() => ctx.register({ id: props.id, onChange: props.onChange }), [props.id])
   return <input
     type="radio"
     role="tab"
     name={ctx.name}
-    className="tab whitespace-nowrap"
+    className={classNames("tab whitespace-nowrap", props.className)}
     aria-label={props.label}
     checked={props.checked}
     onChange={evt => {if (evt.currentTarget.checked) { props.onChange(props.id) }}}
   />
 }
 
-export function TabContent(props: React.PropsWithChildren<{ className: string }>) {
+export function TabContent(props: React.PropsWithChildren<{ className?: string }>) {
   return <div role="tabpanel" className={classNames("tab-content", props.className)}>{props.children}</div>
 }
