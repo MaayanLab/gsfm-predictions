@@ -17,7 +17,7 @@ export default function Footer() {
             The Ma’ayan Lab is a computational biology research group focused on data‑driven approaches to understanding gene regulation, signaling pathways, and disease mechanisms. The lab develops open tools and resources to accelerate biological discovery.
           </div>
         </div>
-        <div className="flex flex-row gap-8 h-[233px]">
+        <div className="flex flex-row gap-8 h-[233px] bg-secondary">
           <nav className="flex flex-col p-8 gap-4">
             <a className="font-semibold link link-hover" href="/about">About</a>
             <a className="font-semibold link link-hover" href="/augment">Augment</a>

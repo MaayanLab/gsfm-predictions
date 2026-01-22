@@ -49,7 +49,7 @@ export default function Home() {
           </div>
         </div>
         <div className="bg-secondary self-stretch flex flex-row">
-          <div className="flex flex-col items-start gap-4 my-4 mx-auto shrink-0">
+          <div className="flex flex-col items-start gap-4 my-4 mx-auto">
             <div className="flex items-center gap-2">
               <img src="/resources/BulletIcon.svg" alt="" />
               <span className="text-primary font-semibold text-xl">WHAT IS GSFM?</span>
@@ -60,7 +60,7 @@ export default function Home() {
               </p>
             </div>
           </div>
-          <img className="shrink-0" src="/resources/Ellipse11.svg" alt="" />
+          <img className="hidden lg:block" src="/resources/Ellipse11.svg" alt="" />
         </div>
         <div className="bg-primary self-stretch flex flex-row text-primary-content p-8 justify-around">
           <nav className="place-self-center">
