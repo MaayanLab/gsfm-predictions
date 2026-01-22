@@ -6,7 +6,7 @@
     "dev:next": "next dev --webpack",
     "dev": "concurrently npm:dev:*",
     "prebuild": "npm run codegen",
-    "build": "NEXT_PUBLIC_URL=https://gsfm.maayanlab.cloud next build",
+    "build": "NEXT_PUBLIC_URL=https://gsfm.maayanlab.cloud next build --webpack",
     "start": "next start",
     "lint": "next lint",
     "codegen:kysely": "kysely-codegen",
