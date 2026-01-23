@@ -20,6 +20,14 @@ export default function GenePredictions(props: { gene: string, models: string[] 
       return sources.data[0]
     }
   }, [searchParams, sources])
+  React.useEffect(() => {
+    if (selectedModel !== searchParams.get('model') || selected?.source !== searchParams.get('source')) {
+      setSearchParams(sp => {
+        sp.set('model', selectedModel)
+        if (selected?.source) sp.set('source', selected?.source)
+      }, { scroll: false })
+    }
+  }, [selectedModel, searchParams])
   return (
     <div className="flex flex-row gap-4">
       <div className="border-[#013CC6] border rounded-2xl p-4 flex flex-col w-56 shrink-0">
@@ -34,7 +42,7 @@ export default function GenePredictions(props: { gene: string, models: string[] 
                   {/* <div className="w-8 h-8 flex items-center">
                     {typeof source_icons[source] === 'string' ? <img src={source_icons[source]} alt={(source_rename[source] ?? source).replaceAll('_', ' ')} /> : source_icons[source]}
                   </div> */}
-                  <div className={classNames("text-primary px-4", { "bg-[#DCEBFF]": searchParams.get('source') === source })}>
+                  <div className={classNames("text-primary px-4", { "bg-[#DCEBFF]": selected?.source === source })}>
                     {(source_rename[source] ?? source).replaceAll('_', ' ')}
                   </div>
                 </div>
