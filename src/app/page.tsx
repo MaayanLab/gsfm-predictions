@@ -104,29 +104,29 @@ export default function Home() {
             <h3>The Gene Set Foundation Model Has Been Applied to at Least 4 Downstream Tasks:</h3>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <Link href="/search">
-              <div className="border-1 border-[#6992C8] rounded-sm bg-[#F9FAFE] p-3">
+            <Link href="https://github.com/MaayanLab/gsfm/blob/main/gsfm/benchmarks/dex_benchmark.ipynb" target="_blank">
+              <div className="border border-[#6992C8] rounded-sm bg-[#F9FAFE] p-3">
                 <div className="bg-[#DCEBFF] text-[#013CC6] rounded-full p-2 flex flex-row justify-between">
                   <span>Performing Reverse Gene Set Enrichment Analysis</span><img className="inline-block" src="/resources/LinkOutIcon.svg" alt="" />
                 </div>
               </div>
             </Link>
-            <Link href="/augment">
-              <div className="border-1 border-[#6992C8] rounded-sm bg-[#F9FAFE] p-3">
+            <Link href="/about">
+              <div className="border border-[#6992C8] rounded-sm bg-[#F9FAFE] p-3">
                 <div className="bg-[#DCEBFF] text-[#013CC6] rounded-full p-2 flex flex-row gap-2 justify-between">
                   <span>Predicting Gene-Disease Associations</span><img src="/resources/LinkOutIcon.svg" alt="" />
                 </div>
               </div>
             </Link>
-            <Link href="/about">
-              <div className="border-1 border-[#6992C8] rounded-sm bg-[#F9FAFE] p-3">
+            <Link href="https://github.com/MaayanLab/gsfm/blob/main/gsfm/benchmarks/GSFM_Paired_PPI.ipynb" target='_blank'>
+              <div className="border border-[#6992C8] rounded-sm bg-[#F9FAFE] p-3">
                 <div className="bg-[#DCEBFF] text-[#013CC6] rounded-full p-2 flex flex-row gap-2 justify-between">
                   <span>Predicting Protein-Protein Interactions</span><img src="/resources/LinkOutIcon.svg" alt="" />
                 </div>
               </div>
             </Link>
-            <Link href="/downloads">
-              <div className="border-1 border-[#6992C8] rounded-sm bg-[#F9FAFE] p-3">
+            <Link href="/about">
+              <div className="border border-[#6992C8] rounded-sm bg-[#F9FAFE] p-3">
                 <div className="bg-[#DCEBFF] text-[#013CC6] rounded-full p-2 flex flex-row gap-2 justify-between">
                   <span>Predicting Protein Membership in Pathways</span><img src="/resources/LinkOutIcon.svg" alt="" />
                 </div>
