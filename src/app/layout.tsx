@@ -5,6 +5,20 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Analytics from "@/components/analytics";
+import { Schibsted_Grotesk, JetBrains_Mono } from 'next/font/google'
+import classNames from "classnames";
+
+const schibsted_grotesk = Schibsted_Grotesk({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-schibsted-grotesk',
+})
+ 
+const jetbrains_mono = JetBrains_Mono({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-jetbrains-mono',
+})
 
 export const metadata: Metadata = {
   title: {
@@ -50,7 +64,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={classNames(schibsted_grotesk.variable, jetbrains_mono.variable)}>
       <body>
         <TrpcProvider>
           <div className="flex flex-col min-h-screen">

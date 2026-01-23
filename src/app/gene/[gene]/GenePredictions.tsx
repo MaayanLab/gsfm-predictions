@@ -30,7 +30,7 @@ export default function GenePredictions(props: { gene: string, models: string[] 
   }, [selectedModel, searchParams])
   return (
     <div className="flex flex-row gap-4">
-      <div className="border-[#013CC6] border rounded-2xl p-4 flex flex-col w-56 shrink-0">
+      <div className="border-[#013CC6] border rounded-2xl p-4 flex flex-col w-60 shrink-0">
         <h3 className="text-primary text-xl whitespace-nowrap font-mono font-medium">Table of contents</h3>
         <ul className="menu">
           {sources.data?.map(({ source, count }) => 
