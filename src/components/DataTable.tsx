@@ -30,39 +30,29 @@ export default function DataTable<C extends object>(props: { columns: { [k in ke
   }, [props.data, page, filter, orderBy, pageSize])
   return (
     <div className="flex flex-col place-items-center gap-2">
+      <div className="flex flex-row self-stretch justify-end">
+        <label className={classNames("input input-bordered flex items-center rounded-full text-primary font-semibold not-focus-within:w-28")}>
+          <img src="/resources/SearchIcon.svg" alt="" />
+          <input type="text" className="grow not-focus:placeholder:text-primary" placeholder="Search" value={filter} onChange={evt => {setFilter(() => evt.target.value); setPage(1)}} />
+        </label>
+      </div>
       <div className="overflow-x-auto">
-        <table className="table table-sm">
+        <table className="table table-sm text-primary">
           <thead>
-            <tr>
-              <th colSpan={6}>
-                <div className="flex flex-row justify-end">
-                  <label className="input input-bordered flex items-center gap-2">
-                    <input type="text" className="grow" placeholder="Filter table" value={filter} onChange={evt => {setFilter(() => evt.target.value); setPage(() => 1)}} />
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 16 16"
-                      fill="currentColor"
-                      className="h-4 w-4 opacity-70">
-                      <path
-                        fillRule="evenodd"
-                        d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-                        clipRule="evenodd" />
-                    </svg>
-                  </label>
-                </div>
-              </th>
-            </tr>
             <tr>
               {Object.keys(props.columns).map((col) => {
                 const column = props.columns[col as keyof C]
                 return (
-                  <th key={col}>
-                    <div onClick={evt => {setOrderBy(orderBy => orderBy === `${col as string & keyof C} desc` ? `${col as string & keyof C} asc` : `${col as string & keyof C} desc`); setPage(() => 1)}}>
+                  <th key={col} className="text-primary text-center">
+                    <button
+                      className="cursor-pointer"
+                      onClick={evt => {setOrderBy(orderBy => orderBy === `${col as string & keyof C} desc` ? `${col as string & keyof C} asc` : `${col as string & keyof C} desc`); setPage(() => 1)}}
+                    >
                       {column.th}
                       {orderBy === `${col} asc` ? <>&uarr;</>
                         : orderBy === `${col} desc` ? <>&darr;</>
                         : <span className="invisible">&darr;</span>}
-                    </div>
+                    </button>
                   </th>
                 )
               })}
@@ -78,14 +68,14 @@ export default function DataTable<C extends object>(props: { columns: { [k in ke
           </tbody>
         </table>
       </div>
-      <div className="place-self-center join items-center justify-center">
-        {page > 2 && <button className="join-item btn" onClick={evt => {setPage(page => 1)}}>1</button>}
-        {page > 3 && <button className="join-item btn btn-disabled">...</button>}
-        {page > 1 && <button className="join-item btn" onClick={evt => {setPage(page => page - 1)}}>{page - 1}</button>}
-        <button className={classNames("btn btn-active", { 'rounded-lg': totalCount <= pageSize, 'join-item': totalCount > pageSize })}>{page}</button>
-        {page*pageSize < totalCount && <button className="join-item btn" onClick={evt => {setPage(page => page + 1)}}>{page + 1}</button>}
-        {(page+2)*pageSize < totalCount && <button className="join-item btn btn-disabled">...</button>}
-        {(page+1)*pageSize < totalCount && <button className="join-item btn" onClick={evt => {setPage(page => Math.ceil(totalCount/pageSize))}}>{Math.ceil(totalCount/pageSize)}</button>}
+      <div className="join items-center justify-center gap-1">
+        {page > 2 && <button className="join-item btn text-[#6992C8] bg-white border font-normal border-[#6992C8] rounded-lg" onClick={evt => {setPage(page => 1)}}>1</button>}
+        {page > 3 && <button className="join-item btn text-[#6992C8] bg-white border font-normal border-[#6992C8] rounded-lg btn-disabled">...</button>}
+        {page > 1 && <button className="join-item btn text-[#6992C8] bg-white border font-normal border-[#6992C8] rounded-lg" onClick={evt => {setPage(page => page - 1)}}>{page - 1}</button>}
+        <button className={classNames("btn rounded-lg btn-active border border-[#6992C8] bg-[#DCEBFF] text-[#013CC6]", { 'rounded-lg': totalCount <= pageSize, 'join-item': totalCount > pageSize })}>{page}</button>
+        {page*pageSize < totalCount && <button className="join-item btn text-[#6992C8] bg-white border font-normal border-[#6992C8] rounded-lg" onClick={evt => {setPage(page => page + 1)}}>{page + 1}</button>}
+        {(page+2)*pageSize < totalCount && <button className="join-item btn text-[#6992C8] bg-white border font-normal border-[#6992C8] rounded-lg btn-disabled">...</button>}
+        {(page+1)*pageSize < totalCount && <button className="join-item btn text-[#6992C8] bg-white border font-normal border-[#6992C8] rounded-lg" onClick={evt => {setPage(page => Math.ceil(totalCount/pageSize))}}>{Math.ceil(totalCount/pageSize)}</button>}
       </div>
     </div>
   )

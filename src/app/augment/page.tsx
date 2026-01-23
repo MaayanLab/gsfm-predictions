@@ -28,7 +28,7 @@ export default function AugmentPage() {
     ].join('\n'), `${model}-predictions.tsv`, 'text/tab-separated-values;charset=utf-8')
   }, [model, predictions])
   return (
-    <main className="bg-white">
+    <main className="bg-white py-2">
       <div className="mx-auto prose prose-h1:text-primary text-justify">
         <h1>GSFM Augment</h1>
         <p>Trained on millions of gene sets automatically extracted from literature and raw RNA-seq data, GSFM learns to recover held-out genes from gene sets. The resulting model exhibits state of the art performance on gene function prediction.</p>
@@ -37,7 +37,7 @@ export default function AugmentPage() {
       </div>
       <div className="flex flex-row flex-wrap gap-4 justify-center">
         <fieldset className="fieldset w-80">
-          <legend className="fieldset-legend text-lg">Augment Gene Set</legend>
+          <legend className="fieldset-legend text-lg text-primary">Augment Gene Set</legend>
           <textarea
             className="input h-72 whitespace-pre"
             value={geneSet}
@@ -63,7 +63,7 @@ export default function AugmentPage() {
           <button className="btn btn-success" disabled={!predictions.isSuccess} onClick={downloadPredictions}>Download Results</button>
         </fieldset>
         <fieldset className="fieldset min-w-72">
-          <legend className="fieldset-legend text-lg">Results</legend>
+          <legend className="fieldset-legend text-lg text-primary">Results</legend>
             {predictions.isPending && <div className="flex-auto">Loading...</div>}
             {predictions.isError && <div className="alert alert-error">{predictions.error.message}</div>}
             {predictions.isSuccess &&
