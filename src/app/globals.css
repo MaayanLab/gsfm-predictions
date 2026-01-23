@@ -1,8 +1,10 @@
 @import 'tailwindcss';
 @import url("https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=JetBrains%20Mono&display=swap");
 
 @theme {
   --font-sans: "Schibsted Grotesk", sans-serif;
+  --font-mono: "JetBrains Mono";
 }
 
 @plugin "@tailwindcss/typography";

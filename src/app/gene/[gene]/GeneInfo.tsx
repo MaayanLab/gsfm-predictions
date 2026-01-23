@@ -20,7 +20,7 @@ export default function GeneInfo({ gene_info }: { gene_info: Exclude<UnPromise<R
   }, [gpt4o_available, gemini_available, gene_info, searchParams, setSearchParams])
 
   return (
-    <div className="prose max-w-full p-4 flex flex-col overflow-hidden relative">
+    <div className="prose max-w-full py-4 flex flex-col overflow-hidden relative">
       <div className="flex flex-col gap-8 mb-8">
         <h1 className="mb-0 text-6xl text-primary">{gene_info.symbol}</h1>
         <h5 className="mt-0 text-2xl text-primary">{gene_info.name}</h5>

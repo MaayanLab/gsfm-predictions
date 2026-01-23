@@ -1,6 +1,5 @@
 import React from 'react';
 import trpc from '@/lib/trpc/server'
-import { Waypoints } from '@/components/waypoint';
 import GeneInfo from './GeneInfo';
 import GenePredictions from './GenePredictions';
 import { notFound, redirect } from 'next/navigation';
@@ -82,10 +81,8 @@ export default async function Home(props: { params: Promise<{ gene: string }>, s
           <img className="hidden xl:block" src="/resources/Ellipse11.svg" alt="" />
         </div>
         <div className="mx-18">
-          <Waypoints>
-            <GeneInfo gene_info={gene_info} />
-            <GenePredictions gene={gene} models={models.map(({ model }) => model)} />
-          </Waypoints>
+          <GeneInfo gene_info={gene_info} />
+          <GenePredictions gene={gene} models={models.map(({ model }) => model)} />
         </div>
       </main>
     </>
