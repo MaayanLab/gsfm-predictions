@@ -43,7 +43,7 @@ export default function Home() {
               <p>Enter a human gene name to receive AI-powered predictions about the role of the gene across key contexts such as pathway membership, disease associations, GO biological processes, knockout mouse phenotypes, and more.</p>
             </div>
             <div>
-              <Link href="/search" className="btn btn-primary font-semibold bg-[#006DFF] border-0 rounded-full">Start predicting</Link>
+              <Link href="/search" className="btn btn-primary font-semibold bg-[#006DFF] border-0 rounded-full">Explore predictions</Link>
               <Link href="/search" className="btn btn-primary font-semibold bg-[#006DFF] border-0 rounded-full"><img src="/resources/RightArrowIcon.svg" alt="" /></Link>
             </div>
           </div>
