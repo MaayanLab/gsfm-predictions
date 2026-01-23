@@ -4,10 +4,8 @@ import React from 'react'
 
 const TabContext = React.createContext<{
   name: string,
-  register: (props: { id: string, onChange: (id: string) => void }) => () => void,
 }>({
   name: '',
-  register: (props: { id: string, onChange: (id: string) => void }) => () => {},
 })
 
 export function TabContainer(props: React.PropsWithChildren<{ name: string, className: string }>) {
@@ -15,15 +13,6 @@ export function TabContainer(props: React.PropsWithChildren<{ name: string, clas
   return (
     <TabContext.Provider value={{
       name: props.name,
-      register: (props: { id: string, onChange: (id: string) => void }) => {
-        if (!(props.id in ref.current)) {
-          if (Object.keys(ref.current).length === 0) {
-            ref.current[props.id] = true
-            props.onChange(props.id)
-          }
-        }
-        return () => { delete ref.current[props.id] }
-      },
     }}>
       <div role="tablist" className={classNames("tabs", props.className)}>
         {props.children}
@@ -34,12 +23,11 @@ export function TabContainer(props: React.PropsWithChildren<{ name: string, clas
 
 export function Tab(props: { id: string, className?: string, label: string, checked: boolean, onChange: (id: string) => void }) {
   const ctx = React.useContext(TabContext)
-  React.useEffect(() => ctx.register({ id: props.id, onChange: props.onChange }), [props.id])
   return <input
     type="radio"
     role="tab"
     name={ctx.name}
-    className={classNames("tab", props.className)}
+    className={classNames("tab", props.className, {'tab-active': props.checked})}
     aria-label={props.label}
     checked={props.checked}
     onChange={evt => {if (evt.currentTarget.checked) { props.onChange(props.id) }}}
