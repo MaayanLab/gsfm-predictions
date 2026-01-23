@@ -27,17 +27,13 @@ function ModelTab(props: { model: string, gene: string }) {
   return !!sources.data?.length && <>
     <Tab
       id={props.model}
-      className={classNames("border-[#013CC6] whitespace-nowrap rounded-t-2xl border-t border-x border-dashed bg-[#F9FAFE]", { 'bg-white tab-active border-solid': searchParams.get('model') === props.model })}
+      className={classNames("border-[#013CC6] whitespace-nowrap rounded-t-2xl border-t border-x border-dashed bg-[#F9FAFE] text-primary", { 'bg-white tab-active border-solid': searchParams.get('model') === props.model })}
       label={model_name[props.model] ?? props.model}
       checked={searchParams.get('model') === props.model}
       onChange={() => {setSearchParams(sp => { sp.set('model', props.model) })}}
     />
     <TabContent className="block border-[#013CC6] border rounded-2xl rounded-tl-none p-6 prose max-w-none">
       <div className="prose max-w-full p-4 px-6">
-        <h2 className="text-4xl mb-2">{model_name[props.model] ?? props.model} gene annotation predictions</h2>
-        <p>
-          The gene annotations below have been generated using {model_name[props.model] ?? props.model}, an auto-encoder-like deep machine learning model trained on {model_descriptions[props.model] ?? 'gene sets'}.
-        </p>
         {searchParams.get('model') === props.model && <ModelPredictions model={props.model} gene={props.gene} sources={sources.data} />}
       </div>
     </TabContent>

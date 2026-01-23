@@ -30,7 +30,7 @@ export default function GeneInfo({ gene_info }: { gene_info: Exclude<UnPromise<R
           {(ncbi_available || gpt4o_available || gemini_available) && <>
             <button
               role="tab"
-              className={classNames("tab border-[#013CC6] whitespace-nowrap rounded-t-2xl border-t border-x border-dashed bg-[#F9FAFE]", { 'bg-white tab-active border-solid': searchParams.get('geneinfo') === null })}
+              className={classNames("tab border-[#013CC6] whitespace-nowrap rounded-t-2xl border-t border-x border-dashed bg-[#F9FAFE] text-primary", { 'bg-white tab-active border-solid': searchParams.get('geneinfo') === null })}
               onClick={evt => {evt.preventDefault(); setSearchParams(sp => { sp.delete('geneinfo') }, { scroll: false })}}
             >
               NCBI Description
@@ -40,7 +40,7 @@ export default function GeneInfo({ gene_info }: { gene_info: Exclude<UnPromise<R
           {gpt4o_available && gene_info.deepdive_gpt4o_description && <>
             <button
               role="tab"
-              className={classNames("tab border-[#013CC6] whitespace-nowrap rounded-t-2xl border-t border-x border-dashed bg-[#F9FAFE]", { 'bg-white tab-active border-solid': searchParams.get('geneinfo') === 'gpt4o' })}
+              className={classNames("tab border-[#013CC6] whitespace-nowrap rounded-t-2xl border-t border-x border-dashed bg-[#F9FAFE] text-primary", { 'bg-white tab-active border-solid': searchParams.get('geneinfo') === 'gpt4o' })}
               onClick={evt => {evt.preventDefault(); setSearchParams(sp => { sp.set('geneinfo', 'gpt4o') }, { scroll: false })}}
             >
               AI Overview (DeepDive GPT4o)
@@ -50,7 +50,7 @@ export default function GeneInfo({ gene_info }: { gene_info: Exclude<UnPromise<R
           {gemini_available && gene_info.deepdive_gemini_description && <>
             <button
               role="tab"
-              className={classNames("tab border-[#013CC6] whitespace-nowrap rounded-t-2xl border-t border-x border-dashed bg-[#F9FAFE]", { 'bg-white tab-active border-solid': searchParams.get('geneinfo') === 'gemini' })}
+              className={classNames("tab border-[#013CC6] whitespace-nowrap rounded-t-2xl border-t border-x border-dashed bg-[#F9FAFE] text-primary", { 'bg-white tab-active border-solid': searchParams.get('geneinfo') === 'gemini' })}
               onClick={evt => {evt.preventDefault(); setSearchParams(sp => { sp.set('geneinfo', 'gemini') }, { scroll: false })}}
             >
               AI Overview (DeepDive Gemini)
@@ -60,7 +60,7 @@ export default function GeneInfo({ gene_info }: { gene_info: Exclude<UnPromise<R
           {!ncbi_available && !gpt4o_available && !gemini_available && <>
             <button
               role="tab"
-              className={classNames("tab border-[#013CC6] whitespace-nowrap bg-white tab-active")}
+              className={classNames("tab border-[#013CC6] whitespace-nowrap text-primary bg-white tab-active")}
             >
               Coming Soon
             </button>
