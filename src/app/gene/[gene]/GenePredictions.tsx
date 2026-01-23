@@ -29,7 +29,7 @@ function ModelTab(props: { model: string, gene: string }) {
       className={classNames({ 'tab-active': searchParams.get('model') === props.model })}
       label={model_name[props.model] ?? props.model}
       checked={searchParams.get('model') === props.model}
-      onChange={() => {setSearchParams(sp => { sp.set('model', props.model) })}}
+      onChange={() => {setSearchParams(sp => { sp.set('model', props.model) }, { scroll: false })}}
     />
     <TabContent>
       <div className="prose max-w-full">
