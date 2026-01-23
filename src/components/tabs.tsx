@@ -39,7 +39,7 @@ export function Tab(props: { id: string, className?: string, label: string, chec
     type="radio"
     role="tab"
     name={ctx.name}
-    className={classNames("tab whitespace-nowrap", props.className)}
+    className={classNames("tab", props.className)}
     aria-label={props.label}
     checked={props.checked}
     onChange={evt => {if (evt.currentTarget.checked) { props.onChange(props.id) }}}

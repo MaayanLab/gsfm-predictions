@@ -29,7 +29,7 @@ export default function GeneInput({ large, value, onChange }: { large?: boolean,
         <datalist id="geneAutocomplete">{geneAutocomplete.data?.map(suggestion => <option key={suggestion.symbol}>{suggestion.symbol}</option>)}</datalist>
       </label>
       <button
-        className={classNames("btn btn-primary rounded-full bg-[#006DFF] text-white font-normal", { 'btn-xl': large })}
+        className={classNames("btn btn-primary", { 'btn-xl': large })}
         type="submit"
         disabled={!validGene}
         onClick={evt => {

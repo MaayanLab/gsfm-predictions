@@ -43,8 +43,8 @@ export default function Home() {
               <p>Enter a human gene name to receive AI-powered predictions about the role of the gene across key contexts such as pathway membership, disease associations, GO biological processes, knockout mouse phenotypes, and more.</p>
             </div>
             <div>
-              <Link href="/search" className="btn btn-primary font-semibold bg-[#006DFF] border-0 rounded-full">Explore predictions</Link>
-              <Link href="/search" className="btn btn-primary font-semibold bg-[#006DFF] border-0 rounded-full"><img src="/resources/RightArrowIcon.svg" alt="" /></Link>
+              <Link href="/search" className="btn btn-primary">Explore predictions</Link>
+              <Link href="/search" className="btn btn-primary"><img src="/resources/RightArrowIcon.svg" alt="" /></Link>
             </div>
           </div>
         </div>
@@ -87,8 +87,8 @@ export default function Home() {
           <div className="prose prose-h3:text-primary prose-p:text-primary">
             <h3>How it Works</h3>
             <div>
-              <button className="btn btn-primary font-semibold bg-[#006DFF] border-0 rounded-full">Start predicting</button>
-              <button className="btn btn-primary font-semibold bg-[#006DFF] border-0 rounded-full"><img src="/resources/RightArrowIcon.svg" alt="" /></button>
+              <button className="btn btn-primary">Start predicting</button>
+              <button className="btn btn-primary"><img src="/resources/RightArrowIcon.svg" alt="" /></button>
             </div>
           </div>
         </div> */}

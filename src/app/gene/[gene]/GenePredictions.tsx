@@ -9,7 +9,6 @@ import trpc from '@/lib/trpc/client';
 import type trpcT from '@/lib/trpc/server';
 import classNames from 'classnames';
 import React from 'react';
-import Image from 'next/image'
 
 export default function GenePredictions(props: { gene: string, models: string[] }) {
   return (
@@ -27,13 +26,13 @@ function ModelTab(props: { model: string, gene: string }) {
   return !!sources.data?.length && <>
     <Tab
       id={props.model}
-      className={classNames("border-[#013CC6] whitespace-nowrap rounded-t-2xl border-t border-x border-dashed bg-[#F9FAFE] text-primary", { 'bg-white tab-active border-solid': searchParams.get('model') === props.model })}
+      className={classNames({ 'tab-active': searchParams.get('model') === props.model })}
       label={model_name[props.model] ?? props.model}
       checked={searchParams.get('model') === props.model}
       onChange={() => {setSearchParams(sp => { sp.set('model', props.model) })}}
     />
-    <TabContent className="block border-[#013CC6] border rounded-2xl rounded-tl-none p-6 prose max-w-none">
-      <div className="prose max-w-full p-4 px-6">
+    <TabContent>
+      <div className="prose max-w-full">
         {searchParams.get('model') === props.model && <ModelPredictions model={props.model} gene={props.gene} sources={sources.data} />}
       </div>
     </TabContent>
