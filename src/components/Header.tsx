@@ -13,12 +13,12 @@ export default function Header() {
   const searchParams = useSearchParams()
   if (searchParams.get('embed') !== null) return null
   return (
-    <header className="my-2 px-2 shadow bg-white z-1 h-[92px] items-center">
+    <header className="my-2 px-2 shadow bg-white z-1 h-23 items-center">
       <div className="navbar bg-base-100 gap-x-10 size-full flex flex-row">
         <Link className="flex flex-row gap-2 overflow-clip px-2 shrink-0" href="/">
           <img src="/resources/Logo.svg" alt="Logo" />
         </Link>
-        <div className="flex-grow">&nbsp;</div>
+        <div className="grow">&nbsp;</div>
         <Link className={classNames("text-primary font-semibold", { 'border-b-2': pathname === '/about' })} href="/about">About</Link>
         <Link className={classNames("text-primary font-semibold", { 'border-b-2': pathname === '/augment' })} href="/augment" >Augment</Link>
         <Link className={classNames("text-primary font-semibold", { 'border-b-2': pathname === '/downloads' })} href="/downloads">Downloads</Link>

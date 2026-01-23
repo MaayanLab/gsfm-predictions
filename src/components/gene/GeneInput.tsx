@@ -13,7 +13,7 @@ export default function GeneInput({ large, value, onChange }: { large?: boolean,
   React.useEffect(() => {if (value) setGene(value)}, [value])
   return (
     <div className="flex flex-row gap-6">
-      <label className={classNames("input bg-transparent border-transparent text-4xl text-primary", { 'border-red-400': validGene === false })}>
+      <label className={classNames("input bg-transparent border-transparent text-4xl text-primary rounded-full", { 'border-red-400': validGene === false })}>
         <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M41.9998 42L33.3198 33.32" stroke="#013CC6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
           <path d="M22 38C30.8366 38 38 30.8366 38 22C38 13.1634 30.8366 6 22 6C13.1634 6 6 13.1634 6 22C6 30.8366 13.1634 38 22 38Z" stroke="#013CC6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>

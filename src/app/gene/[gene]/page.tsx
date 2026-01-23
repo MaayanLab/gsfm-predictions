@@ -80,7 +80,7 @@ export default async function Home(props: { params: Promise<{ gene: string }>, s
           </div>
           <img className="hidden xl:block" src="/resources/Ellipse11.svg" alt="" />
         </div>
-        <div className="mx-18">
+        <div className="mx-18 my-4">
           <GeneInfo gene_info={gene_info} />
           <GenePredictions gene={gene} models={models.map(({ model }) => model)} />
         </div>

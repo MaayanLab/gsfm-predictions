@@ -36,6 +36,7 @@ export default function GenePredictions(props: { gene: string, models: string[] 
           {sources.data?.map(({ source, count }) => 
             <li key={`${source}-${props.gene}`}>
               <button
+                className={classNames("border border-white hover:bg-[#DCEBFF] hover:border-primary", { "bg-[#DCEBFF]": selected?.source === source })}
                 onClick={evt => {evt.preventDefault(); setSearchParams(sp => { sp.set('source', source) }, { scroll: false })}}
               >
                 <div className="flex flex-row gap-2 align-center items-center">
@@ -52,7 +53,7 @@ export default function GenePredictions(props: { gene: string, models: string[] 
         </ul>
       </div>
       <div className="prose max-w-full border-secondary flex flex-col gap-4 grow">
-        <div className="flex flex-col items-stretch place-items-stretch overflow-auto">
+        <div className="flex flex-col items-stretch place-items-stretch">
           <div role="tablist" className="tabs tabs-lift tabs-xl min-w-max">
             {props.models.map(model => <button key={model}
                 role="tab"
