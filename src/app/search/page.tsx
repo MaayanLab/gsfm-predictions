@@ -48,12 +48,12 @@ export default function Search() {
         </h1>
       </div>
       <main className="flex flex-col place-items-center items-center grow bg-white">
-        <div className="z-10 bg-secondary self-stretch flex flex-row">
-          <div className="flex flex-col items-start gap-4 my-4 mx-auto shrink-0">
+        <div className="z-10 bg-secondary self-stretch flex flex-row overflow-hidden">
+          <div className="flex flex-col items-start justify-between gap-4 my-4 mx-auto py-4 px-16">
             <span className="text-primary font-semibold text-xl">SEARCH GENE SYMBOL</span>
             <GeneInput />
           </div>
-          <img className="shrink-0" src="/resources/Ellipse11.svg" alt="" />
+          <img className="hidden xl:block" src="/resources/Ellipse11.svg" alt="" />
         </div>
         <div className="self-stretch bg-white p-8 mx-auto flex flex-col items-center">
           <div className="prose prose-h3:text-primary prose-p:text-primary">
