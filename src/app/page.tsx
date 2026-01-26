@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Banner from '@/components/Banner';
 import Linkouts from '@/components/Linkouts';
+import ButtonWithIcon from '@/components/ButtonWithIcon';
 
 export default function Home() {
   return (
@@ -44,10 +45,12 @@ export default function Home() {
             <div className="prose prose-p:text-primary">
               <p>Enter a human gene name to receive AI-powered predictions about the role of the gene across key contexts such as pathway membership, disease associations, GO biological processes, knockout mouse phenotypes, and more.</p>
             </div>
-            <div className="whitespace-nowrap">
-              <Link href="/search" className="btn btn-primary">Explore predictions</Link>
-              <Link href="/search" className="btn btn-primary"><img src="/resources/RightArrowIcon.svg" alt="" /></Link>
-            </div>
+            <Link href="/search">
+              <ButtonWithIcon
+                className="btn btn-primary font-semibold"
+                icon={<img src="/resources/RightArrowIcon.svg" alt="" />}
+              >Explore predictions</ButtonWithIcon>
+            </Link>
           </div>
         </div>
         <div className="bg-secondary self-stretch flex flex-row">

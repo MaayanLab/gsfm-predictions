@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Content from './content.mdx'
 import Banner from '@/components/Banner'
 import Linkouts from '@/components/Linkouts'
+import ButtonWithIcon from '@/components/ButtonWithIcon'
 
 export default function About() {
   return (
@@ -42,10 +43,12 @@ export default function About() {
             <div className="prose prose-p:text-primary lg:w-92">
               <p>Advancing gene set functional analysis through open, data-driven science.</p>
             </div>
-            <div className="whitespace-nowrap">
-              <Link href="/search" className="btn btn-primary">Explore predictions</Link>
-              <Link href="/search" className="btn btn-primary"><img src="/resources/RightArrowIcon.svg" alt="" /></Link>
-            </div>
+            <Link href="/search">
+              <ButtonWithIcon
+                className="btn btn-primary font-semibold"
+                icon={<img src="/resources/RightArrowIcon.svg" alt="" />}
+              >Explore predictions</ButtonWithIcon>
+            </Link>
           </div>
         </div>
       </div>
