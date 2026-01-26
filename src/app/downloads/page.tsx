@@ -86,7 +86,7 @@ export default function Downloads() {
           </table>
           <div className="prose text-primary">
             <p>
-              For model weights, see our <a href={`https://huggingface.co/collections/maayanlab/gsfm-68d5a2ff093d93d3c005108e`}>GSFM collection</a> on HuggingFace.
+              For model weights, see our <a className="text-[#006DFF]" href={`https://huggingface.co/collections/maayanlab/gsfm-68d5a2ff093d93d3c005108e`}>GSFM collection</a> on HuggingFace.
             </p>
           </div>
         </div>
