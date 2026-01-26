@@ -5,6 +5,7 @@ import trpc from '@/lib/trpc/client'
 import downloadBlob from "@/components/downloadBlob"
 import DataTable from "@/components/DataTable"
 import { model_name } from "@/components/resources"
+import ButtonWithIcon from "@/components/ButtonWithIcon"
 
 const example = {
   gene_set: `TYROBP\nLILRB1\nSLC11A1\nTNFSF18\nFCER1G\nEIF2AK4\nMDK\nSEMA6D\nIFNA6\nIFNK\nIFNB1\nIFNA2\nIFNA14\nIFNA7\nIFNA1\nIFNE\nIFNA4\nIFNA5\nPLXNA1\nITGAL\nICAM1\nF2RL1\nTOX4\nCD74\nIFNA21\nIFNA8\nIFNW1\nIFNA16\nIFNA10\nIFNA17`,
@@ -28,60 +29,129 @@ export default function AugmentPage() {
     ].join('\n'), `${model}-predictions.tsv`, 'text/tab-separated-values;charset=utf-8')
   }, [model, predictions])
   return (
-    <main className="bg-white py-2">
-      <div className="mx-auto prose prose-h1:text-primary text-justify">
-        <h1>GSFM Augment</h1>
-        <p>Trained on millions of gene sets automatically extracted from literature and raw RNA-seq data, GSFM learns to recover held-out genes from gene sets. The resulting model exhibits state of the art performance on gene function prediction.</p>
-        <p>Submit your set of known genes and get predictions for missing genes in the set.</p>
-        <p>NOTE: The maximum gene set size is currently 512 genes.</p>
+    <>
+      <div
+        style={{
+          position: 'relative',
+          height:'450px',
+          overflow: 'hidden',
+        }}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            right: '0px',
+            top: '-410px',
+            height: '630px',
+            width: '630px',
+            backgroundImage: 'url("/resources/AboutHeroRight.svg")',
+          }}
+        />
+        <div
+          className="hidden lg:block"
+          style={{
+            position: 'absolute',
+            bottom: '-410px',
+            height: '630px',
+            width: '630px',
+            backgroundImage: 'url("/resources/AboutHeroLeft.svg")',
+          }}
+        />
+        <div className="flex flex-row p-36 gap-36 place-items-center align-center">
+          <div className="prose prose-h1:text-primary prose-h1:font-normal prose-h1:text-6xl">
+            <h1>GSFM<br /><span className="underline text-[#006DFF]">Augment</span></h1>
+          </div>
+          <div className="flex flex-col gap-6">
+            <div className="prose prose-p:text-primary min-w-56">
+              <p>Trained on millions of gene sets automatically extracted from literature and raw RNA-seq data, GSFM learns to recover held-out genes from gene sets. The resulting model exhibits state of the art performance on gene function prediction.</p>
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="flex flex-row flex-wrap gap-4 justify-center">
-        <fieldset className="fieldset w-80">
-          <legend className="fieldset-legend text-lg text-primary">Augment Gene Set</legend>
-          <textarea
-            className="input h-72 whitespace-pre"
-            value={geneSet}
-            onChange={evt => {setGeneSet(evt.currentTarget.value)}}
-            placeholder={`Gene\nSymbols\nLine\nBy\nLine\n...`}
-          />
-          <input
-            className="input"
-            value={description}
-            onChange={evt => {setDescription(evt.currentTarget.value)}}
-            placeholder="Gene set description"
-          />
-          <select
-            className="select"
-            value={model}
-            onChange={evt => {setModel(evt.currentTarget.value)}}
-          >
-            {models.isLoading && <option key="" value="">Loading...</option>}
-            {models.data && models.data.map(({ model }) => <option key={model} value={model}>{model_name[model] ?? model}</option>)}
-          </select>
-          <button className="btn" onClick={evt => {setGeneSet(example.gene_set); setDescription(example.description)}}>Example</button>
-          <button className="btn btn-primary" onClick={evt => predictions.mutate({ model, gene_set: geneSetParsed, description })} disabled={!(geneSetParsed.length <= 512)}>Submit</button>
-          <button className="btn btn-success" disabled={!predictions.isSuccess} onClick={downloadPredictions}>Download Results</button>
-        </fieldset>
-        <fieldset className="fieldset min-w-72">
-          <legend className="fieldset-legend text-lg text-primary">Results</legend>
-            {predictions.isPending && <div className="flex-auto">Loading...</div>}
-            {predictions.isError && <div className="alert alert-error">{predictions.error.message}</div>}
-            {predictions.isSuccess &&
-              <DataTable
-                columns={{
-                  gene: {th: <>Gene</>, td: (gene: string) => gene},
-                  score: {th: <>Score</>, td: (score: number) => score.toPrecision(3)},
-                  known: {th: <>Known</>, td: (known: number) => known},
-                }}
-                defaultOrderBy={'score desc'}
-                data={Object.entries(predictions.data.predictions).map(([gene, score]) => ({
-                  gene,
-                  score,
-                  known: predictions.variables.gene_set.includes(gene) ? 1 : 0
-                }))}
-              />}
-          </fieldset>
+      <div className="self-stretch bg-white p-8 flex flex-col gap-12 items-start">
+        <div className="prose prose-h1:font-semibold prose-h1:text-primary prose-h1:mb-3 prose-p:text-primary">
+          <h1>Start predicting</h1>
+          <p>Submit your set of known genes and get predictions for missing genes in the set.</p>
+        </div>
+        <div className="flex flex-row gap-4 self-stretch">
+          <div className="flex flex-col gap-8 items-stretch">
+            <div role="tablist" className="tabs tabs-lift tabs-xl">
+              <button
+                role="tab"
+                className="tab tab-active cursor-auto"
+              >
+                Augment Gene Set
+              </button>
+              <div role="tabpanel" className="tab-content block">
+                {/* TODO: line indicator */}
+                <textarea
+                  className="input h-72 w-full whitespace-pre border-none"
+                  value={geneSet}
+                  onChange={evt => {setGeneSet(evt.currentTarget.value)}}
+                  placeholder={`Gene symbols line by line`}
+                />
+              </div>
+            </div>
+            <input
+              className="input w-full text-primary border-primary"
+              value={description}
+              onChange={evt => {setDescription(evt.currentTarget.value)}}
+              placeholder="Gene set description"
+            />
+            <select
+              className="select w-full text-primary border-primary"
+              value={model}
+              onChange={evt => {setModel(evt.currentTarget.value)}}
+            >
+              {models.isLoading && <option key="" value="">Loading...</option>}
+              {models.data && models.data.map(({ model }) => <option key={model} value={model}>{model_name[model] ?? model}</option>)}
+            </select>
+            <div className="flex flex-row gap-2">
+              <button className="btn bg-[#6992C8] text-white" onClick={evt => {setGeneSet(example.gene_set); setDescription(example.description)}}>Example</button>
+              <ButtonWithIcon
+                className="btn btn-primary font-semibold"
+                icon={<img src="/resources/RightArrowIcon.svg" alt="" />}
+                onClick={evt => predictions.mutate({ model, gene_set: geneSetParsed, description })} disabled={!(geneSetParsed.length <= 512)}
+              >Submit</ButtonWithIcon>
+            </div>
+          </div>
+          {predictions.status !== 'idle' && <div className="grow flex flex-col gap-4">
+            <div role="tablist" className="tabs tabs-lift tabs-xl">
+              <button
+                role="tab"
+                className="tab cursor-auto"
+              >
+                Results
+              </button>
+              <div role="tabpanel" className="tab-content block p-0">
+                {predictions.isPending && <div className="flex-auto">Loading...</div>}
+                {predictions.isError && <div className="alert alert-error">{predictions.error.message}</div>}
+                {predictions.isSuccess &&
+                  <DataTable
+                    title={<>{description}</>}
+                    columns={{
+                      gene: {th: <>Gene</>, td: (gene: string) => gene},
+                      score: {th: <>Score</>, td: (score: number) => score.toPrecision(3)},
+                      known: {th: <>Known</>, td: (known: number) => known},
+                    }}
+                    defaultOrderBy={'score desc'}
+                    data={Object.entries(predictions.data.predictions).map(([gene, score]) => ({
+                      gene,
+                      score,
+                      known: predictions.variables.gene_set.includes(gene) ? 1 : 0
+                    }))}
+                  />}
+              </div>
+            </div>
+            <ButtonWithIcon
+              className="btn btn-primary font-semibold"
+              disabled={!predictions.isSuccess}
+              onClick={downloadPredictions}
+              icon={<img src="/resources/DownloadIcon.svg" alt="" />}
+            >Download result</ButtonWithIcon>
+          </div>}
+        </div>
       </div>
-    </main>
+    </>
   )
 }
