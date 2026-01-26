@@ -1,5 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
+import Banner from '@/components/Banner';
+import Linkouts from '@/components/Linkouts';
 
 export default function Home() {
   return (
@@ -42,7 +44,7 @@ export default function Home() {
             <div className="prose prose-p:text-primary">
               <p>Enter a human gene name to receive AI-powered predictions about the role of the gene across key contexts such as pathway membership, disease associations, GO biological processes, knockout mouse phenotypes, and more.</p>
             </div>
-            <div>
+            <div className="whitespace-nowrap">
               <Link href="/search" className="btn btn-primary">Explore predictions</Link>
               <Link href="/search" className="btn btn-primary"><img src="/resources/RightArrowIcon.svg" alt="" /></Link>
             </div>
@@ -62,22 +64,7 @@ export default function Home() {
           </div>
           <img className="hidden lg:block" src="/resources/Ellipse11.svg" alt="" />
         </div>
-        <div className="bg-primary self-stretch flex flex-row text-primary-content p-8 justify-around">
-          <nav className="place-self-center">
-            <a href="https://icahn.mssm.edu/research/portal?tab=Labs" target='_blank'><img className="w-48" src="/ismms_white.png" alt="icahn school of medicine at mount sinai center for bioinformatics" /></a>
-          </nav>
-          <nav className="place-self-center">
-            <a href="https://labs.icahn.mssm.edu/maayanlab/" target='_blank'><img className="w-48" src="/maayanlab_white.png" alt="ma'ayan lab" /></a>
-          </nav>
-          <nav className="place-self-center">
-            <a className="flex flex-row items-center gap-4" href="https://info.cfde.cloud" target="_blank">
-              <div className="bg-white rounded-full p-1 w-12">
-                <img style={{ transform: 'translate(-2px, 0)' }} src="/drc.png" alt="CFDE DRC" />
-              </div>
-              <span className="prose text-lg text-white text-center">CFDE WORKBENCH</span>
-            </a>
-          </nav>
-        </div>
+        <Banner />
         {/* <div className="self-stretch bg-white p-8">
           <div className="prose prose-h3:text-primary prose-p:text-primary">
             <h3>Key capabilities</h3>
@@ -99,41 +86,29 @@ export default function Home() {
           </div>
           <img src="/fig-1-restyled.svg" alt="" />
         </div>
-        <div className="self-stretch bg-white p-8">
-          <div className="prose prose-h3:text-primary prose-p:text-primary">
-            <h3>The Gene Set Foundation Model Has Been Applied to at Least 4 Downstream Tasks:</h3>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <Link href="https://github.com/MaayanLab/gsfm/blob/main/gsfm/benchmarks/dex_benchmark.ipynb" target="_blank">
-              <div className="border border-[#6992C8] rounded-sm bg-[#F9FAFE] p-3">
-                <div className="bg-[#DCEBFF] text-[#013CC6] rounded-full p-2 flex flex-row justify-between">
-                  <span>Performing Reverse Gene Set Enrichment Analysis</span><img className="inline-block" src="/resources/LinkOutIcon.svg" alt="" />
-                </div>
-              </div>
-            </Link>
-            <Link href="/about">
-              <div className="border border-[#6992C8] rounded-sm bg-[#F9FAFE] p-3">
-                <div className="bg-[#DCEBFF] text-[#013CC6] rounded-full p-2 flex flex-row gap-2 justify-between">
-                  <span>Predicting Gene-Disease Associations</span><img src="/resources/LinkOutIcon.svg" alt="" />
-                </div>
-              </div>
-            </Link>
-            <Link href="https://github.com/MaayanLab/gsfm/blob/main/gsfm/benchmarks/GSFM_Paired_PPI.ipynb" target='_blank'>
-              <div className="border border-[#6992C8] rounded-sm bg-[#F9FAFE] p-3">
-                <div className="bg-[#DCEBFF] text-[#013CC6] rounded-full p-2 flex flex-row gap-2 justify-between">
-                  <span>Predicting Protein-Protein Interactions</span><img src="/resources/LinkOutIcon.svg" alt="" />
-                </div>
-              </div>
-            </Link>
-            <Link href="/about">
-              <div className="border border-[#6992C8] rounded-sm bg-[#F9FAFE] p-3">
-                <div className="bg-[#DCEBFF] text-[#013CC6] rounded-full p-2 flex flex-row gap-2 justify-between">
-                  <span>Predicting Protein Membership in Pathways</span><img src="/resources/LinkOutIcon.svg" alt="" />
-                </div>
-              </div>
-            </Link>
-          </div>
-        </div>
+        <Linkouts
+          title={<>The Gene Set Foundation Model Has Been Applied to at Least 4 Downstream Tasks:</>}
+          links={[
+            {
+              href: "https://github.com/MaayanLab/gsfm/blob/main/gsfm/benchmarks/dex_benchmark.ipynb",
+              target: "_blank",
+              label: <span>Performing Reverse Gene Set Enrichment Analysis</span>,
+            },
+            {
+              href: "/about",
+              label: <span>Predicting Gene-Disease Associations</span>,
+            },
+            {
+              href: "https://github.com/MaayanLab/gsfm/blob/main/gsfm/benchmarks/GSFM_Paired_PPI.ipynb",
+              target: "_blank",
+              label: <span>Predicting Protein-Protein Interactions</span>,
+            },
+            {
+              href: "/about",
+              label: <span>Predicting Protein Membership in Pathways</span>,
+            },
+          ]}
+        />
       </main>
     </>
   )
