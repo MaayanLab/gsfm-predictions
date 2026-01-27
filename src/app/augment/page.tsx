@@ -71,7 +71,7 @@ export default function AugmentPage() {
       <div className="self-stretch bg-white p-8 flex flex-col gap-12 items-start">
         <div className="prose prose-h1:font-semibold prose-h1:text-primary prose-h1:mb-3 prose-p:text-primary">
           <h1>Start augmenting your gene set</h1>
-          <p>Submit your set of known genes and get predictions for missing genes in the set.</p>
+          <p>Submit your gene set to receive additional genes most relevant to the input gene set.</p>
         </div>
         <div className="flex flex-row gap-4 self-stretch">
           <div className="flex flex-col gap-8 items-stretch">
