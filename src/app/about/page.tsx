@@ -126,7 +126,7 @@ export default function About() {
           },
           {
             href: "/downloads",
-            label: <span>Benchmark results</span>,
+            label: <span>Benchmarking Results</span>,
           },
         ]}
       />
