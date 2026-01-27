@@ -10,8 +10,10 @@ export default function useRWSearchParams() {
     (cb: (searchParams: URLSearchParams) => void, opts?: { push?: boolean, scroll?: boolean, preserveHash?: boolean }) => {
       const newSearchParams = new URLSearchParams(searchParams)
       cb(newSearchParams)
-      const router_augment = opts?.push ? router.push : router.replace
-      router_augment(`?${newSearchParams.toString()}${opts?.preserveHash ? window.location.hash : ''}`, opts)
+      if (newSearchParams.toString() !== searchParams.toString()) {
+        const router_augment = opts?.push ? router.push : router.replace
+        router_augment(`?${newSearchParams.toString()}${opts?.preserveHash ? window.location.hash : ''}`, opts)
+      }
     }
   ] as const
 }

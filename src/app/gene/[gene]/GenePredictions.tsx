@@ -21,13 +21,11 @@ export default function GenePredictions(props: { gene: string, models: string[] 
     }
   }, [searchParams, sources])
   React.useEffect(() => {
-    if (selectedModel !== searchParams.get('model') || selected?.source !== searchParams.get('source')) {
-      setSearchParams(sp => {
-        sp.set('model', selectedModel)
-        if (selected?.source) sp.set('source', selected?.source)
-      }, { scroll: false })
-    }
-  }, [selectedModel, searchParams])
+    setSearchParams(sp => {
+      if (selectedModel && sp.get('model') !== selectedModel) sp.set('model', selectedModel)
+      if (selected?.source && sp.get('source') !== selected?.source) sp.set('source', selected.source)
+    }, { scroll: false })
+  }, [selectedModel])
   return (
     <div className="flex flex-row gap-4">
       <div className="border-[#013CC6] border rounded-2xl p-4 flex flex-col w-60 shrink-0">
