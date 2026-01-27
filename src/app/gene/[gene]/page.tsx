@@ -6,7 +6,7 @@ import { notFound, redirect } from 'next/navigation';
 import { Metadata } from 'next';
 import GeneInput from '@/components/gene/GeneInput';
 
-const getGeneInfo = React.cache(async (gene: string) => trpc.gene_info(gene))
+const getGeneInfo = React.cache((gene: string) => trpc.gene_info(gene))
 
 export async function generateMetadata(props: { params: Promise<{ gene: string }>, searchParams: Promise<Record<string, string>> }): Promise<Metadata> {
   const gene = decodeURIComponent((await props.params).gene)
@@ -23,11 +23,12 @@ export default async function Home(props: { params: Promise<{ gene: string }>, s
   const gene = decodeURIComponent((await props.params).gene)
   const searchParams = new URLSearchParams(await props.searchParams)
   const gene_info = await getGeneInfo(gene)
-  const models = await trpc.models()
   if (!gene_info) notFound()
   else if (gene_info.symbol !== gene) redirect(`/gene/${gene_info.symbol}?${searchParams.toString()}`)
+  const models = await trpc.modelsWithPredictionsForGene({ gene })
+  if (models.length === 0) notFound()
   return (
-      <>
+    <>
       <div
         style={{
           height:'350px',
@@ -82,7 +83,7 @@ export default async function Home(props: { params: Promise<{ gene: string }>, s
         </div>
         <div className="mx-18 my-4">
           <GeneInfo gene_info={gene_info} />
-          <GenePredictions gene={gene} models={models.map(({ model }) => model)} />
+          <GenePredictions gene={gene} models={models} />
         </div>
       </main>
     </>

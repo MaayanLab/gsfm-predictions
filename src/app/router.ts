@@ -39,6 +39,18 @@ export default router({
     models.sort((a, b) => b.pagerank - a.pagerank)
     return models
   }),
+  modelsWithPredictionsForGene: procedure.input(z.object({
+    gene: z.string(),
+  })).query(async (props) => {
+    const models = (await db
+      .selectFrom('app.prediction')
+      .select('model').distinct()
+      .where('gene', '=', props.input.gene)
+      .execute()
+    ).map(({ model }) => ({ model, pagerank: model_pagerank[model] ?? 0 }))
+    models.sort((a, b) => b.pagerank - a.pagerank)
+    return models.map(({ model }) => model)
+  }),
   sources: procedure.input(z.object({
     model: z.string().default('latest'),
     gene: z.string(),
