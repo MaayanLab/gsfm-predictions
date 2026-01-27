@@ -63,7 +63,7 @@ export default function AugmentPage() {
           </div>
           <div className="flex flex-col gap-6">
             <div className="prose prose-p:text-primary min-w-56">
-              <p>Trained on millions of gene sets automatically extracted from literature and raw RNA-seq data, GSFM learns to recover held-out genes from gene sets. The resulting model exhibits state of the art performance on gene function prediction.</p>
+              <p>Trained on millions of gene sets automatically extracted from PubMed Central (PMC) and raw RNA-seq data the Gene Expression Omnibus (GEO), GSFM learns to recover held-out genes from gene sets. The resulting model exhibits state-of-the-art performance in the task of gene function prediction.</p>
             </div>
           </div>
         </div>
