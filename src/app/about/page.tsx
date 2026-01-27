@@ -102,7 +102,7 @@ export default function About() {
       <div className="self-stretch bg-white p-8">
         <div className="prose prose-h3:text-primary prose-p:text-primary">
           <h3>Model Performance and Validation</h3>
-          <p>GSFM captures the complex and high-dimensional space of genes and gene sets across biological domains. It is a foundation model for gene and gene set because it can be applied to other tasks besides gene function prediction.</p>
+          <p>GSFM captures the complex and high-dimensional space of genes and gene sets across biological domains. It is a foundation model for gene and gene sets because it can be applied to other tasks besides gene function prediction.</p>
         </div>
         <img src="/fig-1-restyled.svg" alt="" />
       </div>
