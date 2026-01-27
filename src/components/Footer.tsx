@@ -14,7 +14,7 @@ export default function Footer() {
             <img style={{ width: '372.88px' }} src="/resources/Logo.svg" alt="" />
           </Link>
           <div className="p-8 prose text-secondary-content">
-            The Ma’ayan Lab is a computational biology research group focused on data‑driven approaches to understanding gene regulation, signaling pathways, and disease mechanisms. The lab develops open tools and resources to accelerate biological discovery.
+            The Ma'ayan Lab is a computational systems biology research laboratory focused on data‑driven approaches to understanding gene regulation, cell signaling pathways, systems pharmacology, and molecular mechanisms of disease. The lab develops open bioinformatics software tools and other computational resources to accelerate biological, target, and drug discoveries.
           </div>
         </div>
         <div className="flex flex-row gap-8 h-[233px] bg-secondary">
