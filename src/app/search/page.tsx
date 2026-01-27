@@ -57,7 +57,7 @@ export default function Search() {
         </div>
         <div className="self-stretch bg-white p-8 mx-auto flex flex-col items-center">
           <div className="prose prose-h3:text-primary prose-p:text-primary">
-            <p>Search your gene of interest to review GSFM&apos;s predictions across a variety of Common Fund Data Ecosystem (CFDE) gene set libraries & other public resources.</p>
+            <p>Submit a human gene symbol to the GSFM's model to receive predictions about the gene role across a variety of domains including Gene Ontology functions, disease associations, predicted knockout mouse phenotypes, regulation by transcription factors, and pathway membership.</p>
           </div>
           <img src="/fig-1-restyled.svg" alt="" />
         </div>
