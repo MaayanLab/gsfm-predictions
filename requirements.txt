@@ -1,0 +1,2 @@
+blitzgsea @ git+https://github.com/MaayanLab/blitzgsea.git
+gsfm @ git+https://github.com/MaayanLab/gsfm.git
