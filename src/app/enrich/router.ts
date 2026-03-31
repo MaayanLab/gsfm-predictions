@@ -31,7 +31,6 @@ export default router({
       "nes": number | null,
       "pval": number,
       "sidak": number,
-      "fdr": number,
       "geneset_size": number,
       "leading_edge": string,
     }[]>('app.enrich.gsfm_gsea.enrich', {

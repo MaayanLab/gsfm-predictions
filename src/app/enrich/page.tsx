@@ -24,8 +24,10 @@ export default function EnrichPage() {
   const downloadPredictions = React.useCallback(() => {
     if (!predictions.isSuccess) return
     downloadBlob([
-      ['Gene', 'Score', 'Known'].join('\t'),
-      ...Object.entries(predictions.data.predictions).map(([gene, score]) => [gene, `${score}`, predictions.variables.gene_set.includes(gene) ? 1 : 0].join('\t')),
+      ['term', 'es', 'nes', 'pval', 'geneset_size'].join('\t'),
+      ...predictions.data.map((row) => [
+        row.Term, row.es, row.nes, row.pval, row.geneset_size,
+      ].join('\t')),
     ].join('\n'), `${model}-predictions.tsv`, 'text/tab-separated-values;charset=utf-8')
   }, [model, predictions])
   return (
@@ -145,7 +147,6 @@ export default function EnrichPage() {
                       es: {th: <>ES</>, td: (cell: number) => cell.toPrecision(3)},
                       nes: {th: <>NES</>, td: (cell: number | null) => cell?.toPrecision(3)},
                       pval: {th: <>PVal</>, td: (cell: number) => cell?.toPrecision(3)},
-                      fdr: {th: <>FDR</>, td: (cell: number) => cell?.toPrecision(3)},
                       geneset_size: {th: <>Gene Set</>, td: (cell: number, row) => <button className="tooltip cursor-pointer active:font-bold" onClick={evt => {navigator.clipboard.writeText(row.leading_edge.split(',').join('\n'))}} data-tip="Copy to clipboard">{cell} genes</button>},
                     }}
                     defaultOrderBy={'pval asc'}
