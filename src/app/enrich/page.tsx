@@ -76,7 +76,7 @@ export default function EnrichPage() {
       <div className="self-stretch bg-white p-8 flex flex-col gap-12 items-start">
         <div className="prose prose-h1:font-semibold prose-h1:text-primary prose-h1:mb-3 prose-p:text-primary">
           <h1>Enrich your gene set</h1>
-          <p>Submit your gene set to receive enrichment analysis results.</p>
+          <p>Submit your gene set to receive enrichment analysis results. This works by using GSFM assigned gene membership probabilities for a GSEA-like weighted random walk.</p>
         </div>
         <div className="flex flex-row gap-4 self-stretch">
           <form className="flex flex-col gap-8 items-stretch" onSubmit={evt => {
