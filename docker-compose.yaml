@@ -20,7 +20,7 @@ services:
     volumes:
     - gsfm-app-model:/app/data/model
   gsfm-postgres:
-    image: postgres
+    image: postgres:17
     environment:
     - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
