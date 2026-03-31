@@ -6,6 +6,7 @@ import downloadBlob from "@/components/downloadBlob"
 import DataTable from "@/components/DataTable"
 import { model_name } from "@/components/resources"
 import ButtonWithIcon from "@/components/ButtonWithIcon"
+import classNames from "classnames"
 
 const example = {
   gene_set: `TYROBP\nLILRB1\nSLC11A1\nTNFSF18\nFCER1G\nEIF2AK4\nMDK\nSEMA6D\nIFNA6\nIFNK\nIFNB1\nIFNA2\nIFNA14\nIFNA7\nIFNA1\nIFNE\nIFNA4\nIFNA5\nPLXNA1\nITGAL\nICAM1\nF2RL1\nTOX4\nCD74\nIFNA21\nIFNA8\nIFNW1\nIFNA16\nIFNA10\nIFNA17`,
@@ -15,6 +16,8 @@ const example = {
 export default function EnrichPage() {
   const [geneSet, setGeneSet] = React.useState('')
   const [description, setDescription] = React.useState('')
+  const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
+
   const [model, setModel] = React.useState('gsfm-rummagene')
   const models = trpc.models.useQuery()
   const geneSetParsed = React.useMemo(() =>
@@ -100,7 +103,14 @@ export default function EnrichPage() {
             </div>
             <fieldset className="fieldset">
               <legend className="fieldset-legend text-primary">Gene Set Library</legend>
-              <input type="file" name="gene_set_library" className="file-input text-primary" />
+              <input
+                type="file"
+                name="gene_set_library"
+                className="file-input text-primary"
+                onChange={evt => {
+                  setSelectedFile(evt.target.files?.item(0) ?? null)
+                }}
+              />
             </fieldset>
             <input
               className="input w-full text-primary border-primary"
@@ -119,12 +129,20 @@ export default function EnrichPage() {
               {models.data && models.data.map(({ model }) => <option key={model} value={model}>{model_name[model] ?? model}</option>)}
             </select>
             <div className="flex flex-row gap-2">
-              <button className="btn bg-[#6992C8] text-white" onClick={evt => {setGeneSet(example.gene_set); setDescription(example.description)}}>Example</button>
+              <button
+                type="button"
+                className="btn bg-[#6992C8] text-white"
+                onClick={evt => {
+                  evt.preventDefault()
+                  evt.stopPropagation()
+                  setGeneSet(example.gene_set);
+                  setDescription(example.description)
+                }}>Example</button>
               <ButtonWithIcon
-                className="btn btn-primary font-semibold"
+                className={classNames("btn font-semibold", { 'btn-primary': !(geneSetParsed.length === 0 || selectedFile === null) })}
                 icon={<img src="/resources/RightArrowIcon.svg" alt="" />}
                 type="submit"
-                disabled={!(geneSetParsed.length <= 512)}
+                disabled={true}
               >Submit</ButtonWithIcon>
             </div>
           </form>

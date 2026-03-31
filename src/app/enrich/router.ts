@@ -19,6 +19,7 @@ export default router({
       gene_set_library: formData.get('gene_set_library') as File,
     }))
   ).mutation(async (props) => {
+    if (props.input.input_gene_set.length === 0) throw new Error('Missing or empty gene set')
     await db.insertInto('app.user_gene_set')
       .values({
         id: uuidv4(),
@@ -26,6 +27,8 @@ export default router({
         description: props.input.description ?? null,
       })
       .execute()
+    const gene_set_library = await props.input.gene_set_library.text()
+    if (!gene_set_library) throw new Error('Missing or empty gene set library')
     return await python<{
       "Term": string,
       "es": number,
@@ -38,7 +41,7 @@ export default router({
       kwargs: {
         model: props.input.model,
         input_gene_set: props.input.input_gene_set,
-        gene_set_library: await props.input.gene_set_library.text(),
+        gene_set_library,
       },
     })
   }),
