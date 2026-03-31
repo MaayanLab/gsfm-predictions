@@ -90,3 +90,9 @@ export const model_pagerank = {
   'gsfm-rummage': 9,
   'gsfm-rummageo': 8,
 } as Record<string, number>
+
+export const model_on_hf = {
+  'gsfm-rummagene': 'maayanlab/gsfm-rummagene',
+  'gsfm-rummage': 'maayanlab/gsfm-rummage',
+  'gsfm-rummageo': 'maayanlab/gsfm-rummageo',
+} as Record<string, string>
