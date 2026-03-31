@@ -11,6 +11,10 @@ services:
       imagePullPolicy: IfNotPresent
       annotations:
         maayanlab.cloud/ingress: https://gsfm.maayanlab.cloud
+        nginx.ingress.kubernetes.io/proxy-body-size: '0'
+        nginx.ingress.kubernetes.io/proxy-max-temp-file-size: '0'
+        nginx.ingress.kubernetes.io/proxy-read-timeout: '60'
+        nginx.ingress.kubernetes.io/proxy-send-timeout: '60'
     environment:
     - DATABASE_URL=${PROD_DATABASE_URL:-postgres://postgres:${POSTGRES_PASSWORD}@gsfm-postgres:5432/postgres}
     - NEXT_PUBLIC_URL=https://gsfm.maayanlab.cloud
