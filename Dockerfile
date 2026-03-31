@@ -16,6 +16,7 @@ RUN set -x \
 
 ADD .next/standalone ./
 ADD .next/static ./.next/static
+ADD src ./src
 ADD public ./public
 ADD ensure-model.sh ./
 RUN chmod +x ensure-model.sh
