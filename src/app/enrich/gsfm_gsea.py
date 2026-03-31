@@ -1,6 +1,4 @@
 def enrich(*, model, input_gene_set: list[str], gene_set_library: str):
-  import io
-  import json
   import torch
   import numpy as np
   import pandas as pd
@@ -28,3 +26,17 @@ def enrich(*, model, input_gene_set: list[str], gene_set_library: str):
     np.inf, -np.inf, np.nan,
     float('inf'), float('-inf'), float('nan')
   ], None).reset_index().to_dict(orient='records')
+
+def enrich_from_enrichr(*, model, input_gene_set: list[str], gene_set_library_name: str):
+  import requests
+  req = requests.get('https://maayanlab.cloud/Enrichr/geneSetLibrary', params=dict(
+    mode='text',
+    libraryName=gene_set_library_name,
+  ))
+  assert req.ok
+  gene_set_library = req.text
+  return enrich(
+    model=model,
+    input_gene_set=input_gene_set,
+    gene_set_library=gene_set_library,
+  )

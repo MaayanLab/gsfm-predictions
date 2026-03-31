@@ -11,12 +11,14 @@ import classNames from "classnames"
 const example = {
   gene_set: `TYROBP\nLILRB1\nSLC11A1\nTNFSF18\nFCER1G\nEIF2AK4\nMDK\nSEMA6D\nIFNA6\nIFNK\nIFNB1\nIFNA2\nIFNA14\nIFNA7\nIFNA1\nIFNE\nIFNA4\nIFNA5\nPLXNA1\nITGAL\nICAM1\nF2RL1\nTOX4\nCD74\nIFNA21\nIFNA8\nIFNW1\nIFNA16\nIFNA10\nIFNA17`,
   description: 'T Cell Activation Involved in Immune Response (GO:0002286)',
+  gene_set_library_name: 'GO_Biological_Process_2025',
 }
 
 export default function EnrichPage() {
   const [geneSet, setGeneSet] = React.useState('')
   const [description, setDescription] = React.useState('')
-  const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
+  const [geneSetLibraryName, setGeneSetLibraryName] = React.useState('GO_Biological_Process_2025')
+  const [geneSetLibraryFile, setGeneSetLibraryFile] = React.useState<File | null>(null);
 
   const [model, setModel] = React.useState('gsfm-rummagene')
   const models = trpc.models.useQuery()
@@ -33,6 +35,14 @@ export default function EnrichPage() {
       ].join('\t')),
     ].join('\n'), `${model}-predictions.tsv`, 'text/tab-separated-values;charset=utf-8')
   }, [model, predictions])
+
+  const valid = React.useMemo(() => 
+    geneSetParsed.length !== 0
+    && (
+      geneSetLibraryName !== ''
+      || geneSetLibraryFile !== null
+    ), [geneSetParsed, geneSetLibraryName, geneSetLibraryFile]
+  )
   return (
     <>
       <div
@@ -103,14 +113,28 @@ export default function EnrichPage() {
             </div>
             <fieldset className="fieldset">
               <legend className="fieldset-legend text-primary">Gene Set Library</legend>
-              <input
-                type="file"
-                name="gene_set_library"
-                className="file-input text-primary"
-                onChange={evt => {
-                  setSelectedFile(evt.target.files?.item(0) ?? null)
-                }}
-              />
+              <select
+                className="select w-full text-primary border-primary"
+                value={geneSetLibraryName}
+                onChange={evt => {setGeneSetLibraryName(evt.currentTarget.value)}}
+                name="gene_set_library_name"
+              >
+                <option value="GO_Biological_Process_2025">GO Biological Process 2025</option>
+                <option value="GO_Cellular_Component_2025">GO Cellular Component 2025</option>
+                <option value="GO_Molecular_Function_2025">GO Molecular Function 2025</option>
+                <option value="GWAS_Catalog_2025">GWAS Catalog 2025</option>
+                <option value="ChEA_2022">ChEA 2022</option>
+                <option value="" className="italic">Custom Upload</option>
+              </select>
+              {geneSetLibraryName === "" &&
+                <input
+                  type="file"
+                  name="gene_set_library_file"
+                  className="file-input text-primary"
+                  onChange={evt => {
+                    setGeneSetLibraryFile(evt.target.files?.item(0) ?? null)
+                  }}
+                />}
             </fieldset>
             <input
               className="input w-full text-primary border-primary"
@@ -135,14 +159,15 @@ export default function EnrichPage() {
                 onClick={evt => {
                   evt.preventDefault()
                   evt.stopPropagation()
-                  setGeneSet(example.gene_set);
+                  setGeneSet(example.gene_set)
+                  setGeneSetLibraryName(example.gene_set_library_name)
                   setDescription(example.description)
                 }}>Example</button>
               <ButtonWithIcon
-                className={classNames("btn font-semibold", { 'btn-primary': !(geneSetParsed.length === 0 || selectedFile === null) })}
+                className={classNames("btn font-semibold", { 'btn-primary': valid })}
                 icon={<img src="/resources/RightArrowIcon.svg" alt="" />}
                 type="submit"
-                disabled={(geneSetParsed.length === 0 || selectedFile === null)}
+                disabled={!valid}
               >Submit</ButtonWithIcon>
             </div>
           </form>
