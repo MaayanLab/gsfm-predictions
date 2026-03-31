@@ -138,21 +138,19 @@ export default function EnrichPage() {
                 {predictions.isPending && <div className="flex-auto">Loading...</div>}
                 {predictions.isError && <div className="alert alert-error">{predictions.error.message}</div>}
                 {predictions.isSuccess &&
-                  JSON.stringify(predictions.data)
-                  /*<DataTable
+                  <DataTable
                     title={<>{description}</>}
                     columns={{
-                      gene: {th: <>Gene</>, td: (gene: string) => gene},
-                      score: {th: <>Score</>, td: (score: number) => score.toPrecision(3)},
-                      known: {th: <>Known</>, td: (known: number) => known},
+                      Term: {th: <>Term</>, td: (cell: string, row) => <button className="tooltip cursor-pointer active:font-bold" onClick={evt => {navigator.clipboard.writeText(row.Term)}} data-tip="Copy to clipboard">{cell}</button>},
+                      es: {th: <>ES</>, td: (cell: number) => cell.toPrecision(3)},
+                      nes: {th: <>NES</>, td: (cell: number | null) => cell?.toPrecision(3)},
+                      pval: {th: <>PVal</>, td: (cell: number) => cell?.toPrecision(3)},
+                      fdr: {th: <>FDR</>, td: (cell: number) => cell?.toPrecision(3)},
+                      geneset_size: {th: <>Gene Set</>, td: (cell: number, row) => <button className="tooltip cursor-pointer active:font-bold" onClick={evt => {navigator.clipboard.writeText(row.leading_edge.split(',').join('\n'))}} data-tip="Copy to clipboard">{cell} genes</button>},
                     }}
-                    defaultOrderBy={'score desc'}
-                    data={Object.entries(predictions.data.predictions).map(([gene, score]) => ({
-                      gene,
-                      score,
-                      known: predictions.variables.gene_set.includes(gene) ? 1 : 0
-                    }))}
-                  />*/}
+                    defaultOrderBy={'pval asc'}
+                    data={predictions.data}
+                  />}
               </div>
             </div>
             <ButtonWithIcon

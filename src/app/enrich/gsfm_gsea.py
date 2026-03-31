@@ -27,4 +27,4 @@ def enrich(*, model, input_gene_set: list[str], gene_set_library: str):
   return results[results['pval']<0.05].replace([
     np.inf, -np.inf, np.nan,
     float('inf'), float('-inf'), float('nan')
-  ], None).to_dict(orient='records')
+  ], None).reset_index().to_dict(orient='records')

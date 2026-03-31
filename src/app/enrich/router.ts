@@ -25,7 +25,16 @@ export default router({
         description: props.input.description ?? null,
       })
       .execute()
-    return await python('app.enrich.gsfm_gsea.enrich', {
+    return await python<{
+      "Term": string,
+      "es": number,
+      "nes": number | null,
+      "pval": number,
+      "sidak": number,
+      "fdr": number,
+      "geneset_size": number,
+      "leading_edge": string,
+    }[]>('app.enrich.gsfm_gsea.enrich', {
       kwargs: {
         model: `maayanlab/gsfm-${props.input.model}`,
         input_gene_set: props.input.input_gene_set,
