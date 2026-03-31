@@ -35,12 +35,12 @@ export default function python<T>(pathspec: string, args: { kargs?: unknown[], k
     try {
       stdin = JSON.stringify(args)
     } catch (e) {
-      throw new ProcessError(`Process input could not be serialized`, null)
+      return reject(new ProcessError(`Process input could not be serialized`, null))
     }
-    if (typeof spawn === 'undefined') throw new Error("python is server side only")
-    if (typeof path === 'undefined') throw new Error("python is server side only")
+    if (typeof spawn === 'undefined') return reject(new Error("python is server side only"))
+    if (typeof path === 'undefined') return reject(new Error("python is server side only"))
     const proc = spawn(process.env.PYTHON_BIN || 'python', [
-      path.join(process.env.PYTHON_ROOT || '', 'src', 'utils', 'helper.py'),
+      path.join(process.env.PYTHON_ROOT || '', 'src', 'lib', 'python', 'helper.py'),
       pathspec,
     ], { env: { ...process.env } })
     let stdout = ''
@@ -49,15 +49,20 @@ export default function python<T>(pathspec: string, args: { kargs?: unknown[], k
     proc.on('close', (code) => {
       try {
         const stdout_parsed = JSON.parse(stdout)
-        if (stdout_parsed.error) reject(new ProcessError(stdout_parsed.error, code))
-        else if (code !== 0) reject(new ProcessError(`[${pathspec}]: ${`Process exited with unexpected code ${code}`}`, code))
+        if (stdout_parsed.error) return reject(new ProcessError(stdout_parsed.error, code))
+        else if (code !== 0) return reject(new ProcessError(`[${pathspec}]: ${`Process exited with unexpected code ${code}`}`, code))
         else resolve(stdout_parsed.data)
       } catch (e) {
         console.debug(stdout)
-        reject(new ProcessError(`[${pathspec}]: Process output could not be parsed as json. ${e}`, code))
+        return reject(new ProcessError(`[${pathspec}]: Process output could not be parsed as json. ${e}`, code))
       }
     })
-    proc.stdin.end(stdin)
+    proc.stdin.write(stdin, (e) => {
+      if (e) {
+        reject(new ProcessError(`[${pathspec}]: Failed to write stdin ${e}`, 1))
+      }
+      proc.stdin.end()
+    })
   })
 }
 
@@ -80,7 +85,7 @@ export function pythonStream(pathspec: string, args: { kargs?: unknown[], kwargs
   if (typeof path === 'undefined') throw new Error("python is server side only")
   const proc = spawn(process.env.PYTHON_BIN || 'python3', [
     '-u',
-    path.join(process.env.PYTHON_ROOT || '', 'src', 'utils', 'helper.py'),
+    path.join(process.env.PYTHON_ROOT || '', 'src', 'lib', 'python', 'helper.py'),
     pathspec,
   ], { env: { ...process.env } })
   let stderr = ''
