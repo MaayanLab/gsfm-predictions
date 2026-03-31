@@ -142,7 +142,7 @@ export default function EnrichPage() {
                 className={classNames("btn font-semibold", { 'btn-primary': !(geneSetParsed.length === 0 || selectedFile === null) })}
                 icon={<img src="/resources/RightArrowIcon.svg" alt="" />}
                 type="submit"
-                disabled={true}
+                disabled={(geneSetParsed.length === 0 || selectedFile === null)}
               >Submit</ButtonWithIcon>
             </div>
           </form>
