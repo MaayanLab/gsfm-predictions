@@ -74,7 +74,11 @@ export default function EnrichPage() {
           <p>Submit your gene set to receive enrichment analysis results.</p>
         </div>
         <div className="flex flex-row gap-4 self-stretch">
-          <div className="flex flex-col gap-8 items-stretch">
+          <form className="flex flex-col gap-8 items-stretch" onSubmit={evt => {
+            evt.preventDefault()
+            evt.stopPropagation()
+            predictions.mutate(new FormData(evt.currentTarget))
+          }}>
             <div role="tablist" className="tabs tabs-lift tabs-xl">
               <button
                 role="tab"
@@ -84,6 +88,7 @@ export default function EnrichPage() {
               </button>
               <div role="tabpanel" className="tab-content block">
                 <textarea
+                  name="input_gene_set"
                   className="input h-72 w-full whitespace-pre border-none"
                   value={geneSet}
                   onChange={evt => {setGeneSet(evt.currentTarget.value)}}
@@ -93,10 +98,11 @@ export default function EnrichPage() {
             </div>
             <fieldset className="fieldset">
               <legend className="fieldset-legend text-primary">Gene Set Library</legend>
-              <input type="file" className="file-input text-primary" />
+              <input type="file" name="gene_set_library" className="file-input text-primary" />
             </fieldset>
             <input
               className="input w-full text-primary border-primary"
+              name="description"
               value={description}
               onChange={evt => {setDescription(evt.currentTarget.value)}}
               placeholder="Gene set description"
@@ -105,6 +111,7 @@ export default function EnrichPage() {
               className="select w-full text-primary border-primary"
               value={model}
               onChange={evt => {setModel(evt.currentTarget.value)}}
+              name="model"
             >
               {models.isLoading && <option key="" value="">Loading...</option>}
               {models.data && models.data.map(({ model }) => <option key={model} value={model}>{model_name[model] ?? model}</option>)}
@@ -114,10 +121,11 @@ export default function EnrichPage() {
               <ButtonWithIcon
                 className="btn btn-primary font-semibold"
                 icon={<img src="/resources/RightArrowIcon.svg" alt="" />}
-                onClick={evt => predictions.mutate({ model, gene_set: geneSetParsed, description })} disabled={!(geneSetParsed.length <= 512)}
+                type="submit"
+                disabled={!(geneSetParsed.length <= 512)}
               >Submit</ButtonWithIcon>
             </div>
-          </div>
+          </form>
           {predictions.status !== 'idle' && <div className="grow flex flex-col gap-4">
             <div role="tablist" className="tabs tabs-lift tabs-xl">
               <button
@@ -130,7 +138,8 @@ export default function EnrichPage() {
                 {predictions.isPending && <div className="flex-auto">Loading...</div>}
                 {predictions.isError && <div className="alert alert-error">{predictions.error.message}</div>}
                 {predictions.isSuccess &&
-                  <DataTable
+                  JSON.stringify(predictions.data)
+                  /*<DataTable
                     title={<>{description}</>}
                     columns={{
                       gene: {th: <>Gene</>, td: (gene: string) => gene},
@@ -143,7 +152,7 @@ export default function EnrichPage() {
                       score,
                       known: predictions.variables.gene_set.includes(gene) ? 1 : 0
                     }))}
-                  />}
+                  />*/}
               </div>
             </div>
             <ButtonWithIcon

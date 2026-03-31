@@ -5,27 +5,32 @@ import { v4 as uuidv4 } from 'uuid'
 import python from "@/lib/python"
 
 export default router({
-  enrich: procedure.input(z.object({
-    model: z.string().default('rummagene'),
-    input_gene_set: z.string().array(),
-    description: z.string().optional(),
-    gene_set_library: z.string(),
-  })).mutation(async (props) => {
+  enrich: procedure.input(z.instanceof(FormData)
+    .transform((formData: FormData) => z.object({
+      model: z.string().default('rummagene'),
+      input_gene_set: z.string().array(),
+      description: z.string().optional(),
+      gene_set_library: z.file(),
+    }).parse({
+      model: formData.get('model')?.toString() ?? undefined,
+      input_gene_set: formData.get('input_gene_set')?.toString().split(/[\r\n]+/g),
+      description: formData.get('description')?.toString() ?? undefined,
+      gene_set_library: formData.get('gene_set_library') as File,
+    }))
+  ).mutation(async (props) => {
     await db.insertInto('app.user_gene_set')
       .values({
         id: uuidv4(),
         gene_set: props.input.input_gene_set.join('\n'),
-        description: props.input.description,
+        description: props.input.description ?? null,
       })
       .execute()
-    return await python<{
-
-    }>('app.enrich.gsfm_gsea.enrich', {
+    return await python('app.enrich.gsfm_gsea.enrich', {
       kwargs: {
         model: `maayanlab/gsfm-${props.input.model}`,
-        input_gene_set: props.input.input_gene_set.join('\n'),
-        gene_set_library: props.input.gene_set_library,
-      }
+        input_gene_set: props.input.input_gene_set,
+        gene_set_library: await props.input.gene_set_library.text(),
+      },
     })
   }),
 })
