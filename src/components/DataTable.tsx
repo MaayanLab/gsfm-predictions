@@ -2,7 +2,7 @@
 import classNames from 'classnames'
 import React from 'react'
 
-export default function DataTable<C extends object>(props: { title?: React.ReactElement, columns: { [k in keyof C]: { th: React.ReactNode, td: (datum: C[k]) => React.ReactNode } }, data: { [k in keyof C]: C[k] }[], defaultOrderBy: `${string & keyof C} asc` | `${string & keyof C} desc` }) {
+export default function DataTable<C extends object>(props: { title?: React.ReactElement, columns: { [k in keyof C]?: { th: React.ReactNode, td: (datum: C[k], row: C) => React.ReactNode } }, data: { [k in keyof C]: C[k] }[], defaultOrderBy: `${string & keyof C} asc` | `${string & keyof C} desc` }) {
   const pageSize = 10
   const totalCount = props.data.length
   const [page, setPage] = React.useState(1)
@@ -42,6 +42,7 @@ export default function DataTable<C extends object>(props: { title?: React.React
           <tr>
             {Object.keys(props.columns).map((col) => {
               const column = props.columns[col as keyof C]
+              if (!column) return null
               return (
                 <th key={col} className="text-primary text-center">
                   <button
@@ -59,10 +60,11 @@ export default function DataTable<C extends object>(props: { title?: React.React
           </tr>
         </thead>
         <tbody>
-          {view.map((datum, i) => <tr key={i}>
+          {view.map((row, i) => <tr key={i}>
             {Object.keys(props.columns).map((col, j) => {
               const column = props.columns[col as keyof C]
-              return <td key={j} className={classNames('text-center', {  'bg-[#DCEBFF]': i%2==0 })}>{column.td(datum[col as keyof C])}</td>
+              if (!column) return null
+              return <td key={j} className={classNames('text-center', {  'bg-[#DCEBFF]': i%2==0 })}>{column.td(row[col as keyof C], row)}</td>
             })}
           </tr>)}
         </tbody>
