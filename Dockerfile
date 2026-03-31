@@ -5,12 +5,13 @@ WORKDIR /app
 RUN set -x \
   && apt update -y \
   && apt install -y git curl python3 python3-pip \
-  && pip install --break-system-packages uv
+  && pip install --no-cache-dir --break-system-packages uv \
+  && rm -rf /var/lib/apt/lists/*
 
 ADD requirements.txt ./
 RUN set -x \
   && uv venv \
-  && uv pip install -r requirements.txt \
+  && uv pip install --no-cache-dir -r requirements.txt \
   && rm requirements.txt
 
 ADD .next/standalone ./
