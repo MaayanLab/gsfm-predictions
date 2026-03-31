@@ -155,9 +155,8 @@ export default function EnrichPage() {
                 Results
               </button>
               <div role="tabpanel" className="tab-content block p-0">
-                {predictions.isPending && <div className="flex-auto">Loading...</div>}
                 {predictions.isError && <div className="alert alert-error">{predictions.error.message}</div>}
-                {predictions.isSuccess &&
+                {
                   <DataTable
                     title={<>{description}</>}
                     columns={{
@@ -168,7 +167,8 @@ export default function EnrichPage() {
                       geneset_size: {th: <>Gene Set</>, td: (cell: number, row) => <button className="tooltip cursor-pointer active:font-bold" onClick={evt => {navigator.clipboard.writeText(row.leading_edge.split(',').join('\n'))}} data-tip="Copy to clipboard">{cell} genes</button>},
                     }}
                     defaultOrderBy={'pval asc'}
-                    data={predictions.data}
+                    data={predictions.data ? predictions.data : []}
+                    isLoading={predictions.isPending}
                   />}
               </div>
             </div>

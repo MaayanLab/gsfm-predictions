@@ -2,7 +2,7 @@
 import classNames from 'classnames'
 import React from 'react'
 
-export default function DataTable<C extends object>(props: { title?: React.ReactElement, columns: { [k in keyof C]?: { th: React.ReactNode, td: (datum: C[k], row: C) => React.ReactNode } }, data: { [k in keyof C]: C[k] }[], defaultOrderBy: `${string & keyof C} asc` | `${string & keyof C} desc` }) {
+export default function DataTable<C extends object>(props: { title?: React.ReactElement, columns: { [k in keyof C]?: { th: React.ReactNode, td: (datum: C[k], row: C) => React.ReactNode } }, data: { [k in keyof C]: C[k] }[], defaultOrderBy: `${string & keyof C} asc` | `${string & keyof C} desc`, isLoading?: boolean }) {
   const pageSize = 10
   const totalCount = props.data.length
   const [page, setPage] = React.useState(1)
@@ -69,6 +69,7 @@ export default function DataTable<C extends object>(props: { title?: React.React
           </tr>)}
         </tbody>
       </table>
+      {props.isLoading && <div className="w-full flex flex-col items-center"><div className="loading loading-spinner loading-xl" /></div>}
       <div className="join items-center justify-center gap-1">
         {page > 2 && <button className="join-item btn text-[#6992C8] bg-white border font-normal border-[#6992C8] rounded-lg" onClick={evt => {setPage(page => 1)}}>1</button>}
         {page > 3 && <button className="join-item btn text-[#6992C8] bg-white border font-normal border-[#6992C8] rounded-lg btn-disabled">...</button>}
