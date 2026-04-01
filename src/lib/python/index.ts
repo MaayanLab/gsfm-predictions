@@ -71,7 +71,7 @@ export default function python<T>(pathspec: string, args: { kargs?: unknown[], k
  * @param script: of the form python_file.py:func_in_file
  * @param args: The kwargs to provide to the file
  */
-export function pythonStream(pathspec: string, args: { kargs?: unknown[], kwargs?: Record<string, unknown> }): Readable {
+export function pythonStream(pathspec: string, args: { kargs?: unknown[], kwargs?: Record<string, unknown> }, signal?: AbortSignal) {
   if (typeof window !== 'undefined') throw new Error("python is server side only")
   const spawn = typeof window === 'undefined' ? (require('child_process') as typeof child_process_type).spawn : undefined
   const path = typeof window === 'undefined' ? require('path') as typeof path_type : undefined
@@ -87,7 +87,7 @@ export function pythonStream(pathspec: string, args: { kargs?: unknown[], kwargs
     '-u',
     path.join(process.env.PYTHON_ROOT || '', 'src', 'lib', 'python', 'helper.py'),
     pathspec,
-  ], { env: { ...process.env } })
+  ], { env: { ...process.env, PYTHONUNBUFFERED: '1' }, signal })
   let stderr = ''
   proc.stderr.on('data', (chunk: string) => { stderr += chunk })
   proc.on('close', (code) => {
@@ -100,5 +100,5 @@ export function pythonStream(pathspec: string, args: { kargs?: unknown[], kwargs
     }
   })
   proc.stdin.end(stdin)
-  return proc.stdout
+  return proc
 }

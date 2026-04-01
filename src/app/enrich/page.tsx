@@ -14,28 +14,95 @@ const example = {
   gene_set_library_name: 'GO_Biological_Process_2025',
 }
 
+function Results(props: { model: string, description: string, gene_set_id: string, gene_set_library_id?: string, gene_set_library_name?: string }) {
+  const [state, setState] = React.useState<{
+    error?: string,
+    status?: string | null,
+    data?: {
+        "Term": string;
+        "es": number;
+        "nes": number | null;
+        "pval": number;
+        "sidak": number;
+        "geneset_size": number;
+        "leading_edge": string;
+    }[] | null,
+  }>({})
+  const results = trpc.enrich.useSubscription({
+    model: props.model,
+    gene_set_id: props.gene_set_id,
+    gene_set_library_name: props.gene_set_library_name,
+    gene_set_library_id: props.gene_set_library_id,
+  }, {
+    enabled: !!(props.gene_set_library_name || props.gene_set_library_id),
+    onStarted: () => setState({ status: 'Starting...' }),
+    onData: (newState) => setState(curState => ({
+      error: newState.error ?? curState.error,
+      status: newState.status ?? curState.status,
+      data: newState.data ?? curState.data,
+    })),
+    onComplete: () => setState(({ status: _, ...curState }) => curState),
+  })
+  const downloadData = React.useCallback(() => {
+    if (!state.data) return
+    downloadBlob([
+      ['term', 'es', 'nes', 'pval', 'geneset_size'].join('\t'),
+      ...state.data.map((row) => [
+        row.Term, row.es, row.nes, row.pval, row.geneset_size,
+      ].join('\t')),
+    ].join('\n'), `${props.model}-predictions.tsv`, 'text/tab-separated-values;charset=utf-8')
+  }, [props.model, state.data])
+  return (
+    <div className="grow flex flex-col gap-4">
+      <div role="tablist" className="tabs tabs-lift tabs-xl">
+        <button
+          role="tab"
+          className="tab cursor-auto"
+        >
+          Results
+        </button>
+        <div role="tabpanel" className="tab-content block p-0">
+          <DataTable
+            title={<>{props.description}</>}
+            columns={{
+              Term: {th: <>Term</>, td: (cell: string, row) => <button className="tooltip cursor-pointer active:font-bold" onClick={evt => {navigator.clipboard.writeText(row.Term)}} data-tip="Copy to clipboard">{cell}</button>},
+              es: {th: <>ES</>, td: (cell: number) => cell.toPrecision(3)},
+              nes: {th: <>NES</>, td: (cell: number | null) => cell?.toPrecision(3)},
+              pval: {th: <>PVal</>, td: (cell: number) => cell?.toPrecision(3)},
+              geneset_size: {th: <>Gene Set</>, td: (cell: number, row) => <button className="tooltip cursor-pointer active:font-bold" onClick={evt => {navigator.clipboard.writeText(row.leading_edge.split(',').join('\n'))}} data-tip="Copy to clipboard">{cell} genes</button>},
+            }}
+            defaultOrderBy={'pval asc'}
+            data={!!state.data ? state.data : []}
+            isLoading={results.status !== 'idle'}
+          />
+          {state.status && <div className="alert alert-info">{state.status}</div>}
+          {state.error && <div className="alert alert-error">{state.error}</div>}
+          {results.error && <div className="alert alert-error">{results.error.message}</div>}
+        </div>
+      </div>
+      <ButtonWithIcon
+        className={classNames("btn font-semibold", { 'btn-primary': !!state.data })}
+        disabled={!state.data}
+        onClick={downloadData}
+        icon={<img src="/resources/DownloadIcon.svg" alt="" />}
+      >Download result</ButtonWithIcon>
+    </div>
+  )
+
+}
+
 export default function EnrichPage() {
   const [geneSet, setGeneSet] = React.useState('')
   const [description, setDescription] = React.useState('')
   const [geneSetLibraryName, setGeneSetLibraryName] = React.useState('GO_Biological_Process_2025')
   const [geneSetLibraryFile, setGeneSetLibraryFile] = React.useState<File | null>(null);
-
   const [model, setModel] = React.useState('gsfm-rummagene')
   const models = trpc.models.useQuery()
   const geneSetParsed = React.useMemo(() =>
     !geneSet ? [] : geneSet.split(/[\s\r?\n]+/g).filter(gene => !!gene)
   , [geneSet])
-  const predictions = trpc.enrich.useMutation()
-  const downloadPredictions = React.useCallback(() => {
-    if (!predictions.isSuccess) return
-    downloadBlob([
-      ['term', 'es', 'nes', 'pval', 'geneset_size'].join('\t'),
-      ...predictions.data.map((row) => [
-        row.Term, row.es, row.nes, row.pval, row.geneset_size,
-      ].join('\t')),
-    ].join('\n'), `${model}-predictions.tsv`, 'text/tab-separated-values;charset=utf-8')
-  }, [model, predictions])
-
+  const addList = trpc.addList.useMutation()
+  const addLibrary = trpc.addLibrary.useMutation()
   const valid = React.useMemo(() => 
     geneSetParsed.length !== 0
     && (
@@ -43,6 +110,7 @@ export default function EnrichPage() {
       || geneSetLibraryFile !== null
     ), [geneSetParsed, geneSetLibraryName, geneSetLibraryFile]
   )
+  const [submitted, setSubmitted] = React.useState<React.ComponentProps<typeof Results>|null>(null)
   return (
     <>
       <div
@@ -92,7 +160,18 @@ export default function EnrichPage() {
           <form className="flex flex-col gap-8 items-stretch" onSubmit={evt => {
             evt.preventDefault()
             evt.stopPropagation()
-            predictions.mutate(new FormData(evt.currentTarget))
+            Promise.all([
+              addList.mutateAsync({ gene_set: geneSet.split(/[\r\n]+/g) }),
+              (geneSetLibraryName === '' && geneSetLibraryFile !== null) ? addLibrary.mutateAsync(new FormData(evt.currentTarget)) : Promise.resolve(undefined),
+            ] as const).then(([addListResult, addLibraryResult]) => {
+              setSubmitted({
+                model,
+                description,
+                gene_set_id: addListResult,
+                gene_set_library_id: addLibraryResult,
+                gene_set_library_name: geneSetLibraryName,
+              })
+            })
           }}>
             <div role="tablist" className="tabs tabs-lift tabs-xl">
               <button
@@ -103,7 +182,6 @@ export default function EnrichPage() {
               </button>
               <div role="tabpanel" className="tab-content block">
                 <textarea
-                  name="input_gene_set"
                   className="input h-72 w-full whitespace-pre border-none"
                   value={geneSet}
                   onChange={evt => {setGeneSet(evt.currentTarget.value)}}
@@ -138,7 +216,6 @@ export default function EnrichPage() {
             </fieldset>
             <input
               className="input w-full text-primary border-primary"
-              name="description"
               value={description}
               onChange={evt => {setDescription(evt.currentTarget.value)}}
               placeholder="Gene set description"
@@ -147,7 +224,6 @@ export default function EnrichPage() {
               className="select w-full text-primary border-primary"
               value={model}
               onChange={evt => {setModel(evt.currentTarget.value)}}
-              name="model"
             >
               {models.isLoading && <option key="" value="">Loading...</option>}
               {models.data && models.data.map(({ model }) => <option key={model} value={model}>{model_name[model] ?? model}</option>)}
@@ -171,39 +247,9 @@ export default function EnrichPage() {
               >Submit</ButtonWithIcon>
             </div>
           </form>
-          {predictions.status !== 'idle' && <div className="grow flex flex-col gap-4">
-            <div role="tablist" className="tabs tabs-lift tabs-xl">
-              <button
-                role="tab"
-                className="tab cursor-auto"
-              >
-                Results
-              </button>
-              <div role="tabpanel" className="tab-content block p-0">
-                {predictions.isError && <div className="alert alert-error">{predictions.error.message}</div>}
-                {
-                  <DataTable
-                    title={<>{description}</>}
-                    columns={{
-                      Term: {th: <>Term</>, td: (cell: string, row) => <button className="tooltip cursor-pointer active:font-bold" onClick={evt => {navigator.clipboard.writeText(row.Term)}} data-tip="Copy to clipboard">{cell}</button>},
-                      es: {th: <>ES</>, td: (cell: number) => cell.toPrecision(3)},
-                      nes: {th: <>NES</>, td: (cell: number | null) => cell?.toPrecision(3)},
-                      pval: {th: <>PVal</>, td: (cell: number) => cell?.toPrecision(3)},
-                      geneset_size: {th: <>Gene Set</>, td: (cell: number, row) => <button className="tooltip cursor-pointer active:font-bold" onClick={evt => {navigator.clipboard.writeText(row.leading_edge.split(',').join('\n'))}} data-tip="Copy to clipboard">{cell} genes</button>},
-                    }}
-                    defaultOrderBy={'pval asc'}
-                    data={predictions.data ? predictions.data : []}
-                    isLoading={predictions.isPending}
-                  />}
-              </div>
-            </div>
-            <ButtonWithIcon
-              className="btn btn-primary font-semibold"
-              disabled={!predictions.isSuccess}
-              onClick={downloadPredictions}
-              icon={<img src="/resources/DownloadIcon.svg" alt="" />}
-            >Download result</ButtonWithIcon>
-          </div>}
+          {addList.isError && <div className="alert alert-error">{addList.error.message}</div>}
+          {addLibrary.isError && <div className="alert alert-error">{addLibrary.error.message}</div>}
+          {submitted && <Results {...submitted} />}
         </div>
       </div>
     </>

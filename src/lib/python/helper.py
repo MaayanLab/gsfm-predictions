@@ -14,7 +14,12 @@ try:
     if not inspect.isgenerator(out):
       out = json.dumps(dict(data=out), allow_nan=False)
   if inspect.isgenerator(out):
-    sys.stdout.buffer.writelines(out)
+    try:
+      sys.stdout.buffer.writelines(out)
+    except Exception as e:
+      traceback.print_exc(file=sys.stderr)
+      json.dump(dict(error=str(e)), sys.stdout, allow_nan=False)
+      sys.stdout.write('\n')
   else:
     sys.stdout.write(out)
     sys.stdout.flush()
