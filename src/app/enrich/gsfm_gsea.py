@@ -1,4 +1,6 @@
-def enrich(*, model, input_gene_set: list[str], gene_set_library: str):
+import typing as t
+
+def enrich(*, model, input_gene_set: list[str], gene_set_library_name: t.Optional[str] = None, gene_set_library: t.Optional[str] = None):
   import torch
   import numpy as np
   import pandas as pd
@@ -10,7 +12,7 @@ def enrich(*, model, input_gene_set: list[str], gene_set_library: str):
     for line_split in (line.split('\t'),)
     if len(line_split) >= 3
     for term, _desc, *gene_set in (line_split,)
-  }
+  } if gene_set_library is not None else blitz.enrichr.get_library(gene_set_library_name)
   # load model
   from gsfm import GSFM, Vocab
   vocab = Vocab.from_pretrained(model)
@@ -21,22 +23,8 @@ def enrich(*, model, input_gene_set: list[str], gene_set_library: str):
   logits = torch.squeeze(gsfm(token_ids))
   signature = pd.DataFrame(zip(vocab.vocab, logits.tolist()))
   # perform GSEA
-  results = blitz.gsea(signature, library)
+  results = blitz.gsea(signature, library, signature_cache=True, shared_null=True, processes=1)
   return results[results['pval']<0.05].replace([
     np.inf, -np.inf, np.nan,
     float('inf'), float('-inf'), float('nan')
   ], None).reset_index().to_dict(orient='records')
-
-def enrich_from_enrichr(*, model, input_gene_set: list[str], gene_set_library_name: str):
-  import requests
-  req = requests.get('https://maayanlab.cloud/Enrichr/geneSetLibrary', params=dict(
-    mode='text',
-    libraryName=gene_set_library_name,
-  ))
-  assert req.ok
-  gene_set_library = req.text
-  return enrich(
-    model=model,
-    input_gene_set=input_gene_set,
-    gene_set_library=gene_set_library,
-  )

@@ -17,8 +17,8 @@ export default router({
       model: model_on_hf[formData.get('model')?.toString() ?? 'gsfm-rummagene'],
       input_gene_set: formData.get('input_gene_set')?.toString().split(/[\r\n]+/g),
       description: formData.get('description')?.toString() ?? undefined,
-      gene_set_library_file: formData.get('gene_set_library_file') as File,
-      gene_set_library_name: formData.get('gene_set_library_name')?.toString() ?? '',
+      gene_set_library_file: formData.get('gene_set_library_file') as File | null,
+      gene_set_library_name: formData.get('gene_set_library_name')?.toString(),
     }))
   ).mutation(async (props) => {
     if (props.input.input_gene_set.length === 0) throw new Error('Missing or empty gene set')
@@ -29,40 +29,22 @@ export default router({
         description: props.input.description ?? null,
       })
       .execute()
-    if (props.input.gene_set_library_name) {
-      return await python<{
-        "Term": string,
-        "es": number,
-        "nes": number | null,
-        "pval": number,
-        "sidak": number,
-        "geneset_size": number,
-        "leading_edge": string,
-      }[]>('app.enrich.gsfm_gsea.enrich_from_enrichr', {
-        kwargs: {
-          model: props.input.model,
-          input_gene_set: props.input.input_gene_set,
-          gene_set_library_name: props.input.gene_set_library_name,
-        },
-      })
-    } else {
-      const gene_set_library = await props.input.gene_set_library_file?.text()
-      if (!gene_set_library) throw new Error('Missing or empty gene set library')
-      return await python<{
-        "Term": string,
-        "es": number,
-        "nes": number | null,
-        "pval": number,
-        "sidak": number,
-        "geneset_size": number,
-        "leading_edge": string,
-      }[]>('app.enrich.gsfm_gsea.enrich', {
-        kwargs: {
-          model: props.input.model,
-          input_gene_set: props.input.input_gene_set,
-          gene_set_library,
-        },
-      })
-    }
+    const gene_set_library = await props.input.gene_set_library_file?.text()
+    return await python<{
+      "Term": string,
+      "es": number,
+      "nes": number | null,
+      "pval": number,
+      "sidak": number,
+      "geneset_size": number,
+      "leading_edge": string,
+    }[]>('app.enrich.gsfm_gsea.enrich', {
+      kwargs: {
+        model: props.input.model,
+        input_gene_set: props.input.input_gene_set,
+        gene_set_library: gene_set_library,
+        gene_set_library_name: props.input.gene_set_library_name,
+      },
+    })
   }),
 })
