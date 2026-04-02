@@ -64,13 +64,13 @@ export default function DataTable<C extends object>(props: { title?: React.React
             {Object.keys(props.columns).map((col, j) => {
               const column = props.columns[col as keyof C]
               if (!column) return null
-              return <td key={j} className={classNames('text-center', {  'bg-[#DCEBFF]': i%2==0 })}>{column.td(row[col as keyof C], row)}</td>
+              return <td key={j} className={classNames("text-center align-middle", { 'bg-[#DCEBFF]': i%2==0 })}>{column.td(row[col as keyof C], row)}</td>
             })}
           </tr>)}
         </tbody>
       </table>
       {props.isLoading && <div className="w-full flex flex-col items-center"><div className="loading loading-spinner loading-xl" /></div>}
-      <div className="join items-center justify-center gap-1">
+      {totalCount > pageSize && <div className="join items-center justify-center gap-1">
         {page > 2 && <button className="join-item btn text-[#6992C8] bg-white border font-normal border-[#6992C8] rounded-lg" onClick={evt => {setPage(page => 1)}}>1</button>}
         {page > 3 && <button className="join-item btn text-[#6992C8] bg-white border font-normal border-[#6992C8] rounded-lg btn-disabled">...</button>}
         {page > 1 && <button className="join-item btn text-[#6992C8] bg-white border font-normal border-[#6992C8] rounded-lg" onClick={evt => {setPage(page => page - 1)}}>{page - 1}</button>}
@@ -78,7 +78,7 @@ export default function DataTable<C extends object>(props: { title?: React.React
         {page*pageSize < totalCount && <button className="join-item btn text-[#6992C8] bg-white border font-normal border-[#6992C8] rounded-lg" onClick={evt => {setPage(page => page + 1)}}>{page + 1}</button>}
         {(page+2)*pageSize < totalCount && <button className="join-item btn text-[#6992C8] bg-white border font-normal border-[#6992C8] rounded-lg btn-disabled">...</button>}
         {(page+1)*pageSize < totalCount && <button className="join-item btn text-[#6992C8] bg-white border font-normal border-[#6992C8] rounded-lg" onClick={evt => {setPage(page => Math.ceil(totalCount/pageSize))}}>{Math.ceil(totalCount/pageSize)}</button>}
-      </div>
+      </div>}
     </div>
   )
 }

@@ -73,8 +73,8 @@ export default function AugmentPage() {
           <h1>Start augmenting your gene set</h1>
           <p>Submit your gene set to receive additional genes most relevant to the input gene set.</p>
         </div>
-        <div className="flex flex-row gap-4 self-stretch">
-          <div className="flex flex-col gap-8 items-stretch">
+        <div className="flex flex-row flex-wrap gap-8 self-stretch">
+          <div className="flex-1 flex flex-col gap-8 items-stretch">
             <div role="tablist" className="tabs tabs-lift tabs-xl">
               <button
                 role="tab"
@@ -115,7 +115,7 @@ export default function AugmentPage() {
               >Submit</ButtonWithIcon>
             </div>
           </div>
-          {predictions.status !== 'idle' && <div className="grow flex flex-col gap-4">
+          {predictions.status !== 'idle' && <div className="grow md:flex-3 flex flex-col gap-4">
             <div role="tablist" className="tabs tabs-lift tabs-xl">
               <button
                 role="tab"
@@ -124,23 +124,22 @@ export default function AugmentPage() {
                 Results
               </button>
               <div role="tabpanel" className="tab-content block p-0">
-                {predictions.isPending && <div className="flex-auto">Loading...</div>}
-                {predictions.isError && <div className="alert alert-error">{predictions.error.message}</div>}
-                {predictions.isSuccess &&
-                  <DataTable
-                    title={<>{description}</>}
-                    columns={{
-                      gene: {th: <>Gene</>, td: (gene: string) => gene},
-                      score: {th: <>Score</>, td: (score: number) => score.toPrecision(3)},
-                      known: {th: <>Known</>, td: (known: number) => known},
-                    }}
-                    defaultOrderBy={'score desc'}
-                    data={Object.entries(predictions.data.predictions).map(([gene, score]) => ({
-                      gene,
-                      score,
-                      known: predictions.variables.gene_set.includes(gene) ? 1 : 0
-                    }))}
-                  />}
+                <DataTable
+                  title={<>{description}</>}
+                  columns={{
+                    gene: {th: <>Gene</>, td: (gene: string) => gene},
+                    score: {th: <>Score</>, td: (score: number) => score.toPrecision(3)},
+                    known: {th: <>Known</>, td: (known: number) => known},
+                  }}
+                  defaultOrderBy={'score desc'}
+                  data={predictions.data ? Object.entries(predictions.data.predictions).map(([gene, score]) => ({
+                    gene,
+                    score,
+                    known: predictions.variables.gene_set.includes(gene) ? 1 : 0
+                  })) : []}
+                  isLoading={predictions.isPending}
+                />
+                {predictions.isError && <div className="alert alert-error rounded-t-none rounded-b-2xl flex flex-col">{predictions.error.message}</div>}
               </div>
             </div>
             <ButtonWithIcon

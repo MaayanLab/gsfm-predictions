@@ -41,6 +41,10 @@ function Results(props: { model: string, description: string, gene_set_id: strin
       status: newState.status ?? curState.status,
       data: newState.data ?? curState.data,
     })),
+    onError: (error) => setState(curState => ({
+      ...curState,
+      error: error.message,
+    })),
     onComplete: () => setState(({ status: _, ...curState }) => curState),
   })
   const downloadData = React.useCallback(() => {
@@ -53,7 +57,7 @@ function Results(props: { model: string, description: string, gene_set_id: strin
     ].join('\n'), `${props.model}-predictions.tsv`, 'text/tab-separated-values;charset=utf-8')
   }, [props.model, state.data])
   return (
-    <div className="grow flex flex-col gap-4">
+    <div className="flex flex-col gap-4">
       <div role="tablist" className="tabs tabs-lift tabs-xl">
         <button
           role="tab"
@@ -65,19 +69,20 @@ function Results(props: { model: string, description: string, gene_set_id: strin
           <DataTable
             title={<>{props.description}</>}
             columns={{
-              Term: {th: <>Term</>, td: (cell: string, row) => <button className="tooltip cursor-pointer active:font-bold" onClick={evt => {navigator.clipboard.writeText(row.Term)}} data-tip="Copy to clipboard">{cell}</button>},
+              Term: {th: <>Term</>, td: (cell: string, row) => <div className="tooltip w-full" data-tip="Copy to clipboard"><button className="cursor-pointer active:font-bold text-left px-2 w-full" onClick={evt => {navigator.clipboard.writeText(row.Term)}}>{cell}</button></div>},
               es: {th: <>ES</>, td: (cell: number) => cell.toPrecision(3)},
               nes: {th: <>NES</>, td: (cell: number | null) => cell?.toPrecision(3)},
-              pval: {th: <>PVal</>, td: (cell: number) => cell?.toPrecision(3)},
-              geneset_size: {th: <>Gene Set</>, td: (cell: number, row) => <button className="tooltip cursor-pointer active:font-bold" onClick={evt => {navigator.clipboard.writeText(row.leading_edge.split(',').join('\n'))}} data-tip="Copy to clipboard">{cell} genes</button>},
+              pval: {th: <>PVal</>, td: (cell: number) => <span className="text-nowrap">{cell?.toPrecision(3)}</span>},
+              geneset_size: {th: <>Gene Set</>, td: (cell: number, row) => <div className="tooltip" data-tip="Copy to clipboard"><button className="cursor-pointer active:font-bold text-left px-2 text-nowrap" onClick={evt => {navigator.clipboard.writeText(row.leading_edge.split(',').join('\n'))}}>{cell} genes</button></div>},
             }}
             defaultOrderBy={'pval asc'}
             data={!!state.data ? state.data : []}
             isLoading={results.status !== 'idle'}
           />
-          {state.status && <div className="alert alert-info">{state.status}</div>}
-          {state.error && <div className="alert alert-error">{state.error}</div>}
-          {results.error && <div className="alert alert-error">{results.error.message}</div>}
+          {(state.status || state.error) && <div className={classNames("alert rounded-t-none rounded-b-2xl flex flex-col", {'alert-error': state.error})}>
+            {state.status && <>{state.status}</>}
+            {state.error && <>Error: {state.error}</>}
+          </div>}
         </div>
       </div>
       <ButtonWithIcon
@@ -156,8 +161,8 @@ export default function EnrichPage() {
           <h1>Enrich your gene set</h1>
           <p>Submit your gene set to receive enrichment analysis results. This works by using GSFM assigned gene membership probabilities for a GSEA-like weighted random walk.</p>
         </div>
-        <div className="flex flex-row gap-4 self-stretch">
-          <form className="flex flex-col gap-8 items-stretch" onSubmit={evt => {
+        <div className="flex flex-row flex-wrap gap-8 self-stretch">
+          <form className="flex-1 flex flex-col gap-8 items-stretch" onSubmit={evt => {
             evt.preventDefault()
             evt.stopPropagation()
             Promise.all([
@@ -249,7 +254,9 @@ export default function EnrichPage() {
           </form>
           {addList.isError && <div className="alert alert-error">{addList.error.message}</div>}
           {addLibrary.isError && <div className="alert alert-error">{addLibrary.error.message}</div>}
-          {submitted && <Results {...submitted} />}
+          {submitted && <div className="grow md:flex-3">
+            <Results {...submitted} />
+          </div>}
         </div>
       </div>
     </>
