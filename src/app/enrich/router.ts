@@ -91,6 +91,7 @@ export default router({
           "sidak": number,
           "geneset_size": number,
           "leading_edge": string,
+          "hits": string,
         }[]
       }
       if (props.signal?.aborted) return

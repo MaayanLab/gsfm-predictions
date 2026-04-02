@@ -30,7 +30,20 @@ def enrich(*, model, input_gene_set: list[str], gene_set_library_name: t.Optiona
   # perform GSEA
   yield (json.dumps(dict(status='Performing GSEA...'))+'\n').encode()
   results = blitz.gsea(signature, library, signature_cache=True, shared_null=True)
-  yield (json.dumps(dict(status='', data=results[results['pval']<0.05].replace([
+  results = results[results['pval']<0.05].replace([
     np.inf, -np.inf, np.nan,
     float('inf'), float('-inf'), float('nan')
-  ], None).reset_index().to_dict(orient='records')))+'\n').encode()
+  ], None)
+  yield (json.dumps(dict(status='Preparing plots...'))+'\n').encode()
+  # from https://github.com/MaayanLab/blitzgsea/blob/main/blitzgsea/plot.py
+  signature = signature.copy()
+  signature.columns = ['i','v']
+  sig = signature.sort_values('v', ascending=False).set_index('i')
+  sig = sig[~sig.index.duplicated(keep='first')]
+  all_hits = []
+  for term in results.index.tolist():
+    gs = set(library[term])
+    hits = np.array([i for i,x in enumerate(sig.index.tolist()) if x in gs]) / sig.shape[0]
+    all_hits.append(','.join(f"{hit:.3f}" for hit in hits))
+  results['hits'] = all_hits
+  yield (json.dumps(dict(status='', data=results.reset_index().to_dict(orient='records')))+'\n').encode()

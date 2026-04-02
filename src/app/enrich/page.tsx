@@ -14,7 +14,7 @@ const example = {
   gene_set_library_name: 'GO_Biological_Process_2025',
 }
 
-function Results(props: { model: string, description: string, gene_set_id: string, gene_set_library_id?: string, gene_set_library_name?: string }) {
+function Results(props: { model: string, description: string, gene_set: string[], gene_set_id: string, gene_set_library_id?: string, gene_set_library_name?: string }) {
   const [state, setState] = React.useState<{
     error?: string,
     status?: string | null,
@@ -26,6 +26,7 @@ function Results(props: { model: string, description: string, gene_set_id: strin
         "sidak": number;
         "geneset_size": number;
         "leading_edge": string;
+        "hits": string;
     }[] | null,
   }>({})
   const results = trpc.enrich.useSubscription({
@@ -69,11 +70,12 @@ function Results(props: { model: string, description: string, gene_set_id: strin
           <DataTable
             title={<>{props.description}</>}
             columns={{
-              Term: {th: <>Term</>, td: (cell: string, row) => <div className="tooltip w-full" data-tip="Copy to clipboard"><button className="cursor-pointer active:font-bold text-left px-2 w-full" onClick={evt => {navigator.clipboard.writeText(row.Term)}}>{cell}</button></div>},
               es: {th: <>ES</>, td: (cell: number) => cell.toPrecision(3)},
-              nes: {th: <>NES</>, td: (cell: number | null) => cell?.toPrecision(3)},
               pval: {th: <>PVal</>, td: (cell: number) => <span className="text-nowrap">{cell?.toPrecision(3)}</span>},
               geneset_size: {th: <>Gene Set</>, td: (cell: number, row) => <div className="tooltip" data-tip="Copy to clipboard"><button className="cursor-pointer active:font-bold text-left px-2 text-nowrap" onClick={evt => {navigator.clipboard.writeText(row.leading_edge.split(',').join('\n'))}}>{cell} genes</button></div>},
+              nes: {th: <>NES</>, td: (cell: number | null) => cell?.toPrecision(3)},
+              hits: {th: <>Plot</>, td: (cell: string) => cell && <svg viewBox="0 0 1 0.1" className="w-full h-6">{cell.split(',').map((index, i) => <line key={i} x1={Number(index)} x2={Number(index)} y1={0} y2={0.1} stroke="red" strokeWidth={1/1000} />)}</svg>},
+              Term: {th: <>SET</>, td: (cell: string, row) => <div className="tooltip w-full" data-tip="Copy to clipboard"><button className="cursor-pointer active:font-bold text-left px-2 w-full" onClick={evt => {navigator.clipboard.writeText(row.Term)}}>{cell}</button></div>},
             }}
             defaultOrderBy={'pval asc'}
             data={!!state.data ? state.data : []}
@@ -165,13 +167,15 @@ export default function EnrichPage() {
           <form className="flex-1 flex flex-col gap-8 items-stretch" onSubmit={evt => {
             evt.preventDefault()
             evt.stopPropagation()
+            const gene_set = geneSet.split(/[\r\n]+/g)
             Promise.all([
-              addList.mutateAsync({ gene_set: geneSet.split(/[\r\n]+/g) }),
+              addList.mutateAsync({ gene_set }),
               (geneSetLibraryName === '' && geneSetLibraryFile !== null) ? addLibrary.mutateAsync(new FormData(evt.currentTarget)) : Promise.resolve(undefined),
             ] as const).then(([addListResult, addLibraryResult]) => {
               setSubmitted({
                 model,
                 description,
+                gene_set,
                 gene_set_id: addListResult,
                 gene_set_library_id: addLibraryResult,
                 gene_set_library_name: geneSetLibraryName,
