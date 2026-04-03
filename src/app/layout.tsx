@@ -64,7 +64,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={classNames(schibsted_grotesk.variable, jetbrains_mono.variable)}>
+    <html lang="en" className={classNames(schibsted_grotesk.variable, jetbrains_mono.variable, "min-w-4xl")}>
       <body>
         <TrpcProvider>
           <div className="flex flex-col min-h-screen">

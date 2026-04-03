@@ -17,6 +17,7 @@ export default function Header() {
         <div className="grow">&nbsp;</div>
         <Link className={classNames("text-primary font-semibold", { 'border-b-2': pathname === '/about' })} href="/about">About</Link>
         <Link className={classNames("text-primary font-semibold", { 'border-b-2': pathname === '/augment' })} href="/augment" >Augment</Link>
+        <Link className={classNames("text-primary font-semibold", { 'border-b-2': pathname === '/enrich' })} href="/enrich" >Enrichment</Link>
         <Link className={classNames("text-primary font-semibold", { 'border-b-2': pathname === '/downloads' })} href="/downloads">Downloads</Link>
         <Link className={classNames("flex flex-row gap-4 border rounded-full p-4 text-primary font-semibold shrink-0")} href="/search"><img src="/resources/SearchIcon.svg" alt="" />Search&nbsp;</Link>
       </div>

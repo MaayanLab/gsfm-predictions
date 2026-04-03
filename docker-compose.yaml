@@ -5,12 +5,16 @@ x-kubernetes:
 services:
   gsfm-app:
     build: .
-    image: maayanlab/gsfm:0.10.18
+    image: maayanlab/gsfm:0.12.3
     platform: linux/amd64
     x-kubernetes:
       imagePullPolicy: IfNotPresent
       annotations:
         maayanlab.cloud/ingress: https://gsfm.maayanlab.cloud
+        nginx.ingress.kubernetes.io/proxy-body-size: '0'
+        nginx.ingress.kubernetes.io/proxy-max-temp-file-size: '0'
+        nginx.ingress.kubernetes.io/proxy-read-timeout: '300'
+        nginx.ingress.kubernetes.io/proxy-send-timeout: '300'
     environment:
     - DATABASE_URL=${PROD_DATABASE_URL:-postgres://postgres:${POSTGRES_PASSWORD}@gsfm-postgres:5432/postgres}
     - NEXT_PUBLIC_URL=https://gsfm.maayanlab.cloud
@@ -20,7 +24,7 @@ services:
     volumes:
     - gsfm-app-model:/app/data/model
   gsfm-postgres:
-    image: postgres
+    image: postgres:17
     environment:
     - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
