@@ -8,13 +8,21 @@ import { model_name } from "@/components/resources"
 import ButtonWithIcon from "@/components/ButtonWithIcon"
 import classNames from "classnames"
 
+const gene_set_libraries = [
+  "GO_Biological_Process_2025",
+  "WikiPathway_2024_Human",
+  "KEGG_2026",
+  "MGI_Mammalian_Phenotype_Level_4_2024",
+  "GWAS_Catalog_2025",
+  "ChEA_2022",
+]
 const example = {
   gene_set: `TYROBP\nLILRB1\nSLC11A1\nTNFSF18\nFCER1G\nEIF2AK4\nMDK\nSEMA6D\nIFNA6\nIFNK\nIFNB1\nIFNA2\nIFNA14\nIFNA7\nIFNA1\nIFNE\nIFNA4\nIFNA5\nPLXNA1\nITGAL\nICAM1\nF2RL1\nTOX4\nCD74\nIFNA21\nIFNA8\nIFNW1\nIFNA16\nIFNA10\nIFNA17`,
   description: 'T Cell Activation Involved in Immune Response (GO:0002286)',
   gene_set_library_name: 'GO_Biological_Process_2025',
 }
 
-function Results(props: { model: string, description: string, gene_set: string[], gene_set_id: string, gene_set_library_id?: string, gene_set_library_name?: string }) {
+function Results(props: { model: string, description: string, gene_set_id: string, gene_set_library_id?: string, gene_set_library_name?: string }) {
   const [state, setState] = React.useState<{
     error?: string,
     status?: string | null,
@@ -26,7 +34,7 @@ function Results(props: { model: string, description: string, gene_set: string[]
         "sidak": number;
         "geneset_size": number;
         "leading_edge": string;
-        "hits": string;
+        "plot": string;
     }[] | null,
   }>({})
   const results = trpc.enrich.useSubscription({
@@ -36,7 +44,7 @@ function Results(props: { model: string, description: string, gene_set: string[]
     gene_set_library_id: props.gene_set_library_id,
   }, {
     enabled: !!(props.gene_set_library_name || props.gene_set_library_id),
-    onStarted: () => setState({ status: 'Starting...' }),
+    onStarted: () => setState({ status: 'Submitting enrichment job...' }),
     onData: (newState) => setState(curState => ({
       error: newState.error ?? curState.error,
       status: newState.status ?? curState.status,
@@ -74,7 +82,24 @@ function Results(props: { model: string, description: string, gene_set: string[]
               pval: {th: <>PVal</>, td: (cell: number) => <span className="text-nowrap">{cell?.toPrecision(3)}</span>},
               geneset_size: {th: <>Gene Set</>, td: (cell: number, row) => <div className="tooltip" data-tip="Copy to clipboard"><button className="cursor-pointer active:font-bold text-left px-2 text-nowrap" onClick={evt => {navigator.clipboard.writeText(row.leading_edge.split(',').join('\n'))}}>{cell} genes</button></div>},
               nes: {th: <>NES</>, td: (cell: number | null) => cell?.toPrecision(3)},
-              hits: {th: <>Plot</>, td: (cell: string) => cell && <svg viewBox="0 0 1 0.1" className="w-full h-6">{cell.split(',').map((index, i) => <line key={i} x1={Number(index)} x2={Number(index)} y1={0} y2={0.1} stroke="red" strokeWidth={1/1000} />)}</svg>},
+              plot: {th: <>Plot</>, td: (cell: string, row) => {
+                const [_0, plot, size] = /([\d,]*)\/(\d+)/.exec(cell) as RegExpExecArray
+                const vlines = plot.split(',').map(pt => Number(pt)/Number(size))
+                return (
+                  <svg viewBox="0 0 16 3" className="w-32">
+                    {vlines.map((x, i) =>
+                      <line
+                        key={i}
+                        x1={x*16}
+                        x2={x*16}
+                        y1={0}
+                        y2={3}
+                        stroke={row.nes && row.nes < 0 ? 'blue' : 'red'}
+                        strokeWidth={16/1000}
+                      />)}
+                  </svg>
+                )
+              }},
               Term: {th: <>SET</>, td: (cell: string, row) => <div className="tooltip w-full" data-tip="Copy to clipboard"><button className="cursor-pointer active:font-bold text-left px-2 w-full" onClick={evt => {navigator.clipboard.writeText(row.Term)}}>{cell}</button></div>},
             }}
             defaultOrderBy={'pval asc'}
@@ -175,7 +200,6 @@ export default function EnrichPage() {
               setSubmitted({
                 model,
                 description,
-                gene_set,
                 gene_set_id: addListResult,
                 gene_set_library_id: addLibraryResult,
                 gene_set_library_name: geneSetLibraryName,
@@ -199,6 +223,15 @@ export default function EnrichPage() {
               </div>
             </div>
             <fieldset className="fieldset">
+              <legend className="fieldset-legend text-primary">Gene Set Description</legend>
+              <input
+                className="input w-full text-primary border-primary"
+                value={description}
+                onChange={evt => {setDescription(evt.currentTarget.value)}}
+                placeholder="Gene set description"
+              />
+            </fieldset>
+            <fieldset className="fieldset">
               <legend className="fieldset-legend text-primary">Gene Set Library</legend>
               <select
                 className="select w-full text-primary border-primary"
@@ -206,11 +239,7 @@ export default function EnrichPage() {
                 onChange={evt => {setGeneSetLibraryName(evt.currentTarget.value)}}
                 name="gene_set_library_name"
               >
-                <option value="GO_Biological_Process_2025">GO Biological Process 2025</option>
-                <option value="GO_Cellular_Component_2025">GO Cellular Component 2025</option>
-                <option value="GO_Molecular_Function_2025">GO Molecular Function 2025</option>
-                <option value="GWAS_Catalog_2025">GWAS Catalog 2025</option>
-                <option value="ChEA_2022">ChEA 2022</option>
+                {gene_set_libraries.map(gsl => <option key={gsl} value={gsl}>{gsl.replaceAll('_', ' ')}</option>)}
                 <option value="" className="italic">Custom Upload</option>
               </select>
               {geneSetLibraryName === "" &&
@@ -223,20 +252,17 @@ export default function EnrichPage() {
                   }}
                 />}
             </fieldset>
-            <input
-              className="input w-full text-primary border-primary"
-              value={description}
-              onChange={evt => {setDescription(evt.currentTarget.value)}}
-              placeholder="Gene set description"
-            />
-            <select
-              className="select w-full text-primary border-primary"
-              value={model}
-              onChange={evt => {setModel(evt.currentTarget.value)}}
-            >
-              {models.isLoading && <option key="" value="">Loading...</option>}
-              {models.data && models.data.map(({ model }) => <option key={model} value={model}>{model_name[model] ?? model}</option>)}
-            </select>
+            <fieldset className="fieldset">
+              <legend className="fieldset-legend text-primary">Model Version</legend>
+              <select
+                className="select w-full text-primary border-primary"
+                value={model}
+                onChange={evt => {setModel(evt.currentTarget.value)}}
+              >
+                {models.isLoading && <option key="" value="">Loading...</option>}
+                {models.data && models.data.map(({ model }) => <option key={model} value={model}>{model_name[model] ?? model}</option>)}
+              </select>
+            </fieldset>
             <div className="flex flex-row gap-2">
               <button
                 type="button"
