@@ -1,6 +1,7 @@
 {
   "name": "gsfm",
   "version": "0.12.3",
+  "license": "CC-BY-NC-SA-4.0",
   "private": true,
   "scripts": {
     "dev:next": "next dev --webpack",
