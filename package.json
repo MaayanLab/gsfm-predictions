@@ -1,7 +1,7 @@
 {
   "name": "gsfm",
   "version": "0.12.3",
-  "license": "CC-BY-NC-SA-4.0",
+  "license": "BSD-Source-Code",
   "private": true,
   "scripts": {
     "dev:next": "next dev --webpack",
