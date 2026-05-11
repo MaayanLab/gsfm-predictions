@@ -69,7 +69,7 @@ export default router({
     const proc = pythonStream('app.enrich.gsfm_gsea.enrich', {
       kwargs: {
         model: props.input.model,
-        input_gene_set: gene_set,
+        input_gene_set: gene_set.split('\n'),
         gene_set_library,
         gene_set_library_name: props.input.gene_set_library_name,
       },
