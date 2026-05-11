@@ -26,7 +26,8 @@ def enrich(*, model, input_gene_set: list[str], gene_set_library_name: t.Optiona
   yield (json.dumps(dict(status='Generating GSFM signature...'))+'\n').encode()
   token_ids = torch.tensor(vocab(input_gene_set))[None, :]
   logits = torch.squeeze(gsfm(token_ids))
-  signature = pd.DataFrame(zip(vocab.vocab, logits.tolist()))
+  signature = pd.DataFrame(zip(vocab.vocab, logits.tolist()), columns=['i','v'])
+  signature = signature[~signature['i'].isin(['<pad>', '<unk>'])]
   # perform GSEA
   yield (json.dumps(dict(status='Performing GSEA...'))+'\n').encode()
   results = blitz.gsea(signature, library, signature_cache=True, shared_null=True)
@@ -36,7 +37,6 @@ def enrich(*, model, input_gene_set: list[str], gene_set_library_name: t.Optiona
   ], None)
   yield (json.dumps(dict(status='Preparing plots...'))+'\n').encode()
   # from https://github.com/MaayanLab/blitzgsea/blob/main/blitzgsea/plot.py
-  signature.columns = ['i','v']
   sig = signature.sort_values('v', ascending=False).set_index('i')
   sig = sig[~sig.index.duplicated(keep='first')]
   plots = []
