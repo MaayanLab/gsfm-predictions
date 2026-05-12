@@ -2,11 +2,13 @@
 
 import React from "react"
 import trpc from '@/lib/trpc/client'
+import { z } from 'zod'
 import downloadBlob from "@/components/downloadBlob"
 import DataTable from "@/components/DataTable"
 import { model_name } from "@/components/resources"
 import ButtonWithIcon from "@/components/ButtonWithIcon"
 import classNames from "classnames"
+import useRWSearchParams from "@/components/rwsearchparams"
 
 const gene_set_libraries = [
   "GO_Biological_Process_2025",
@@ -142,7 +144,16 @@ export default function EnrichPage() {
       || geneSetLibraryFile !== null
     ), [geneSetParsed, geneSetLibraryName, geneSetLibraryFile]
   )
-  const [submitted, setSubmitted] = React.useState<React.ComponentProps<typeof Results>|null>(null)
+  const [searchParams, setSearchParams] = useRWSearchParams()
+  const submitted = React.useMemo(() => {
+    return z.object({
+      model: z.string(),
+      description: z.string(),
+      gene_set_id: z.string(),
+      gene_set_library_id: z.string().optional(),
+      gene_set_library_name: z.string().optional(),
+    }).safeParse(Object.fromEntries(searchParams.entries()))
+  }, [searchParams])
   return (
     <>
       <div
@@ -197,12 +208,17 @@ export default function EnrichPage() {
               addList.mutateAsync({ gene_set }),
               (geneSetLibraryName === '' && geneSetLibraryFile !== null) ? addLibrary.mutateAsync(new FormData(evt.currentTarget)) : Promise.resolve(undefined),
             ] as const).then(([addListResult, addLibraryResult]) => {
-              setSubmitted({
-                model,
-                description,
-                gene_set_id: addListResult,
-                gene_set_library_id: addLibraryResult,
-                gene_set_library_name: geneSetLibraryName,
+              setSearchParams(sp => {
+                sp.set('model', model)
+                sp.set('description', description)
+                sp.set('gene_set_id', addListResult)
+                if (addLibraryResult) {
+                  sp.set('gene_set_library_id', addLibraryResult)
+                  sp.delete('gene_set_library_name')
+                } else {
+                  sp.set('gene_set_library_name', geneSetLibraryName)
+                  sp.delete('gene_set_library_id')
+                }
               })
             })
           }}>
@@ -284,8 +300,8 @@ export default function EnrichPage() {
           </form>
           {addList.isError && <div className="alert alert-error">{addList.error.message}</div>}
           {addLibrary.isError && <div className="alert alert-error">{addLibrary.error.message}</div>}
-          {submitted && <div className="grow md:flex-3">
-            <Results {...submitted} />
+          {submitted.data && <div className="grow md:flex-3">
+            <Results {...submitted.data} />
           </div>}
         </div>
       </div>
