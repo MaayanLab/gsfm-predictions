@@ -7,7 +7,7 @@ export default function DataTable<C extends object>(props: { title?: React.React
   const [page, setPage] = React.useState(1)
   const [filter, setFilter] = React.useState('')
   const [orderBy, setOrderBy] = React.useState(props.defaultOrderBy)
-  const view = React.useMemo(() => {
+  const { view, totalCount } = React.useMemo(() => {
     let view = [...props.data]
     if (filter) {
       view = view.filter(record => Object.values(record).reduce((keep, value) => {
@@ -25,7 +25,10 @@ export default function DataTable<C extends object>(props: { title?: React.React
       else if (direction === 'desc') view.sort((a, b) => b[col] < a[col] ? -1 : b[col] > a[col] ? 1 : 0)
       else throw new Error(`Invalid direction ${direction}`)
     }
-    return view.slice((page-1)*pageSize, page*pageSize)
+    return {
+      view: view.slice((page-1)*pageSize, page*pageSize),
+      totalCount: view.length,
+    }
   }, [props.data, page, filter, orderBy, pageSize])
   return (
     <div className="flex flex-col place-items-start gap-2 m-4">
@@ -69,14 +72,14 @@ export default function DataTable<C extends object>(props: { title?: React.React
         </tbody>
       </table>
       {props.isLoading && <div className="w-full flex flex-col items-center"><div className="loading loading-spinner loading-xl" /></div>}
-      {view.length > pageSize && <div className="join items-center justify-center gap-1">
+      {totalCount > pageSize && <div className="join items-center justify-center gap-1">
         {page > 2 && <button className="join-item btn text-[#6992C8] bg-white border font-normal border-[#6992C8] rounded-lg" onClick={evt => {setPage(page => 1)}}>1</button>}
         {page > 3 && <button className="join-item btn text-[#6992C8] bg-white border font-normal border-[#6992C8] rounded-lg btn-disabled">...</button>}
         {page > 1 && <button className="join-item btn text-[#6992C8] bg-white border font-normal border-[#6992C8] rounded-lg" onClick={evt => {setPage(page => page - 1)}}>{page - 1}</button>}
-        <button className={classNames("btn rounded-lg btn-active border border-[#6992C8] bg-[#DCEBFF] text-[#013CC6]", { 'rounded-lg': view.length <= pageSize, 'join-item': view.length > pageSize })}>{page}</button>
-        {page*pageSize < view.length && <button className="join-item btn text-[#6992C8] bg-white border font-normal border-[#6992C8] rounded-lg" onClick={evt => {setPage(page => page + 1)}}>{page + 1}</button>}
-        {(page+2)*pageSize < view.length && <button className="join-item btn text-[#6992C8] bg-white border font-normal border-[#6992C8] rounded-lg btn-disabled">...</button>}
-        {(page+1)*pageSize < view.length && <button className="join-item btn text-[#6992C8] bg-white border font-normal border-[#6992C8] rounded-lg" onClick={evt => {setPage(page => Math.ceil(view.length/pageSize))}}>{Math.ceil(view.length/pageSize)}</button>}
+        <button className={classNames("btn rounded-lg btn-active border border-[#6992C8] bg-[#DCEBFF] text-[#013CC6]", { 'rounded-lg': totalCount <= pageSize, 'join-item': totalCount > pageSize })}>{page}</button>
+        {page*pageSize < totalCount && <button className="join-item btn text-[#6992C8] bg-white border font-normal border-[#6992C8] rounded-lg" onClick={evt => {setPage(page => page + 1)}}>{page + 1}</button>}
+        {(page+2)*pageSize < totalCount && <button className="join-item btn text-[#6992C8] bg-white border font-normal border-[#6992C8] rounded-lg btn-disabled">...</button>}
+        {(page+1)*pageSize < totalCount && <button className="join-item btn text-[#6992C8] bg-white border font-normal border-[#6992C8] rounded-lg" onClick={evt => {setPage(page => Math.ceil(totalCount/pageSize))}}>{Math.ceil(totalCount/pageSize)}</button>}
       </div>}
     </div>
   )
