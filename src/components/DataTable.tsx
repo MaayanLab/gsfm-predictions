@@ -12,13 +12,13 @@ export default function DataTable<C extends object>(props: { title?: React.React
     let view = [...props.data]
     if (filter) {
       view = view.filter(record => Object.values(record).reduce((keep, value) => {
-        if (!keep)
-          return false
+        if (keep)
+          return true
         else if (typeof value === 'string')
           return value.toLocaleLowerCase().includes(filter.toLowerCase())
         else
-          return true
-      }, true))
+          return false
+      }, false))
     }
     if (orderBy) {
       const [col, direction] = orderBy.split(' ') as [keyof C, 'asc' | 'desc']
