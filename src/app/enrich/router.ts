@@ -23,6 +23,14 @@ export default router({
       .execute()
     return gene_set_id
   }),
+  getList: procedure.input(z.object({
+    id: z.string()
+  })).query(async (props) => {
+    return await db.selectFrom('app.user_gene_set')
+      .where('id', '=', props.input.id)
+      .select('gene_set')
+      .executeTakeFirstOrThrow()
+  }),
   addLibrary: procedure.input(z.instanceof(FormData)
     .transform((formData: FormData) => z.object({
       gene_set_library_file: z.file().nonoptional(),

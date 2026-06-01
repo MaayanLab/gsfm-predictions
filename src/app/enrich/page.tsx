@@ -154,6 +154,15 @@ export default function EnrichPage() {
       gene_set_library_name: z.string().optional(),
     }).safeParse(Object.fromEntries(searchParams.entries()))
   }, [searchParams])
+  const userList = trpc.getList.useQuery({ id: submitted.data?.gene_set_id as string }, { enabled: !!submitted.data?.gene_set_id })
+  React.useEffect(() => {
+    if (userList.data) setGeneSet(userList.data.gene_set)
+  }, [userList.data])
+  React.useEffect(() => {
+    if (submitted.data?.description) setDescription(submitted.data?.description)
+    if (submitted.data?.gene_set_library_name) setGeneSetLibraryName(submitted.data.gene_set_library_name)
+    if (submitted.data?.model) setModel(() => submitted.data.model)
+  }, [submitted])
   return (
     <>
       <div
