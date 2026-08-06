@@ -5,7 +5,7 @@ x-kubernetes:
 services:
   gsfm-app:
     build: .
-    image: maayanlab/gsfm:0.12.8
+    image: maayanlab/gsfm:0.12.9
     platform: linux/amd64
     x-kubernetes:
       imagePullPolicy: IfNotPresent
@@ -23,7 +23,7 @@ services:
     ports:
     - 3000
     volumes:
-    - gsfm-app-model:/app/data/model
+    - gsfm-app-model:/home/node/data/model
   gsfm-postgres:
     image: postgres:17
     environment:
