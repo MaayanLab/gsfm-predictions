@@ -28,6 +28,6 @@ EXPOSE 3000
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 ENV PYTHON_BIN /home/node/.venv/bin/python
-VOLUME ["/home/node/model"]
+VOLUME ["/home/node/data/model"]
 ENTRYPOINT ["/bin/sh"]
 CMD ["ensure-model.sh", "node", "server.js"]
