@@ -23,11 +23,11 @@ COPY --chown=node:node public ./public
 COPY --chown=node:node ensure-model.sh ./
 RUN chmod +x ensure-model.sh
 
-ENV DATABASE_URL ""
+ENV DATABASE_URL=""
 EXPOSE 3000
-ENV PORT 3000
-ENV HOSTNAME "0.0.0.0"
-ENV PYTHON_BIN /home/node/.venv/bin/python
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+ENV PYTHON_BIN=/home/node/.venv/bin/python
 VOLUME ["/home/node/data/model"]
 ENTRYPOINT ["/bin/sh"]
 CMD ["ensure-model.sh", "node", "server.js"]
