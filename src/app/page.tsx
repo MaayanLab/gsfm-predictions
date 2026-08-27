@@ -98,8 +98,9 @@ export default function Home() {
               label: <span>Performing Reverse Gene Set Enrichment Analysis</span>,
             },
             {
-              href: "/about",
-              label: <span>Predicting Gene-Disease Associations</span>,
+              href: "https://github.com/MaayanLab/gsfm/blob/main/gsfm/benchmarks/Gene_Function_Prediction_Tutorial.ipynb",
+              target: "_blank",
+              label: <span>Predicting Gene Function with GSFM</span>,
             },
             {
               href: "https://github.com/MaayanLab/gsfm/blob/main/gsfm/benchmarks/GSFM_Paired_PPI.ipynb",
