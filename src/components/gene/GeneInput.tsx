@@ -20,6 +20,7 @@ export default function GeneInput({ large, value, onChange }: { large?: boolean,
         </svg>
         <input
           type="search"
+          autoFocus
           value={gene}
           placeholder="e.g. ACE2, KLF4"
           onChange={evt => {setGene(evt.currentTarget.value)}}
