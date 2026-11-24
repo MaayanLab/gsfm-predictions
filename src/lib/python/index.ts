@@ -44,6 +44,8 @@ export default function python<T>(pathspec: string, args: { kargs?: unknown[], k
       path.join(process.env.PYTHON_ROOT || '', 'src', 'lib', 'python', 'helper.py'),
       pathspec,
     ], { env: { ...process.env } })
+    proc.on('error', (err) => reject(new ProcessError(`[${pathspec}]: ${err.message}`, null)))
+    proc.stdin.on('error', () => {}) // EPIPE if python dies early; reported via 'close'
     let stdout = ''
     proc.stdout.on('data', (chunk: string) => { stdout += chunk })
     proc.stderr.on('data', callback !== undefined ? (chunk) => callback(chunk.toString()) : (chunk: string) => { console.warn(`[${pathspec}]: ${chunk.toString()}`) })
@@ -91,15 +93,25 @@ export function pythonStream(pathspec: string, args: { kargs?: unknown[], kwargs
   ], { env: { ...process.env, PYTHONUNBUFFERED: '1' }, signal })
   let stderr = ''
   proc.stderr.on('data', (chunk: string) => { stderr += chunk })
-  proc.on('close', (code) => {
-    if (code !== 0) {
-      throw new ProcessError(`[${pathspec}]: ${stderr || `Process exited with unexpected code ${code}`}`, code)
-    } else {
-      if (stderr) {
-        console.warn(`[${pathspec}]: ${stderr}`)
-      }
-    }
+  // Failures must not be thrown from these listeners (that's an uncaughtException which kills the server),
+  //  instead they settle `exited`, which consumers should await after reading stdout.
+  //  An abort (client went away) is an expected way to stop, so it resolves.
+  const exited = new Promise<void>((resolve, reject) => {
+    proc.on('error', (err) => {
+      if (signal?.aborted) resolve()
+      else reject(new ProcessError(`[${pathspec}]: ${err.message}`, null))
+    })
+    proc.on('close', (code) => {
+      if (signal?.aborted) return resolve()
+      if (code !== 0) return reject(new ProcessError(`[${pathspec}]: ${stderr || `Process exited with unexpected code ${code}`}`, code))
+      if (stderr) console.warn(`[${pathspec}]: ${stderr}`)
+      resolve()
+    })
   })
+  // a consumer that stops early (e.g. on abort) never awaits `exited`; don't let that become an unhandledRejection
+  exited.catch(() => {})
+  // if python dies before reading stdin this is EPIPE; `exited` already reports the failure
+  proc.stdin.on('error', () => {})
   proc.stdin.end(stdin)
-  return proc
+  return Object.assign(proc, { exited })
 }

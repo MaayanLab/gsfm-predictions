@@ -115,6 +115,7 @@ export default router({
       if (props.signal?.aborted) return
       yield evt
     }
+    await proc.exited
   }),
   /**
    * Batch mode: enrich every gene set of a user-submitted GMT (`input_gene_set_library_id`, from addLibrary)
@@ -163,5 +164,6 @@ export default router({
       if (props.signal?.aborted) return
       yield evt
     }
+    await proc.exited
   }),
 })
