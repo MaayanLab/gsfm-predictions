@@ -7,6 +7,32 @@ import { model_on_hf } from "@/components/resources"
 import crypto from 'crypto'
 import readline from 'node:readline/promises'
 
+const modelInput = z.string().transform(model => {
+  const res = model_on_hf[model]
+  if (res === undefined) throw new Error('Model is invalid')
+  return res
+})
+
+type EnrichmentResult = {
+  "Term": string,
+  "es": number,
+  "nes": number | null,
+  "pval": number,
+  "sidak": number,
+  "geneset_size": number,
+  "leading_edge": string,
+  "plot": string,
+}
+
+async function getUserGeneSetLibrary(id: string) {
+  const { gene_set_library } = await db
+    .selectFrom('app.user_gene_set_library')
+    .select('gene_set_library')
+    .where('id', '=', id)
+    .executeTakeFirstOrThrow()
+  return gene_set_library
+}
+
 export default router({
   addList: procedure.input(z.object({
     gene_set: z.string().array(),
@@ -45,16 +71,13 @@ export default router({
         id: gene_set_library_id,
         gene_set_library: gene_set_library,
       })
+      .onConflict(oc => oc.column('id').doNothing())
       .execute()
     return gene_set_library_id
   }),
   enrich: procedure.input(z.object({
     lastEventId: z.string().nullish(), // for SSE
-    model: z.string().transform(model => {
-      const res = model_on_hf[model]
-      if (res === undefined) throw new Error('Model is invalid')
-      return res
-    }),
+    model: modelInput,
     gene_set_id: z.string(),
     gene_set_library_name: z.string().optional(),
     gene_set_library_id: z.string().optional(),
@@ -65,13 +88,9 @@ export default router({
       .select('gene_set')
       .where('id', '=', props.input.gene_set_id)
       .executeTakeFirstOrThrow()
-    const { gene_set_library } = props.input.gene_set_library_id ?
-      await db
-        .selectFrom('app.user_gene_set_library')
-        .select('gene_set_library')
-        .where('id', '=', props.input.gene_set_library_id)
-        .executeTakeFirstOrThrow()
-      : {}
+    const gene_set_library = props.input.gene_set_library_id ?
+      await getUserGeneSetLibrary(props.input.gene_set_library_id)
+      : undefined
     yield {status: 'Launching GSFM GSEA enrichment job...'}
 
     const proc = pythonStream('app.enrich.gsfm_gsea.enrich', {
@@ -91,16 +110,55 @@ export default router({
       const evt = JSON.parse(line) as {
         error?: string,
         status?: string,
-        data?: {
-          "Term": string,
-          "es": number,
-          "nes": number | null,
-          "pval": number,
-          "sidak": number,
-          "geneset_size": number,
-          "leading_edge": string,
-          "plot": string,
-        }[]
+        data?: EnrichmentResult[]
+      }
+      if (props.signal?.aborted) return
+      yield evt
+    }
+  }),
+  /**
+   * Batch mode: enrich every gene set of a user-submitted GMT (`input_gene_set_library_id`, from addLibrary)
+   *  against a gene set library (`enrich_gene_set_library_id` from addLibrary, or `enrich_gene_set_library_name`).
+   * Streams one event per input gene set, tagged with `input_term`.
+   */
+  enrichLibrary: procedure.input(z.object({
+    lastEventId: z.string().nullish(), // for SSE
+    model: modelInput,
+    input_gene_set_library_id: z.string(),
+    enrich_gene_set_library_name: z.string().optional(),
+    enrich_gene_set_library_id: z.string().optional(),
+  }).refine(
+    input => !!input.enrich_gene_set_library_name !== !!input.enrich_gene_set_library_id,
+    'Exactly one of enrich_gene_set_library_name or enrich_gene_set_library_id is required',
+  )).subscription(async function* (props) {
+    yield {status: 'Retreiving user content...'}
+    const input_gene_set_library = await getUserGeneSetLibrary(props.input.input_gene_set_library_id)
+    const enrich_gene_set_library = props.input.enrich_gene_set_library_id ?
+      await getUserGeneSetLibrary(props.input.enrich_gene_set_library_id)
+      : undefined
+    yield {status: 'Launching GSFM GSEA batch enrichment job...'}
+
+    const proc = pythonStream('app.enrich.gsfm_gsea.enrich_library', {
+      kwargs: {
+        model: props.input.model,
+        input_gene_set_library,
+        enrich_gene_set_library,
+        enrich_gene_set_library_name: props.input.enrich_gene_set_library_name,
+      },
+    }, props.signal)
+    const rl = readline.createInterface({
+      input: proc.stdout,
+      crlfDelay: Infinity,
+    })
+
+    for await (const line of rl) {
+      const evt = JSON.parse(line) as {
+        // error without input_term is fatal; error with input_term only affects that gene set
+        error?: string,
+        status?: string,
+        progress?: { current: number, total: number },
+        input_term?: string,
+        data?: EnrichmentResult[]
       }
       if (props.signal?.aborted) return
       yield evt
