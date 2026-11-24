@@ -73,10 +73,12 @@ function MDRecurse(props: { children: MDComponentProps[keyof MDComponentProps][]
 }
 
 export default function MDT(props: { src: string }) {
+  let parsed
   try {
-    return <MD {...JSON.parse(props.src)} />
+    parsed = JSON.parse(props.src)
   } catch (e) {
     console.error(e)
     return props.src
   }
+  return <MD {...parsed} />
 }

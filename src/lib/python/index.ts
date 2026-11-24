@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports -- guarded require()s keep node builtins out of client bundles */
 /** Stolen from https://raw.githubusercontent.com/MaayanLab/Playbook-Workflow-Builder/refs/heads/main/utils/python.ts
  * Run python scripts/functions from typescript
  * Usage:

@@ -61,7 +61,7 @@ export default function About() {
           <div className="relative flex justify-center items-center">
             <div className="absolute bottom-2 p-2 w-full text-center">
               <div className="bg-white m-2 prose text-primary">
-                <h5 className="text-nowrap font-semibold">Avi Ma'ayan, PhD</h5>
+                <h5 className="text-nowrap font-semibold">Avi Ma&apos;ayan, PhD</h5>
                 <h6 className="text-nowrap">Professor in Bioinformatics</h6>
               </div>
             </div>

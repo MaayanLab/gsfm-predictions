@@ -9,7 +9,7 @@
     "prebuild": "npm run codegen",
     "build": "NEXT_PUBLIC_URL=https://gsfm.maayanlab.cloud next build --webpack",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "codegen:kysely": "kysely-codegen",
     "codegen:trpc": "ts-node src/lib/trpc/codegen.ts",
     "codegen": "concurrently npm:codegen:*",

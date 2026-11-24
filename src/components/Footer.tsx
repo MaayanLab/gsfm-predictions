@@ -14,7 +14,7 @@ export default function Footer() {
             <img className="w-xs" src="/resources/Logo.svg" alt="Gene Set Foundation Model" />
           </Link>
           <div className="p-8 prose max-w-full lg:max-w-prose text-secondary-content">
-            The Ma'ayan Lab is a computational systems biology research laboratory focused on data‑driven approaches to understanding gene regulation, cell signaling pathways, systems pharmacology, and molecular mechanisms of disease. The lab develops open bioinformatics software tools and other computational resources to accelerate biological, target, and drug discoveries.
+            The Ma&apos;ayan Lab is a computational systems biology research laboratory focused on data‑driven approaches to understanding gene regulation, cell signaling pathways, systems pharmacology, and molecular mechanisms of disease. The lab develops open bioinformatics software tools and other computational resources to accelerate biological, target, and drug discoveries.
           </div>
         </div>
         <div className="flex flex-row flex-wrap gap-8 bg-secondary justify-between">
@@ -32,7 +32,7 @@ export default function Footer() {
           <img className="shrink-0 hidden lg:block" src="/resources/Ellipse2.svg" alt="" />
         </div>
         <div className="py-6 px-8 border-[#6992C8] border-t font-semibold bg-secondary text-sm">
-          <a href="https://doi.org/10.1016/j.patter.2026.101565" target="_blank">Clarke, D. J. B., Marino, G. B. & Ma'ayan, A. GSFM: A gene set foundation model pre-trained on a massive collection of diverse gene sets. Patterns 101565 (2026) doi:10.1016/j.patter.2026.101565</a>
+          <a href="https://doi.org/10.1016/j.patter.2026.101565" target="_blank">Clarke, D. J. B., Marino, G. B. & Ma&apos;ayan, A. GSFM: A gene set foundation model pre-trained on a massive collection of diverse gene sets. Patterns 101565 (2026) doi:10.1016/j.patter.2026.101565</a>
         </div>
       </div>
     </>
