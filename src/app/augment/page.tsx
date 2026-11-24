@@ -6,10 +6,70 @@ import downloadBlob from "@/components/downloadBlob"
 import DataTable from "@/components/DataTable"
 import { model_name } from "@/components/resources"
 import ButtonWithIcon from "@/components/ButtonWithIcon"
+import useRWSearchParams from "@/components/rwsearchparams"
+import { z } from 'zod'
 
 const example = {
   gene_set: `TYROBP\nLILRB1\nSLC11A1\nTNFSF18\nFCER1G\nEIF2AK4\nMDK\nSEMA6D\nIFNA6\nIFNK\nIFNB1\nIFNA2\nIFNA14\nIFNA7\nIFNA1\nIFNE\nIFNA4\nIFNA5\nPLXNA1\nITGAL\nICAM1\nF2RL1\nTOX4\nCD74\nIFNA21\nIFNA8\nIFNW1\nIFNA16\nIFNA10\nIFNA17`,
   description: 'T Cell Activation Involved in Immune Response (GO:0002286)',
+}
+
+function Results(props: { model: string, description: string, gene_set_id: string }) {
+  const predictions = trpc.augmentGeneSet.useQuery({
+    model: props.model,
+    gene_set_id: props.gene_set_id,
+  }, {
+    // a stored gene set + model always yields the same predictions
+    staleTime: Infinity,
+  })
+  const data = React.useMemo(() => {
+    if (!predictions.data) return []
+    const known = new Set(predictions.data.gene_set)
+    return Object.entries(predictions.data.predictions).map(([gene, score]) => ({
+      gene,
+      score,
+      known: known.has(gene) ? 1 : 0,
+    }))
+  }, [predictions.data])
+  const downloadPredictions = React.useCallback(() => {
+    if (!predictions.isSuccess) return
+    downloadBlob([
+      ['Gene', 'Score', 'Known'].join('\t'),
+      ...data.map(({ gene, score, known }) => [gene, `${score}`, known].join('\t')),
+    ].join('\n'), `${props.model}-predictions.tsv`, 'text/tab-separated-values;charset=utf-8')
+  }, [props.model, predictions.isSuccess, data])
+  return (
+    <div className="flex flex-col gap-4">
+      <div role="tablist" className="tabs tabs-lift tabs-xl">
+        <button
+          role="tab"
+          className="tab cursor-auto"
+        >
+          Results
+        </button>
+        <div role="tabpanel" className="tab-content block p-0">
+          <DataTable
+            title={<>{props.description}</>}
+            columns={{
+              gene: {th: <>Gene</>, td: (gene: string) => gene},
+              score: {th: <>Score</>, td: (score: number) => score.toPrecision(3)},
+              known: {th: <>Known</>, td: (known: number) => known},
+            }}
+            defaultOrderBy={'score desc'}
+            data={data}
+            isLoading={predictions.isPending}
+          />
+          {predictions.isError && <div className="alert alert-error rounded-t-none rounded-b-2xl flex flex-col">{predictions.error.message}</div>}
+        </div>
+      </div>
+      <ButtonWithIcon
+        className="btn btn-primary font-semibold"
+        disabled={!predictions.isSuccess}
+        onClick={downloadPredictions}
+        icon={<img src="/resources/DownloadIcon.svg" alt="" />}
+      >Download result</ButtonWithIcon>
+    </div>
+  )
 }
 
 export default function AugmentPage() {
@@ -20,14 +80,24 @@ export default function AugmentPage() {
   const geneSetParsed = React.useMemo(() =>
     !geneSet ? [] : geneSet.split(/[\s\r?\n]+/g).filter(gene => !!gene)
   , [geneSet])
-  const predictions = trpc.augment.useMutation()
-  const downloadPredictions = React.useCallback(() => {
-    if (!predictions.isSuccess) return
-    downloadBlob([
-      ['Gene', 'Score', 'Known'].join('\t'),
-      ...Object.entries(predictions.data.predictions).map(([gene, score]) => [gene, `${score}`, predictions.variables.gene_set.includes(gene) ? 1 : 0].join('\t')),
-    ].join('\n'), `${model}-predictions.tsv`, 'text/tab-separated-values;charset=utf-8')
-  }, [model, predictions])
+  const valid = geneSetParsed.length > 0 && geneSetParsed.length <= 512
+  const addList = trpc.addList.useMutation()
+  const [searchParams, setSearchParams] = useRWSearchParams()
+  const submitted = React.useMemo(() => {
+    return z.object({
+      model: z.string(),
+      description: z.string().default(''),
+      gene_set_id: z.string(),
+    }).safeParse(Object.fromEntries(searchParams.entries()))
+  }, [searchParams])
+  const userList = trpc.getList.useQuery({ id: submitted.data?.gene_set_id as string }, { enabled: !!submitted.data?.gene_set_id })
+  React.useEffect(() => {
+    if (userList.data) setGeneSet(userList.data.gene_set)
+  }, [userList.data])
+  React.useEffect(() => {
+    if (submitted.data?.description) setDescription(submitted.data.description)
+    if (submitted.data?.model) setModel(() => submitted.data.model)
+  }, [submitted])
   return (
     <>
       <div
@@ -111,43 +181,22 @@ export default function AugmentPage() {
               <ButtonWithIcon
                 className="btn btn-primary font-semibold"
                 icon={<img src="/resources/RightArrowIcon.svg" alt="" />}
-                onClick={evt => predictions.mutate({ model, gene_set: geneSetParsed, description })} disabled={!(geneSetParsed.length <= 512)}
+                disabled={!valid || addList.isPending}
+                onClick={evt => {
+                  addList.mutateAsync({ gene_set: geneSetParsed, description }).then(gene_set_id => {
+                    setSearchParams(sp => {
+                      sp.set('model', model)
+                      sp.set('description', description)
+                      sp.set('gene_set_id', gene_set_id)
+                    })
+                  })
+                }}
               >Submit</ButtonWithIcon>
             </div>
+            {addList.isError && <div className="alert alert-error">{addList.error.message}</div>}
           </div>
-          {predictions.status !== 'idle' && <div className="grow md:flex-3 flex flex-col gap-4">
-            <div role="tablist" className="tabs tabs-lift tabs-xl">
-              <button
-                role="tab"
-                className="tab cursor-auto"
-              >
-                Results
-              </button>
-              <div role="tabpanel" className="tab-content block p-0">
-                <DataTable
-                  title={<>{description}</>}
-                  columns={{
-                    gene: {th: <>Gene</>, td: (gene: string) => gene},
-                    score: {th: <>Score</>, td: (score: number) => score.toPrecision(3)},
-                    known: {th: <>Known</>, td: (known: number) => known},
-                  }}
-                  defaultOrderBy={'score desc'}
-                  data={predictions.data ? Object.entries(predictions.data.predictions).map(([gene, score]) => ({
-                    gene,
-                    score,
-                    known: predictions.variables.gene_set.includes(gene) ? 1 : 0
-                  })) : []}
-                  isLoading={predictions.isPending}
-                />
-                {predictions.isError && <div className="alert alert-error rounded-t-none rounded-b-2xl flex flex-col">{predictions.error.message}</div>}
-              </div>
-            </div>
-            <ButtonWithIcon
-              className="btn btn-primary font-semibold"
-              disabled={!predictions.isSuccess}
-              onClick={downloadPredictions}
-              icon={<img src="/resources/DownloadIcon.svg" alt="" />}
-            >Download result</ButtonWithIcon>
+          {submitted.data && <div className="grow md:flex-3">
+            <Results {...submitted.data} />
           </div>}
         </div>
       </div>
